@@ -371,6 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar17-40</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="settingsBtn" onclick="openSettings()" style="display:none">
@@ -559,21 +560,47 @@ async function doTranslate() {
 
   const tl = LM[targetLang];
 
-  const prompt = `Sen akıllı bir kişisel çeviri asistanısın.
-Kurallar:
-- Metnin GERÇEK NİYETİNİ anla. Yazım hatalarını, eksik kelimeleri, bozuk cümleleri düzelt.
-- ${tl.full} dilinde, o dili anadili olarak konuşan biri gibi doğal ve akıcı çevir.
-- Tonu otomatik algıla (samimi, flörtöz, nazik, resmi) ve çeviride aynı tonu kullan.
+  const prompt = `Sen yüksek sadakatli bir çeviri motorusun.
 
-SADECE şu 4 satırı yaz, başka hiçbir şey yazma, etiket veya numara kullanma:
-[1. satır] ${tl.full} dilinde ana çeviri
-[2. satır] ${targetLang==='tr' ? 'Ana çevirinin aynısını tekrar yaz' : 'Çevirinin tam Türkçe anlamı'}
-[3. satır] Kaynak dilin adı Türkçe olarak (örn: Türkçe, Rusça, Ukraynaca)
-[4. satır] Ton etiketi Türkçe olarak (örn: samimi, resmi, flörtöz, nazik)
+GÖREV: Verilen metni ${tl.full} diline doğal ve akıcı şekilde çevir.
+
+ZORUNLU KURALLAR:
+1. Kaynak metindeki anlamı koru.
+2. Kaynakta olmayan hiçbir bilgi, övgü, duygu, özne, hitap, açıklama veya yorum ekleme.
+3. Yazım hatalarını düzeltebilirsin ama düzelttiğin şey anlamı değiştirmemeli.
+4. Kelime kelime çeviri yapma; hedef dilde doğal yaz.
+5. Doğallık için cümleyi yeniden kurabilirsin ama bilgi ekleyemez, eksiltemez, abartamazsın.
+6. Kaynak metinde kişi açık değilse özne uydurma.
+7. Metindeki ton samimi / resmi / nötr ise bunu koru; tonu güçlendirme veya abartma.
+8. Belirsiz bir ifade varsa onu açıklamaya çalışma, belirsizliği koru.
+9. Metafor, övgü, duygusal yükseltme ve ima eklemek kesinlikle yasaktır.
+
+ÖRNEK HATALI DAVRANIŞ:
+Kaynak: "Çok basit, birkaç HTML kodu ile harikalar yaratabiliyorsun."
+Hatalı: "Ты настоящий волшебник, с помощью нескольких строк HTML кода творишь чудеса."
+Neden hatalı: Kaynakta olmayan "волшебник" (sihirbaz) övgüsü ve özne eklendi.
+Doğru: Kaynaktaki ifadeyi olduğu gibi çevir, ekleme yapma.
+
+Sadece aşağıdaki JSON formatında cevap ver, başka hiçbir şey yazma:
+{"translation":"${tl.full} dilinde çeviri","back":"${targetLang==='tr' ? 'çevirinin aynısı' : 'Türkçe anlamı'}","src":"kaynak dil Türkçe olarak","tone":"ton Türkçe olarak"}
 
 Kullanıcı metni: ${raw}`;
 
+  const validatorPrompt = (src, translation) => `Aşağıda kaynak metin ve çevirisi var. Çevirinin kaynağa anlamsal olarak sadık olup olmadığını kontrol et.
+
+HATA TÜRLERİ:
+- ADDED_CONTENT: kaynakta olmayan bilgi, övgü, duygu, özne veya yorum eklenmiş
+- OMITTED_CONTENT: kaynakta olan bilgi kaybolmuş
+- TONE_SHIFT: ton gereksiz biçimde güçlenmiş veya değişmiş
+
+Kaynak: ${src}
+Çeviri: ${translation}
+
+Sadece şu JSON'u döndür, başka hiçbir şey yazma:
+{"pass":true,"errors":[],"reason":""}`;
+
   try {
+    // STEP 1: Translation
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method:'POST',
       headers:{
@@ -585,24 +612,60 @@ Kullanıcı metni: ${raw}`;
       body: JSON.stringify({
         model: 'openrouter/auto',
         messages:[{role:'user', content: prompt}],
-        temperature: 0.35,
+        temperature: 0.1,
+        top_p: 0.5,
         max_tokens: 2000
       })
     });
     if (!res.ok) { const e=await res.json(); throw new Error(e.error?.message||'API hatası'); }
     const data = await res.json();
     let txt = data.choices?.[0]?.message?.content || '';
-    // Parse plain text response (4 lines)
-    const lines = txt.trim().split('\n')
-      .map(l => l.replace(/^\[?\d+\.?\s*satır\]?\s*/i,'').replace(/^(line\s*\d+:?\s*)/i,'').trim())
-      .filter(l => l);
-    const parsed = {
-      out:  lines[0] || txt,
-      back: lines[1] || null,
-      src:  lines[2] || '?',
-      tone: lines[3] || '',
-      v: []
-    };
+    let parsed;
+    try {
+      const clean = txt.replace(/```json|```/g,'').trim();
+      const jm = clean.match(/\{[\s\S]*\}/);
+      parsed = JSON.parse(jm ? jm[0] : clean);
+      parsed.v = [];
+    } catch { 
+      parsed = {translation: txt, back: null, src: '?', tone: ''};
+      parsed.out = parsed.translation;
+      parsed.v = [];
+    }
+    parsed.out = parsed.out || parsed.translation || txt;
+    parsed.back = parsed.back || null;
+
+    // STEP 2: Validator
+    let validationWarning = null;
+    try {
+      const vres = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+          'HTTP-Referer': window.location.href,
+          'X-Title': 'ceviri'
+        },
+        body: JSON.stringify({
+          model: 'openrouter/auto',
+          messages:[{role:'user', content: validatorPrompt(raw, parsed.out)}],
+          temperature: 0.1,
+          max_tokens: 300
+        })
+      });
+      if (vres.ok) {
+        const vdata = await vres.json();
+        const vtxt = vdata.choices?.[0]?.message?.content || '';
+        const vjm = vtxt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
+        if (vjm) {
+          const vresult = JSON.parse(vjm[0]);
+          if (!vresult.pass && vresult.errors && vresult.errors.length > 0) {
+            validationWarning = vresult.reason || vresult.errors.join(', ');
+          }
+        }
+      }
+    } catch(e) { /* validator hatası sessizce geç */ }
+
+    parsed.warning = validationWarning;
     replaceBubble(lid, raw, parsed);
   } catch(e) {
     removeEl(lid); toast('Hata: '+e.message);
@@ -625,6 +688,7 @@ function replaceBubble(id, inputTxt, p) {
   if (!el) return;
   const tl = LM[targetLang];
   const hasBack = p.back && targetLang !== 'tr';
+  const hasWarning = p.warning;
   const bid = 'b'+Date.now();
   let variants = '';
   if (p.v && p.v.length) {
@@ -639,6 +703,7 @@ function replaceBubble(id, inputTxt, p) {
     <div class="b-out">
       <div class="b-main">${esc(p.out)}</div>
       ${hasBack?`<div class="b-back">↳ ${esc(p.back)}</div>`:''}
+      ${hasWarning?`<div style="margin-top:6px;padding:6px 10px;background:rgba(196,92,92,0.08);border:1px solid rgba(196,92,92,0.2);border-radius:8px;font-size:11px;color:#c45c5c;">⚠️ ${esc(p.warning)}</div>`:''}
       <div class="b-meta">
         <div class="b-tags">
           <span class="tag tag-l">${esc(tl.full)}</span>
