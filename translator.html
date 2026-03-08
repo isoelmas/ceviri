@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar17-40</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar18-55</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="settingsBtn" onclick="openSettings()" style="display:none">
@@ -586,18 +586,30 @@ Sadece aşağıdaki JSON formatında cevap ver, başka hiçbir şey yazma:
 
 Kullanıcı metni: ${raw}`;
 
-  const validatorPrompt = (src, translation) => `Aşağıda kaynak metin ve çevirisi var. Çevirinin kaynağa anlamsal olarak sadık olup olmadığını kontrol et.
+  const validatorPrompt = (src, translation) => `Sen bir translation fidelity validator'sün.
+
+GÖREV: Kaynak metin ile çeviri arasındaki anlamsal sadakati kontrol et.
 
 HATA TÜRLERİ:
-- ADDED_CONTENT: kaynakta olmayan bilgi, övgü, duygu, özne veya yorum eklenmiş
-- OMITTED_CONTENT: kaynakta olan bilgi kaybolmuş
-- TONE_SHIFT: ton gereksiz biçimde güçlenmiş veya değişmiş
+- ADDED_CONTENT: Kaynakta olmayan bilgi, övgü, ima, duygu, özne, hitap veya açıklama eklenmiş.
+- OMITTED_CONTENT: Kaynaktaki anlamın bir kısmı kaybolmuş.
+- TONE_SHIFT: Ton gereksiz şekilde resmileşmiş, samimileşmiş, sertleşmiş veya yumuşamış.
+- INTERPRETATION: Çeviri yerine yorumlama veya açıklama yapılmış.
+- AMBIGUITY_LOST: Kaynaktaki belirsizlik fazla netleştirilmiş.
+- SUBJECT_INSERTED: Kaynakta açık olmayan özne hedef dilde eklenmiş.
+- GRAMMAR_ONLY_NORMALIZATION: Sadece yazım/dilbilgisi düzeltilmiş, anlam korunmuş. Bu hata değildir.
 
-Kaynak: ${src}
-Çeviri: ${translation}
+KURALLAR:
+1. Akıcılık uğruna anlam eklenmesini hata say.
+2. Hedef dilin doğal gereği olan küçük biçimsel değişiklikleri hata sayma.
+3. Yalnızca anlamsal sadakati değerlendir.
+4. Sadece JSON döndür, başka hiçbir şey yazma.
 
-Sadece şu JSON'u döndür, başka hiçbir şey yazma:
-{"pass":true,"errors":[],"reason":""}`;
+Kaynak: \${src}
+Çeviri: \${translation}
+
+JSON:
+{"pass":true,"errors":[],"severity":"none","notes":""}`;
 
   try {
     // STEP 1: Translation
@@ -610,7 +622,7 @@ Sadece şu JSON'u döndür, başka hiçbir şey yazma:
         'X-Title': 'ceviri'
       },
       body: JSON.stringify({
-        model: 'openrouter/auto',
+        model: 'meta-llama/llama-3.3-70b-instruct:free',
         messages:[{role:'user', content: prompt}],
         temperature: 0.1,
         top_p: 0.5,
@@ -646,7 +658,7 @@ Sadece şu JSON'u döndür, başka hiçbir şey yazma:
           'X-Title': 'ceviri'
         },
         body: JSON.stringify({
-          model: 'openrouter/auto',
+          model: 'meta-llama/llama-3.3-70b-instruct:free',
           messages:[{role:'user', content: validatorPrompt(raw, parsed.out)}],
           temperature: 0.1,
           max_tokens: 300
@@ -659,7 +671,20 @@ Sadece şu JSON'u döndür, başka hiçbir şey yazma:
         if (vjm) {
           const vresult = JSON.parse(vjm[0]);
           if (!vresult.pass && vresult.errors && vresult.errors.length > 0) {
-            validationWarning = vresult.reason || vresult.errors.join(', ');
+            const errorLabels = {
+              'ADDED_CONTENT': 'Kaynak metinde olmayan içerik eklendi',
+              'OMITTED_CONTENT': 'Kaynak metinden anlam eksiltildi',
+              'TONE_SHIFT': 'Ton gereksiz değiştirildi',
+              'INTERPRETATION': 'Çeviri yerine yorum yapıldı',
+              'AMBIGUITY_LOST': 'Kaynaktaki belirsizlik kayboldu',
+              'SUBJECT_INSERTED': 'Kaynakta olmayan özne eklendi'
+            };
+            const errMsgs = vresult.errors
+              .filter(e => e !== 'GRAMMAR_ONLY_NORMALIZATION')
+              .map(e => errorLabels[e] || e);
+            if (errMsgs.length > 0) {
+              validationWarning = errMsgs.join(' · ') + (vresult.notes ? ' — ' + vresult.notes : '');
+            }
           }
         }
       }
