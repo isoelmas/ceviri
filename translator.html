@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar19-55</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar20-05</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="settingsBtn" onclick="openSettings()" style="display:none">
@@ -731,10 +731,9 @@ function replaceBubble(id, inputTxt, p) {
   const tl = LM[targetLang];
   const hasBack = p.back && targetLang !== 'tr';
   const hasWarning = p.warning;
-  // Determine source language name reliably
-  const srcLangName = p.src && p.src.length < 20 && !p.src.includes(' ') 
-    ? p.src 
-    : (targetLang !== 'tr' ? 'Türkçe' : (p.src && p.src.length < 20 ? p.src : '?'));
+  // Source lang from model, target lang from button selection
+  const srcLangName = (p.src && p.src.length < 25 && p.src.split(' ').length <= 2) ? p.src : '?';
+  const tgtLangName = tl.name;
   const bid = 'b'+Date.now();
   let variants = '';
   if (p.v && p.v.length) {
@@ -752,7 +751,7 @@ function replaceBubble(id, inputTxt, p) {
       ${hasWarning?`<div style="margin-top:6px;padding:6px 10px;background:rgba(196,92,92,0.08);border:1px solid rgba(196,92,92,0.2);border-radius:8px;font-size:11px;color:#c45c5c;">⚠️ ${esc(p.warning)}</div>`:''}
       <div class="b-meta">
         <div class="b-tags">
-          <span class="tag tag-l">${srcLangName} → ${esc(tl.name)}</span>
+          <span class="tag tag-l">${esc(srcLangName)} → ${esc(tgtLangName)}</span>
           ${p.tone?`<span class="tag tag-t">${esc(p.tone)}</span>`:''}
           ${p.model?`<span class="tag tag-s">${esc(p.model)}</span>`:''}
           ${p.validated===true
