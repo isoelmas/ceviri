@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar20-40</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar20-45</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
@@ -413,6 +413,7 @@ body {
       <div class="lb-hint">en / ru / ua yazarak değiştir</div>
     </div>
 
+    <div id="debugBox" style="display:none;margin:8px 16px;padding:10px;background:#f5f0e8;border:1px solid #ccc;border-radius:8px;font-size:10px;font-family:monospace;white-space:pre-wrap;word-break:break-all;color:#333;"></div>
     <div class="hist" id="hist">
       <div class="empty-st" id="emptyState">
         <div class="empty-icon">✦</div>
@@ -669,9 +670,12 @@ JSON:
     }
     parsed.out = parsed.out || parsed.translation || txt;
     parsed.back = parsed.back || parsed.back_translation_tr || null;
-    // DEBUG: log raw API response
-    console.log('RAW API TXT:', txt);
-    console.log('PARSED:', JSON.stringify({translation: parsed.out, back: parsed.back, src: parsed.src, tone: parsed.tone}));
+    // DEBUG: show raw response on screen
+    const debugBox = document.getElementById('debugBox');
+    if (debugBox) {
+      debugBox.style.display = 'block';
+      debugBox.textContent = 'RAW:\n' + txt.substring(0, 500) + '\n\nBACK: ' + parsed.back;
+    }
 
     // STEP 2: Validator
     let validationWarning = null;
