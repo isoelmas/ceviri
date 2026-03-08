@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar21-10</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar10-00</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
@@ -472,7 +472,7 @@ body {
 <div class="toast" id="toast"></div>
 
 <script>
-let apiKey = '', targetLang = 'tr', favorites = [], showFavs = false, busy = false;
+let apiKey = '', targetLang = 'tr', favorites = [], showFavs = false, busy = false, convHistory = [];
 
 const LM = {
   tr:{name:'Türkçe',full:'Turkish'},
@@ -512,6 +512,7 @@ function setLang(c, btn) {
 function clearHistory() {
   if (!confirm('Tüm mesaj geçmişi silinecektir. Emin misiniz?')) return;
   document.getElementById('hist').innerHTML = '<div class="empty-st" id="emptyState"><div class="empty-icon">✦</div><div class="empty-t">Hazır</div><div class="empty-s">Bir şeyler yaz, çevirelim.<br>en / ru / ua ile dil değiştir.</div></div>';
+  convHistory = [];
   toast('Geçmiş silindi');
 }
 
@@ -570,9 +571,14 @@ async function doTranslate() {
 
   const tl = LM[targetLang];
 
+  // Build conversation context (last 3 pairs)
+  const ctxLines = convHistory.slice(-3).map(h => `[Kaynak]: ${h.src}\n[Çeviri]: ${h.tgt}`).join('\n');
+  const contextBlock = ctxLines ? `\nSOHBET BAĞLAMI (sadece referans, çeviri yapma):\n${ctxLines}\n` : '';
+
   const prompt = `Sen yüksek sadakatli bir çeviri motorusun.
 
-GÖREV: Verilen metni ${tl.full} diline doğal ve akıcı şekilde çevir.
+GÖREV: Verilen metni ${tl.full} diline doğal ve akıcı şekilde çevir.\${contextBlock}
+BAĞLAM KULLANIM KURALI: Sohbet bağlamı varsa, kısa ve belirsiz ifadelerin (tamam, olur, boşver, sonra konuşuruz gibi) tonunu ve anlamını doğru anlamak için kullan. Ama bağlamı çeviriye yansıtma — sadece kelime seçimini ve tonu iyileştirmek için kullan.
 
 ZORUNLU KURALLAR:
 1. Kaynak metindeki anlamı koru.
@@ -757,6 +763,9 @@ JSON:
     parsed.warning = validationWarning;
     parsed.model = data._usedModel ? data._usedModel.split('/').pop().replace(':free','') : null;
     parsed.validated = validatorRan ? (validationWarning === null) : null;
+    // Store in conversation history
+    convHistory.push({src: raw, tgt: parsed.out});
+    if (convHistory.length > 10) convHistory.shift(); // keep last 10
     replaceBubble(lid, raw, parsed);
   } catch(e) {
     removeEl(lid); toast('Hata: '+e.message);
