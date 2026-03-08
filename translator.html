@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="çev.">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<title>çev. — Akıllı Çeviri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1a24;
+  --ink2: #2e2e3e;
+  --paper: #f5f3ee;
+  --paper2: #ede9e0;
+  --paper3: #e0dbd0;
+  --white: #ffffff;
+  --gold: #c9a84c;
+  --gold2: #e8c97a;
+  --teal: #2d7d78;
+  --teal2: #3a9e98;
+  --rose: #c45c5c;
+  --muted: rgba(26,26,36,0.42);
+  --muted2: rgba(26,26,36,0.18);
+  --r: 18px;
+  --rs: 11px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 54px 20px 14px;
+}
+.wordmark {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+.wordmark em { color: var(--gold); font-style: normal; }
+.hdr-r { display: flex; align-items: center; gap: 8px; }
+.lang-chip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--teal);
+  background: rgba(45,125,120,0.1);
+  border: 1px solid rgba(45,125,120,0.2);
+  padding: 5px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  transition: all 0.25s;
+}
+.icon-btn {
+  width: 34px; height: 34px;
+  border-radius: var(--rs);
+  background: var(--paper2);
+  border: 1px solid var(--muted2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--muted);
+  transition: all 0.2s;
+}
+.icon-btn:active { transform: scale(0.92); }
+
+/* SETUP */
+#setupScreen {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center; padding: 20px 20px 60px; gap: 18px;
+}
+.s-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold);
+}
+.s-title {
+  font-family: 'Fraunces', serif;
+  font-size: 30px; font-weight: 500;
+  line-height: 1.2; color: var(--ink);
+}
+.s-title em { font-style: italic; color: var(--teal); }
+.s-body { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.s-card {
+  background: var(--white);
+  border: 1px solid var(--paper3);
+  border-radius: var(--r);
+  padding: 18px; display: flex; flex-direction: column; gap: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+}
+.s-step { display: flex; gap: 12px; align-items: flex-start; }
+.s-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--gold); color: white;
+  font-family: 'Fraunces', serif; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.s-step-txt { font-size: 13px; color: var(--ink); line-height: 1.6; }
+.s-step-txt a { color: var(--teal); text-decoration: none; font-weight: 600; }
+.field {
+  width: 100%; background: var(--paper2);
+  border: 1.5px solid var(--paper3);
+  border-radius: var(--r); padding: 14px 16px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  color: var(--ink); outline: none; transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.field:focus { border-color: var(--gold); background: var(--white); }
+.field::placeholder { color: var(--muted); }
+.primary-btn {
+  width: 100%; padding: 16px;
+  background: var(--ink); border: none; border-radius: var(--r);
+  color: var(--paper); font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; font-weight: 600; letter-spacing: 0.3px;
+  cursor: pointer; transition: all 0.2s;
+}
+.primary-btn:active { opacity: 0.85; transform: scale(0.99); }
+
+/* MAIN */
+#mainUI {
+  flex: 1; display: flex; flex-direction: column;
+  padding: 0 16px 16px; gap: 10px; overflow: hidden;
+}
+
+/* Lang bar */
+.lang-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--ink); border-radius: var(--r); padding: 10px 14px;
+}
+.lb-l .lb-sub { font-size: 11px; color: rgba(245,243,238,0.45); font-weight: 500; }
+.lb-l .lb-main {
+  font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500;
+  color: var(--gold2); display: flex; align-items: center; gap: 6px;
+  margin-top: 1px;
+}
+.lb-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal2); animation: dotpulse 2.5s ease-in-out infinite;
+}
+@keyframes dotpulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.75)} }
+.lb-hint {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  color: rgba(245,243,238,0.28); letter-spacing: 0.3px; text-align: right; max-width: 80px;
+}
+
+/* History */
+.hist {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  display: flex; flex-direction: column; gap: 10px;
+  min-height: 100px; max-height: 46vh;
+  padding: 2px 2px 4px; -webkit-overflow-scrolling: touch;
+}
+.hist::-webkit-scrollbar { display: none; }
+
+.empty-st {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; opacity: 0.35; text-align: center; padding: 24px;
+  pointer-events: none;
+}
+.empty-icon { font-size: 26px; margin-bottom: 4px; }
+.empty-t { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500; }
+.empty-s { font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+/* Bubbles */
+.bubble { display: flex; flex-direction: column; gap: 0; animation: bup 0.28s ease; }
+@keyframes bup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+.b-in {
+  background: var(--paper2); border: 1px solid var(--paper3);
+  border-radius: var(--r) var(--r) 4px var(--r);
+  padding: 9px 13px; font-size: 13px;
+  color: var(--muted); line-height: 1.5; font-style: italic;
+}
+.b-out {
+  margin-top: 4px; background: var(--white);
+  border: 1px solid var(--paper3);
+  border-radius: 4px var(--r) var(--r) var(--r);
+  padding: 12px 14px 10px;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+}
+.b-main {
+  font-family: 'Fraunces', serif; font-size: 18px;
+  font-weight: 300; line-height: 1.5; color: var(--ink);
+}
+.b-back {
+  font-size: 12px; color: var(--muted); margin-top: 7px;
+  padding-top: 7px; border-top: 1px solid var(--paper3); line-height: 1.5;
+}
+.b-meta {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-top: 8px; gap: 8px;
+}
+.b-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.tag {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 6px; font-weight: 500;
+}
+.tag-l { background:rgba(45,125,120,0.1); color:var(--teal); border:1px solid rgba(45,125,120,0.2); }
+.tag-t { background:rgba(201,168,76,0.1); color:#9a7a20; border:1px solid rgba(201,168,76,0.2); }
+.tag-s { background:rgba(26,26,36,0.06); color:var(--muted); border:1px solid var(--muted2); }
+.copy-btn {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--paper2); border: 1px solid var(--paper3);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--muted); transition: all 0.2s; flex-shrink: 0;
+}
+.copy-btn:active { transform: scale(0.88); }
+.copy-btn.ok { color: var(--teal); border-color:rgba(45,125,120,0.3); background:rgba(45,125,120,0.08); }
+
+/* Variants */
+.variants { display: flex; flex-direction: column; gap: 5px; margin-top: 7px; }
+.v-item {
+  background: var(--paper2); border: 1px solid var(--paper3);
+  border-radius: var(--rs); padding: 8px 11px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; transition: background 0.15s;
+}
+.v-item:active { background: var(--paper3); }
+.v-text { font-size: 13px; color: var(--ink); line-height: 1.4; flex: 1; }
+.v-lbl { font-family:'IBM Plex Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); flex-shrink:0; }
+
+/* Loading */
+.load-bub {
+  background: var(--white); border: 1px solid var(--paper3);
+  border-radius: var(--r); padding: 13px 14px;
+  display: flex; gap: 5px; align-items: center;
+  margin-top: 4px;
+}
+.dot-a {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold); animation: dbounce 1.1s ease-in-out infinite;
+}
+.dot-a:nth-child(2){animation-delay:.18s} .dot-a:nth-child(3){animation-delay:.36s}
+@keyframes dbounce { 0%,80%,100%{transform:scale(0.6);opacity:0.35} 40%{transform:scale(1);opacity:1} }
+
+/* Favorites */
+.fav-sec { display: flex; flex-direction: column; gap: 5px; }
+.fav-lbl { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); padding:0 2px; }
+.fav-list { display:flex; flex-direction:column; gap:4px; max-height:130px; overflow-y:auto; }
+.fav-list::-webkit-scrollbar { display:none; }
+.fav-item {
+  background: var(--white); border: 1px solid var(--paper3);
+  border-radius: var(--rs); padding: 8px 12px;
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  transition: background 0.15s;
+}
+.fav-item:active { background: var(--paper2); }
+.fav-txt { font-size:13px; color:var(--ink); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fav-x { color:var(--muted2); font-size:17px; line-height:1; cursor:pointer; padding:2px 4px; flex-shrink:0; }
+
+/* Input area */
+.inp-area {
+  background: var(--white); border: 1.5px solid var(--paper3);
+  border-radius: var(--r);
+  box-shadow: 0 4px 22px rgba(0,0,0,0.07);
+  overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.inp-area:focus-within {
+  border-color: rgba(201,168,76,0.5);
+  box-shadow: 0 4px 24px rgba(201,168,76,0.1);
+}
+#inputText {
+  width: 100%; background: transparent; border: none; outline: none;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px;
+  font-weight: 400; color: var(--ink); line-height: 1.6;
+  padding: 14px 16px 8px; resize: none;
+  min-height: 56px; max-height: 140px;
+  caret-color: var(--gold); -webkit-appearance: none;
+}
+#inputText::placeholder { color: var(--muted); }
+.inp-bar {
+  display: flex; align-items: center;
+  padding: 6px 10px 10px; gap: 6px;
+}
+.qlb { display: flex; gap: 4px; }
+.ql {
+  font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500;
+  letter-spacing:0.4px; padding:5px 8px;
+  background:var(--paper2); border:1px solid var(--paper3);
+  border-radius:8px; color:var(--muted); cursor:pointer; transition:all 0.15s;
+}
+.ql.active { background:var(--ink); color:var(--gold2); border-color:var(--ink); }
+.ql:active { transform:scale(0.91); }
+.inp-acts { display:flex; gap:5px; align-items:center; margin-left:auto; }
+.fav-btn {
+  width:32px; height:32px; border-radius:var(--rs);
+  background:var(--paper2); border:1px solid var(--paper3);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--muted); transition:all 0.2s;
+}
+.fav-btn:active { transform:scale(0.9); }
+.fav-btn.on { color:var(--gold); border-color:rgba(201,168,76,0.4); background:rgba(201,168,76,0.09); }
+.send-btn {
+  width:36px; height:36px; border-radius:var(--rs);
+  background:var(--ink); border:none;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--paper); transition:all 0.2s;
+  position:relative; overflow:hidden;
+}
+.send-btn:active { transform:scale(0.92); }
+.send-btn:disabled { opacity:0.38; cursor:not-allowed; }
+.si { transition:opacity 0.2s; }
+.si.h { opacity:0; }
+.sp { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.2s; }
+.sp.s { opacity:1; }
+.spr { width:16px; height:16px; border:2px solid rgba(245,243,238,0.3); border-top-color:var(--paper); border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* Settings sheet */
+.s-ov { display:none; position:fixed; inset:0; background:rgba(26,26,36,0.5); z-index:100; backdrop-filter:blur(4px); }
+.s-ov.open { display:block; }
+.sheet {
+  position:absolute; bottom:0; left:0; right:0; background:var(--paper);
+  border-radius:24px 24px 0 0; padding:0 20px calc(env(safe-area-inset-bottom,20px) + 20px);
+  max-width:480px; margin:0 auto;
+  box-shadow:0 -8px 40px rgba(0,0,0,0.15);
+  animation:shs .28s ease;
+}
+@keyframes shs { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.sh-handle { width:36px; height:4px; background:var(--paper3); border-radius:2px; margin:12px auto 20px; }
+.sh-title { font-family:'Fraunces',serif; font-size:20px; font-weight:500; margin-bottom:20px; }
+.sh-lbl { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:0.5px; text-transform:uppercase; margin-bottom:8px; }
+.danger-btn {
+  width:100%; padding:14px; background:transparent;
+  border:1px solid rgba(196,92,92,0.25); border-radius:var(--r);
+  color:var(--rose); font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; margin-top:8px;
+}
+.danger-btn:active { background:rgba(196,92,92,0.05); }
+
+/* Toast */
+.toast {
+  position:fixed; bottom:88px; left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--ink); color:var(--paper);
+  padding:10px 18px; border-radius:12px;
+  font-size:13px; font-weight:500;
+  opacity:0; transition:all 0.25s;
+  pointer-events:none; white-space:nowrap; z-index:200;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="wordmark">çev<em>.</em></div>
+    <div class="hdr-r">
+      <div class="lang-chip" id="langChip">→ TR</div>
+      <button class="icon-btn" id="settingsBtn" onclick="openSettings()" style="display:none">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Setup -->
+  <div id="setupScreen">
+    <div>
+      <div class="s-eyebrow">Kişisel Çeviri Asistanı</div>
+      <div class="s-title">Kelime değil,<br><em>niyet</em> çevirir.</div>
+    </div>
+    <div class="s-body">Yazım hataları, yarım cümleler, aceleyle yazılmış mesajlar — ne demek istediğini anlayıp hedef dilde doğal şekilde ifade eder.</div>
+    <div class="s-card">
+      <div class="s-step"><div class="s-num">1</div><div class="s-step-txt"><a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a> → Get API Key</div></div>
+      <div class="s-step"><div class="s-num">2</div><div class="s-step-txt">Ücretsiz Gemini API anahtarını kopyala</div></div>
+      <div class="s-step"><div class="s-num">3</div><div class="s-step-txt">Aşağıya yapıştır ve başla</div></div>
+    </div>
+    <input type="password" class="field" id="apiKeyInput" placeholder="AIza..." autocomplete="off" autocorrect="off" spellcheck="false">
+    <button class="primary-btn" onclick="saveKey()">Başla →</button>
+  </div>
+
+  <!-- Main UI -->
+  <div id="mainUI" style="display:none">
+
+    <div class="lang-bar">
+      <div class="lb-l">
+        <div class="lb-sub">Hedef dil</div>
+        <div class="lb-main"><div class="lb-dot"></div><span id="activeLangName">Türkçe</span></div>
+      </div>
+      <div class="lb-hint">en / ru / ua yazarak değiştir</div>
+    </div>
+
+    <div class="hist" id="hist">
+      <div class="empty-st" id="emptyState">
+        <div class="empty-icon">✦</div>
+        <div class="empty-t">Hazır</div>
+        <div class="empty-s">Bir şeyler yaz, çevirelim.<br>en / ru / ua ile dil değiştir.</div>
+      </div>
+    </div>
+
+    <div class="fav-sec" id="favSec" style="display:none">
+      <div class="fav-lbl">Favoriler</div>
+      <div class="fav-list" id="favList"></div>
+    </div>
+
+    <div class="inp-area">
+      <textarea id="inputText" placeholder="Yaz... (en / ru / ua komutunu öne ekle)" rows="2"
+        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <div class="inp-bar">
+        <div class="qlb">
+          <button class="ql" data-l="tr" onclick="setLang('tr',this)">TR</button>
+          <button class="ql" data-l="en" onclick="setLang('en',this)">EN</button>
+          <button class="ql" data-l="ru" onclick="setLang('ru',this)">RU</button>
+          <button class="ql" data-l="ua" onclick="setLang('ua',this)">UA</button>
+        </div>
+        <div class="inp-acts">
+          <button class="fav-btn" id="favBtn" onclick="toggleFav()" title="Favoriler">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </button>
+          <button class="send-btn" id="sendBtn" onclick="doTranslate()">
+            <span class="si" id="si">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </span>
+            <div class="sp" id="sp"><div class="spr"></div></div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Settings sheet -->
+<div class="s-ov" id="sOv" onclick="closeSettings()">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sh-handle"></div>
+    <div class="sh-title">Ayarlar</div>
+    <div class="sh-lbl">API Anahtarı</div>
+    <input type="password" class="field" id="newKey" placeholder="Yeni anahtar..." style="margin-bottom:12px">
+    <button class="primary-btn" onclick="updateKey()" style="margin-bottom:8px">Güncelle</button>
+    <button class="danger-btn" onclick="deleteKey()">Anahtarı Sil &amp; Sıfırla</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let apiKey = '', targetLang = 'tr', favorites = [], showFavs = false, busy = false;
+
+const LM = {
+  tr:{name:'Türkçe',full:'Turkish'},
+  en:{name:'İngilizce',full:'English'},
+  ru:{name:'Rusça',full:'Russian'},
+  ua:{name:'Ukraynaca',full:'Ukrainian'}
+};
+
+function init() {
+  apiKey = localStorage.getItem('cv_k') || '';
+  targetLang = localStorage.getItem('cv_l') || 'tr';
+  favorites = JSON.parse(localStorage.getItem('cv_f') || '[]');
+  if (apiKey) showMain();
+}
+
+function showMain() {
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('mainUI').style.display = 'flex';
+  document.getElementById('mainUI').style.flexDirection = 'column';
+  document.getElementById('settingsBtn').style.display = 'flex';
+  updateLangUI(); renderFavs();
+}
+
+function updateLangUI() {
+  const l = LM[targetLang];
+  document.getElementById('activeLangName').textContent = l.name;
+  document.getElementById('langChip').textContent = '→ ' + targetLang.toUpperCase();
+  document.querySelectorAll('.ql').forEach(b => b.classList.toggle('active', b.dataset.l === targetLang));
+}
+
+function setLang(c, btn) {
+  targetLang = c; localStorage.setItem('cv_l', c); updateLangUI();
+  document.getElementById('inputText').focus();
+}
+
+function saveKey() {
+  const k = document.getElementById('apiKeyInput').value.trim();
+  if (!k) { toast('API anahtarı gir'); return; }
+  apiKey = k; localStorage.setItem('cv_k', k); showMain();
+}
+
+function openSettings() { document.getElementById('sOv').classList.add('open'); }
+function closeSettings() { document.getElementById('sOv').classList.remove('open'); }
+
+function updateKey() {
+  const k = document.getElementById('newKey').value.trim();
+  if (!k) { toast('Boş olamaz'); return; }
+  apiKey = k; localStorage.setItem('cv_k', k); closeSettings(); toast('Güncellendi ✓');
+}
+
+function deleteKey() {
+  ['cv_k','cv_l','cv_f'].forEach(k => localStorage.removeItem(k));
+  location.reload();
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doTranslate(); }
+}
+
+async function doTranslate() {
+  if (busy) return;
+  let raw = document.getElementById('inputText').value.trim();
+  if (!raw) return;
+
+  // Detect lang command prefix: "en ...", "ua ...", etc.
+  const m = raw.match(/^(en|ru|ua|tr)\s+(.+)/is);
+  if (m) {
+    targetLang = m[1].toLowerCase();
+    raw = m[2].trim();
+    localStorage.setItem('cv_l', targetLang);
+    updateLangUI();
+  }
+
+  const inputEl = document.getElementById('inputText');
+  inputEl.value = ''; inputEl.style.height = 'auto';
+  setLoading(true);
+
+  const es = document.getElementById('emptyState');
+  if (es) es.remove();
+
+  const lid = 'l' + Date.now();
+  addLoadingBubble(raw, lid);
+
+  const tl = LM[targetLang];
+
+  const prompt = `Sen akıllı bir kişisel çeviri asistanısın.
+Kurallar:
+- Metnin GERÇEK NİYETİNİ anla. Yazım hatalarını, eksik kelimeleri, bozuk cümleleri düzelt.
+- ${tl.full} dilinde, o dili anadili olarak konuşan biri gibi doğal ve akıcı çevir.
+- Tonu otomatik algıla (samimi, flörtöz, nazik, resmi) ve çeviride aynı tonu kullan.
+
+SADECE şu 4 satırı yaz, başka hiçbir şey yazma, etiket veya numara kullanma:
+[1. satır] ${tl.full} dilinde ana çeviri
+[2. satır] ${targetLang==='tr' ? 'Ana çevirinin aynısını tekrar yaz' : 'Çevirinin tam Türkçe anlamı'}
+[3. satır] Kaynak dilin adı Türkçe olarak (örn: Türkçe, Rusça, Ukraynaca)
+[4. satır] Ton etiketi Türkçe olarak (örn: samimi, resmi, flörtöz, nazik)
+
+Kullanıcı metni: ${raw}`;
+
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'HTTP-Referer': window.location.href,
+        'X-Title': 'ceviri'
+      },
+      body: JSON.stringify({
+        model: 'openrouter/auto',
+        messages:[{role:'user', content: prompt}],
+        temperature: 0.35,
+        max_tokens: 2000
+      })
+    });
+    if (!res.ok) { const e=await res.json(); throw new Error(e.error?.message||'API hatası'); }
+    const data = await res.json();
+    let txt = data.choices?.[0]?.message?.content || '';
+    // Parse plain text response (4 lines)
+    const lines = txt.trim().split('\n')
+      .map(l => l.replace(/^\[?\d+\.?\s*satır\]?\s*/i,'').replace(/^(line\s*\d+:?\s*)/i,'').trim())
+      .filter(l => l);
+    const parsed = {
+      out:  lines[0] || txt,
+      back: lines[1] || null,
+      src:  lines[2] || '?',
+      tone: lines[3] || '',
+      v: []
+    };
+    replaceBubble(lid, raw, parsed);
+  } catch(e) {
+    removeEl(lid); toast('Hata: '+e.message);
+  } finally { setLoading(false); }
+}
+
+function addLoadingBubble(inputTxt, id) {
+  const h = document.getElementById('hist');
+  const d = document.createElement('div');
+  d.className='bubble'; d.id=id;
+  d.innerHTML=`<div class="b-in">${esc(inputTxt)}</div>
+    <div class="load-bub" style="margin-top:4px">
+      <div class="dot-a"></div><div class="dot-a"></div><div class="dot-a"></div>
+    </div>`;
+  h.appendChild(d); h.scrollTop=h.scrollHeight;
+}
+
+function replaceBubble(id, inputTxt, p) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const tl = LM[targetLang];
+  const hasBack = p.back && targetLang !== 'tr';
+  const bid = 'b'+Date.now();
+  let variants = '';
+  if (p.v && p.v.length) {
+    variants = `<div class="variants">` +
+      p.v.map(v=>`<div class="v-item" onclick="copyD('${ea(v.t)}')">
+        <div class="v-text">${esc(v.t)}</div>
+        <div class="v-lbl">${esc(v.l)}</div>
+      </div>`).join('') + `</div>`;
+  }
+  el.innerHTML=`
+    <div class="b-in">${esc(inputTxt)}</div>
+    <div class="b-out">
+      <div class="b-main">${esc(p.out)}</div>
+      ${hasBack?`<div class="b-back">↳ ${esc(p.back)}</div>`:''}
+      <div class="b-meta">
+        <div class="b-tags">
+          <span class="tag tag-l">${esc(tl.full)}</span>
+          ${p.tone?`<span class="tag tag-t">${esc(p.tone)}</span>`:''}
+          ${p.src?`<span class="tag tag-s">${esc(p.src)}</span>`:''}
+        </div>
+        <button class="copy-btn" id="${bid}" onclick="copyBubble('${ea(p.out)}','${bid}')">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+      ${variants}
+    </div>`;
+  const h=document.getElementById('hist'); h.scrollTop=h.scrollHeight;
+}
+
+function removeEl(id) { const e=document.getElementById(id); if(e) e.remove(); }
+
+async function copyBubble(txt, bid) {
+  await cp(txt);
+  const b=document.getElementById(bid); if(!b) return;
+  b.classList.add('ok');
+  b.innerHTML='<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+  setTimeout(()=>{b.classList.remove('ok');b.innerHTML='<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';},1800);
+}
+
+async function copyD(txt) { await cp(txt); }
+
+async function cp(txt) {
+  try { await navigator.clipboard.writeText(txt); toast('Kopyalandı ✓'); }
+  catch { toast('Kopyalanamadı'); }
+}
+
+function toggleFav() {
+  const inp = document.getElementById('inputText').value.trim();
+  if (inp) {
+    if (!favorites.includes(inp)) {
+      favorites.unshift(inp); if(favorites.length>20) favorites.pop();
+      localStorage.setItem('cv_f', JSON.stringify(favorites));
+      renderFavs(); toast('Favorilere eklendi ★');
+      const fb=document.getElementById('favBtn'); fb.classList.add('on');
+      setTimeout(()=>fb.classList.remove('on'),1500);
+    } else toast('Zaten favoride');
+  } else {
+    showFavs=!showFavs;
+    document.getElementById('favSec').style.display = showFavs && favorites.length ? 'flex':'none';
+    document.getElementById('favBtn').classList.toggle('on', showFavs);
+  }
+}
+
+function renderFavs() {
+  const list=document.getElementById('favList');
+  list.innerHTML=favorites.map((f,i)=>`
+    <div class="fav-item">
+      <div class="fav-txt" onclick="useFav('${ea(f)}')">${esc(f)}</div>
+      <div class="fav-x" onclick="delFav(${i})">×</div>
+    </div>`).join('');
+  if(!favorites.length){ document.getElementById('favSec').style.display='none'; showFavs=false; document.getElementById('favBtn').classList.remove('on'); }
+}
+
+function useFav(txt) {
+  const el=document.getElementById('inputText'); el.value=txt; autoResize(el); el.focus();
+}
+
+function delFav(i) {
+  favorites.splice(i,1); localStorage.setItem('cv_f',JSON.stringify(favorites)); renderFavs();
+}
+
+function setLoading(v) {
+  busy=v;
+  document.getElementById('sendBtn').disabled=v;
+  document.getElementById('si').classList.toggle('h',v);
+  document.getElementById('sp').classList.toggle('s',v);
+}
+
+function toast(msg) {
+  const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function ea(s){ return String(s||'').replace(/'/g,"\\'").replace(/\n/g,' '); }
+
+init();
+</script>
+</body>
+</html>
