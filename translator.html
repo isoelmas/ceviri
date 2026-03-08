@@ -371,9 +371,12 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar20-20</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar20-35</div>
     <div class="hdr-r">
-      <div class="lang-chip" id="langChip" onclick="toggleReverse()" style="cursor:pointer;user-select:none;" title="Yönü değiştir">→ TR</div>
+      <div class="lang-chip" id="langChip">→ TR</div>
+      <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      </button>
       <button class="icon-btn" id="settingsBtn" onclick="openSettings()" style="display:none">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="3"/>
@@ -490,37 +493,26 @@ function showMain() {
   document.getElementById('mainUI').style.display = 'flex';
   document.getElementById('mainUI').style.flexDirection = 'column';
   document.getElementById('settingsBtn').style.display = 'flex';
+  document.getElementById('clearBtn').style.display = 'flex';
   updateLangUI(); renderFavs();
 }
 
 function updateLangUI() {
   const l = LM[targetLang];
-  const chip = document.getElementById('langChip');
-  const langBar = document.getElementById('activeLangName');
-  if (reverseLang && targetLang !== 'tr') {
-    langBar.textContent = l.name + ' → Türkçe';
-    chip.textContent = targetLang.toUpperCase() + ' → TR';
-    chip.style.background = 'rgba(45,125,120,0.12)';
-    chip.style.color = 'var(--teal)';
-  } else {
-    langBar.textContent = l.name;
-    chip.textContent = '→ ' + targetLang.toUpperCase();
-    chip.style.background = '';
-    chip.style.color = '';
-  }
+  document.getElementById('activeLangName').textContent = l.name;
+  document.getElementById('langChip').textContent = '→ ' + targetLang.toUpperCase();
   document.querySelectorAll('.ql').forEach(b => b.classList.toggle('active', b.dataset.l === targetLang));
 }
 
 function setLang(c, btn) {
-  targetLang = c; reverseLang = false; localStorage.setItem('cv_l', c); updateLangUI();
+  targetLang = c; localStorage.setItem('cv_l', c); updateLangUI();
   document.getElementById('inputText').focus();
 }
 
-function toggleReverse() {
-  if (targetLang === 'tr') return; // can't reverse TR→TR
-  reverseLang = !reverseLang;
-  updateLangUI();
-  toast(reverseLang ? targetLang.toUpperCase() + ' → Türkçe modu' : 'Türkçe → ' + targetLang.toUpperCase() + ' modu');
+function clearHistory() {
+  if (!confirm('Tüm mesaj geçmişi silinecektir. Emin misiniz?')) return;
+  document.getElementById('hist').innerHTML = '<div class="empty-st" id="emptyState"><div class="empty-icon">✦</div><div class="empty-t">Hazır</div><div class="empty-s">Bir şeyler yaz, çevirelim.<br>en / ru / ua ile dil değiştir.</div></div>';
+  toast('Geçmiş silindi');
 }
 
 function saveKey() {
@@ -577,9 +569,6 @@ async function doTranslate() {
   addLoadingBubble(raw, lid);
 
   const tl = LM[targetLang];
-  const effectiveSrcLang = reverseLang ? tl.full : 'Turkish';
-  const effectiveTgtLang = reverseLang ? 'Turkish' : tl.full;
-  const effectiveTgtLangTR = reverseLang ? 'Türkçe' : tl.name;
 
   const prompt = `Sen yüksek sadakatli bir çeviri motorusun.
 
@@ -750,14 +739,8 @@ function replaceBubble(id, inputTxt, p) {
   const el = document.getElementById(id);
   if (!el) return;
   const tl = LM[targetLang];
-  const effectiveSrcLang = reverseLang ? tl.full : 'Turkish';
-  const effectiveTgtLang = reverseLang ? 'Turkish' : tl.full;
-  const effectiveTgtLangTR = reverseLang ? 'Türkçe' : tl.name;
   const hasBack = p.back && targetLang !== 'tr';
   const hasWarning = p.warning;
-  // Source lang from model, target lang from button selection
-  const srcLangName = (p.src && p.src.length < 25 && p.src.split(' ').length <= 2) ? p.src : '?';
-  const tgtLangName = reverseLang ? 'Türkçe' : tl.name;
   const bid = 'b'+Date.now();
   let variants = '';
   if (p.v && p.v.length) {
@@ -775,7 +758,7 @@ function replaceBubble(id, inputTxt, p) {
       ${hasWarning?`<div style="margin-top:6px;padding:6px 10px;background:rgba(196,92,92,0.08);border:1px solid rgba(196,92,92,0.2);border-radius:8px;font-size:11px;color:#c45c5c;">⚠️ ${esc(p.warning)}</div>`:''}
       <div class="b-meta">
         <div class="b-tags">
-          <span class="tag tag-l">${esc(srcLangName)} → ${esc(tgtLangName)}</span>
+          <span class="tag tag-l">${esc(tl.name)}</span>
           ${p.tone?`<span class="tag tag-t">${esc(p.tone)}</span>`:''}
           ${p.model?`<span class="tag tag-s">${esc(p.model)}</span>`:''}
           ${p.validated===true
