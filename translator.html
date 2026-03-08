@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar19-30</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar19-45</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="settingsBtn" onclick="openSettings()" style="display:none">
@@ -662,6 +662,7 @@ JSON:
 
     // STEP 2: Validator
     let validationWarning = null;
+    let validatorRan = false;
     try {
       const vres = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method:'POST',
@@ -678,7 +679,7 @@ JSON:
           max_tokens: 300
         })
       });
-      if (vres.ok) {
+      if (vres.ok) { validatorRan = true;
         const vdata = await vres.json();
         const vtxt = vdata.choices?.[0]?.message?.content || '';
         const vjm = vtxt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
@@ -706,6 +707,7 @@ JSON:
 
     parsed.warning = validationWarning;
     parsed.model = data._usedModel ? data._usedModel.split('/').pop().replace(':free','') : null;
+    parsed.validated = validatorRan ? (validationWarning === null) : null;
     replaceBubble(lid, raw, parsed);
   } catch(e) {
     removeEl(lid); toast('Hata: '+e.message);
@@ -746,10 +748,14 @@ function replaceBubble(id, inputTxt, p) {
       ${hasWarning?`<div style="margin-top:6px;padding:6px 10px;background:rgba(196,92,92,0.08);border:1px solid rgba(196,92,92,0.2);border-radius:8px;font-size:11px;color:#c45c5c;">⚠️ ${esc(p.warning)}</div>`:''}
       <div class="b-meta">
         <div class="b-tags">
-          <span class="tag tag-l">${esc(tl.full)}</span>
-          ${p.model ? `<span class="tag" style="background:rgba(26,26,36,0.06);color:var(--muted);border:1px solid var(--muted2);font-size:8px;">${esc(p.model)}</span>` : ''}
+          <span class="tag tag-l">${esc(p.src||'?')} → ${esc(tl.full)}</span>
           ${p.tone?`<span class="tag tag-t">${esc(p.tone)}</span>`:''}
-          ${p.src?`<span class="tag tag-s">${esc(p.src)}</span>`:''}
+          ${p.model?`<span class="tag tag-s">${esc(p.model)}</span>`:''}
+          ${p.validated===true
+            ? `<span class="tag" style="background:rgba(45,125,120,0.1);color:var(--teal);border:1px solid rgba(45,125,120,0.3);">✓ doğrulandı</span>`
+            : p.validated===false
+              ? `<span class="tag" style="background:rgba(201,168,76,0.1);color:#9a7a20;border:1px solid rgba(201,168,76,0.3);">~ doğrulanamadı</span>`
+              : ''}
         </div>
         <button class="copy-btn" id="${bid}" onclick="copyBubble('${ea(p.out)}','${bid}')">
           <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
