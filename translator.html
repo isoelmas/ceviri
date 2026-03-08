@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar20-35</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar20-40</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
@@ -668,7 +668,10 @@ JSON:
       parsed.v = [];
     }
     parsed.out = parsed.out || parsed.translation || txt;
-    parsed.back = parsed.back || null;
+    parsed.back = parsed.back || parsed.back_translation_tr || null;
+    // DEBUG: log raw API response
+    console.log('RAW API TXT:', txt);
+    console.log('PARSED:', JSON.stringify({translation: parsed.out, back: parsed.back, src: parsed.src, tone: parsed.tone}));
 
     // STEP 2: Validator
     let validationWarning = null;
