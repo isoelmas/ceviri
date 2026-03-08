@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar19-20</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar19-30</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="settingsBtn" onclick="openSettings()" style="display:none">
@@ -639,7 +639,7 @@ JSON:
             max_tokens: 2000
           })
         });
-        if (res.ok) { data = await res.json(); break; }
+        if (res.ok) { data = await res.json(); data._usedModel = model; break; }
         const e = await res.json();
         lastError = e.error?.message || 'API hatası';
       } catch(e) { lastError = e.message; }
@@ -705,6 +705,7 @@ JSON:
     } catch(e) { /* validator hatası sessizce geç */ }
 
     parsed.warning = validationWarning;
+    parsed.model = data._usedModel ? data._usedModel.split('/').pop().replace(':free','') : null;
     replaceBubble(lid, raw, parsed);
   } catch(e) {
     removeEl(lid); toast('Hata: '+e.message);
@@ -746,6 +747,7 @@ function replaceBubble(id, inputTxt, p) {
       <div class="b-meta">
         <div class="b-tags">
           <span class="tag tag-l">${esc(tl.full)}</span>
+          ${p.model ? `<span class="tag" style="background:rgba(26,26,36,0.06);color:var(--muted);border:1px solid var(--muted2);font-size:8px;">${esc(p.model)}</span>` : ''}
           ${p.tone?`<span class="tag tag-t">${esc(p.tone)}</span>`:''}
           ${p.src?`<span class="tag tag-s">${esc(p.src)}</span>`:''}
         </div>
