@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar20-50</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar21-05</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
@@ -584,7 +584,7 @@ ZORUNLU KURALLAR:
 7. Metindeki ton samimi / resmi / nötr ise bunu koru; tonu güçlendirme veya abartma.
 8. Belirsiz bir ifade varsa onu açıklamaya çalışma, belirsizliği koru.
 9. Metafor, övgü, duygusal yükseltme ve ima eklemek kesinlikle yasaktır.
-10. Sözlük karşılığı değil, bağlama en uygun doğal karşılığı seç. Özellikle günlük konuşma dili ve sokak dilinde literal ama yapay kelimelerden kaçın. Hedef dilde gerçek hayatta en doğal duyulan seçeneği tercih et.
+10. Kelime kelime en yakın sözlük karşılığını değil, bağlama en uygun doğal karşılığı seç. Günlük konuşma dili, sokak dili ve sosyal ifadelerde pragmatik eşdeğerliği tercih et. Örnek: "sakıncalı kimse" bağlama göre "someone suspicious" veya "someone questionable" olabilir, mekanik "problematic person" değil.
 
 ÖRNEK HATALI DAVRANIŞ:
 Kaynak: "Çok basit, birkaç HTML kodu ile harikalar yaratabiliyorsun."
@@ -593,9 +593,19 @@ Neden hatalı: Kaynakta olmayan "волшебник" (sihirbaz) övgüsü ve öz
 Doğru: Kaynaktaki ifadeyi olduğu gibi çevir, ekleme yapma.
 
 Sadece aşağıdaki JSON formatında cevap ver, başka hiçbir şey yazma:
-{"translation":"${tl.full} dilinde çeviri","back":"${targetLang==='tr' ? 'çevirinin aynısı' : 'Türkçe anlamı'}","src":"kaynak dil Türkçe olarak","tone":"ton Türkçe olarak"}
+{"translation":"${tl.full} dilinde çeviri","src":"kaynak dil Türkçe olarak","tone":"ton Türkçe olarak"}
 
 Kullanıcı metni: ${raw}`;
+
+  const backPrompt = (translatedText) => `Aşağıdaki ${tl.full} metnini Türkçeye çevir.
+
+KURALLAR:
+- Sadece verilen metni çevir, başka hiçbir şey ekleme.
+- Kaynak metnin ne olduğunu bilmiyorsun, sadece bu ${tl.full} metni var.
+- Kelimesi kelimesine değil, doğal Türkçeyle çevir.
+- Tek satır, sadece çeviri, açıklama yok.
+
+Metin: \${translatedText}`;
 
   const validatorPrompt = (src, translation) => `Sen bir translation fidelity validator'sün.
 
@@ -672,7 +682,32 @@ JSON:
       parsed.v = [];
     }
     parsed.out = parsed.out || parsed.translation || txt;
-    parsed.back = parsed.back || parsed.back_translation_tr || null;
+    parsed.back = null;
+
+    // STEP 1.5: Separate back translation call (only if not TR target)
+    if (targetLang !== 'tr' && parsed.out) {
+      try {
+        const bres = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+            'HTTP-Referer': window.location.href,
+            'X-Title': 'ceviri'
+          },
+          body: JSON.stringify({
+            model: 'openrouter/auto',
+            messages:[{role:'user', content: backPrompt(parsed.out)}],
+            temperature: 0.1,
+            max_tokens: 500
+          })
+        });
+        if (bres.ok) {
+          const bdata = await bres.json();
+          parsed.back = bdata.choices?.[0]?.message?.content?.trim() || null;
+        }
+      } catch(e) { /* back translation failed silently */ }
+    }
 
     // STEP 2: Validator
     let validationWarning = null;
@@ -762,7 +797,7 @@ function replaceBubble(id, inputTxt, p) {
       ${hasWarning?`<div style="margin-top:6px;padding:6px 10px;background:rgba(196,92,92,0.08);border:1px solid rgba(196,92,92,0.2);border-radius:8px;font-size:11px;color:#c45c5c;">⚠️ ${esc(p.warning)}</div>`:''}
       <div class="b-meta">
         <div class="b-tags">
-          <span class="tag tag-l">${esc(tl.name)}</span>
+          <span class="tag tag-l">→ ${esc(tl.name)}</span>
           ${p.tone?`<span class="tag tag-t">${esc(p.tone)}</span>`:''}
           ${p.model?`<span class="tag tag-s">${esc(p.model)}</span>`:''}
           ${p.validated===true
