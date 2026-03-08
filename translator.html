@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar19-05</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">8mar19-20</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="settingsBtn" onclick="openSettings()" style="display:none">
@@ -612,25 +612,39 @@ JSON:
 {"pass":true,"errors":[],"severity":"none","notes":""}`;
 
   try {
-    // STEP 1: Translation
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': window.location.href,
-        'X-Title': 'ceviri'
-      },
-      body: JSON.stringify({
-        model: 'google/gemma-3-27b-it:free',
-        messages:[{role:'user', content: prompt}],
-        temperature: 0.1,
-        top_p: 0.5,
-        max_tokens: 2000
-      })
-    });
-    if (!res.ok) { const e=await res.json(); throw new Error(e.error?.message||'API hatası'); }
-    const data = await res.json();
+    // STEP 1: Translation with fallback
+    const MODELS = [
+      'qwen/qwen3-next-80b-a3b-instruct:free',
+      'openai/gpt-oss-20b:free',
+      'openrouter/auto'
+    ];
+
+    let data = null;
+    let lastError = null;
+    for (const model of MODELS) {
+      try {
+        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+            'HTTP-Referer': window.location.href,
+            'X-Title': 'ceviri'
+          },
+          body: JSON.stringify({
+            model: model,
+            messages:[{role:'user', content: prompt}],
+            temperature: 0.1,
+            top_p: 0.5,
+            max_tokens: 2000
+          })
+        });
+        if (res.ok) { data = await res.json(); break; }
+        const e = await res.json();
+        lastError = e.error?.message || 'API hatası';
+      } catch(e) { lastError = e.message; }
+    }
+    if (!data) throw new Error(lastError || 'Tüm modeller başarısız');
     let txt = data.choices?.[0]?.message?.content || '';
     let parsed;
     try {
