@@ -330,6 +330,27 @@ body {
 .spr { width:16px; height:16px; border:2px solid rgba(245,243,238,0.3); border-top-color:var(--paper); border-radius:50%; animation:spin .7s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
 
+
+.opt-row {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding: 12px 0; border-top: 1px solid var(--paper3);
+}
+.opt-copy { display:flex; flex-direction:column; gap:2px; }
+.opt-t { font-size:13px; font-weight:600; color:var(--ink); }
+.opt-s { font-size:11px; color:var(--muted); line-height:1.45; }
+.mini-toggle {
+  min-width: 74px; height: 34px; border-radius: 999px; border:1px solid var(--muted2);
+  background: var(--paper2); color: var(--muted); font-family:'IBM Plex Mono', monospace;
+  font-size:10px; letter-spacing:0.4px; text-transform:uppercase; cursor:pointer;
+}
+.mini-toggle.on { background: rgba(45,125,120,0.1); color: var(--teal); border-color: rgba(45,125,120,0.28); }
+.b-stage {
+  font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.35px;
+  text-transform:uppercase; color:var(--muted); margin-top:8px;
+}
+.b-main.pending { opacity:0.72; }
+.b-back.pending { color: rgba(26,26,36,0.34); }
+
 /* Settings sheet */
 .s-ov { display:none; position:fixed; inset:0; background:rgba(26,26,36,0.5); z-index:100; backdrop-filter:blur(4px); }
 .s-ov.open { display:block; }
@@ -371,7 +392,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar10-40</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar10-50</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
@@ -465,14 +486,29 @@ body {
     <div class="sh-lbl">API Anahtarı</div>
     <input type="password" class="field" id="newKey" placeholder="Yeni anahtar..." style="margin-bottom:12px">
     <button class="primary-btn" onclick="updateKey()" style="margin-bottom:8px">Güncelle</button>
-    <button class="danger-btn" onclick="deleteKey()">Anahtarı Sil &amp; Sıfırla</button>
+    <button class="danger-btn" onclick="deleteKey()" style="margin-bottom:12px">Anahtarı Sil &amp; Sıfırla</button>
+    <div class="opt-row">
+      <div class="opt-copy">
+        <div class="opt-t">Geri çeviri</div>
+        <div class="opt-s">Çevirinin Türkçeye geri dönüşünü her kartta göster.</div>
+      </div>
+      <button class="mini-toggle" id="btToggle" onclick="toggleBackOption()">Açık</button>
+    </div>
+    <div class="opt-row">
+      <div class="opt-copy">
+        <div class="opt-t">Doğrulayıcı</div>
+        <div class="opt-s">Geri çeviri geldikten sonra anlam kontrolü yap.</div>
+      </div>
+      <button class="mini-toggle" id="valToggle" onclick="toggleValidatorOption()">Açık</button>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-let apiKey = '', targetLang = 'tr', favorites = [], showFavs = false, busy = false, convHistory = [];
+let apiKey = '', targetLang = 'tr', favorites = [], showFavs = false, busy = false, convHistory = [], bubbleState = [];
+let showBackTranslation = true, useValidator = true;
 
 const LM = {
   tr:{name:'Türkçe',full:'Turkish'},
@@ -485,6 +521,8 @@ function init() {
   apiKey = localStorage.getItem('cv_k') || '';
   targetLang = localStorage.getItem('cv_l') || 'tr';
   favorites = JSON.parse(localStorage.getItem('cv_f') || '[]');
+  showBackTranslation = localStorage.getItem('cv_bt') !== '0';
+  useValidator = localStorage.getItem('cv_val') !== '0';
   if (apiKey) showMain();
 }
 
@@ -494,7 +532,7 @@ function showMain() {
   document.getElementById('mainUI').style.flexDirection = 'column';
   document.getElementById('settingsBtn').style.display = 'flex';
   document.getElementById('clearBtn').style.display = 'flex';
-  updateLangUI(); renderFavs();
+  updateLangUI(); renderFavs(); renderSettingsToggles();
 }
 
 function updateLangUI() {
@@ -532,8 +570,35 @@ function updateKey() {
 }
 
 function deleteKey() {
-  ['cv_k','cv_l','cv_f'].forEach(k => localStorage.removeItem(k));
+  ['cv_k','cv_l','cv_f','cv_bt','cv_val'].forEach(k => localStorage.removeItem(k));
   location.reload();
+}
+
+function renderSettingsToggles() {
+  const bt = document.getElementById('btToggle');
+  const vt = document.getElementById('valToggle');
+  if (bt) {
+    bt.textContent = showBackTranslation ? 'Açık' : 'Kapalı';
+    bt.classList.toggle('on', showBackTranslation);
+  }
+  if (vt) {
+    vt.textContent = useValidator ? 'Açık' : 'Kapalı';
+    vt.classList.toggle('on', useValidator);
+  }
+}
+
+function toggleBackOption() {
+  showBackTranslation = !showBackTranslation;
+  localStorage.setItem('cv_bt', showBackTranslation ? '1' : '0');
+  renderSettingsToggles();
+  toast(showBackTranslation ? 'Geri çeviri açık' : 'Geri çeviri kapalı');
+}
+
+function toggleValidatorOption() {
+  useValidator = !useValidator;
+  localStorage.setItem('cv_val', useValidator ? '1' : '0');
+  renderSettingsToggles();
+  toast(useValidator ? 'Doğrulayıcı açık' : 'Doğrulayıcı kapalı');
 }
 
 function autoResize(el) {
@@ -550,7 +615,6 @@ async function doTranslate() {
   let raw = document.getElementById('inputText').value.trim();
   if (!raw) return;
 
-  // Detect lang command prefix: "en ...", "ua ...", etc.
   const m = raw.match(/^(en|ru|ua|tr)\s+(.+)/is);
   if (m) {
     targetLang = m[1].toLowerCase();
@@ -567,19 +631,27 @@ async function doTranslate() {
   if (es) es.remove();
 
   const lid = 'l' + Date.now();
-  addLoadingBubble(raw, lid);
-
   const currentTargetLang = targetLang;
   const tl = LM[currentTargetLang];
+  bubbleState[lid] = {
+    out: '', back: null, src: '?', tone: '', warning: null,
+    model: 'deepseek-chat', targetLang: currentTargetLang,
+    validated: useValidator ? 'pending' : null,
+    validatorEnabled: useValidator,
+    backEnabled: showBackTranslation && currentTargetLang !== 'tr',
+    statusLine: 'Çeviri akıyor…',
+    translationPending: true,
+    backPending: false
+  };
+  addLoadingBubble(raw, lid);
 
-  // Build conversation context (last 3 pairs)
   const ctxLines = convHistory.slice(-3).map(h => `[Kaynak]: ${h.src}\n[Çeviri]: ${h.tgt}`).join('\n');
   const contextBlock = ctxLines ? `\nSOHBET BAĞLAMI (sadece referans, çeviri yapma):\n${ctxLines}\n` : '';
 
   const prompt = `Sen yüksek sadakatli bir çeviri motorusun.
 
 GÖREV: Verilen metni ${tl.full} diline doğal ve akıcı şekilde çevir.${contextBlock}
-BAĞLAM KULLANIM KURALI: Sohbet bağlamı varsa, kısa ve belirsiz ifadelerin (tamam, olur, boşver, sonra konuşuruz gibi) tonunu ve anlamını doğru anlamak için kullan. Ama bağlamı çeviriye yansıtma — sadece kelime seçimini ve tonu iyileştirmek için kullan.
+BAĞLAM KULLANIM KURALI: Sohbet bağlamı varsa, kısa ve belirsiz ifadelerin tonunu ve anlamını doğru anlamak için kullan. Ama bağlamı çeviriye yansıtma — sadece kelime seçimini ve tonu iyileştirmek için kullan.
 
 ZORUNLU KURALLAR:
 1. Kaynak metindeki anlamı koru.
@@ -591,16 +663,12 @@ ZORUNLU KURALLAR:
 7. Metindeki ton samimi / resmi / nötr ise bunu koru; tonu güçlendirme veya abartma.
 8. Belirsiz bir ifade varsa onu açıklamaya çalışma, belirsizliği koru.
 9. Metafor, övgü, duygusal yükseltme ve ima eklemek kesinlikle yasaktır.
-10. Kelime kelime en yakın sözlük karşılığını değil, bağlama en uygun doğal karşılığı seç. Günlük konuşma dili, sokak dili ve sosyal ifadelerde pragmatik eşdeğerliği tercih et. Örnek: "sakıncalı kimse" bağlama göre "someone suspicious" veya "someone questionable" olabilir, mekanik "problematic person" değil.
+10. Kelime kelime en yakın sözlük karşılığını değil, bağlama en uygun doğal karşılığı seç.
 
-ÖRNEK HATALI DAVRANIŞ:
-Kaynak: "Çok basit, birkaç HTML kodu ile harikalar yaratabiliyorsun."
-Hatalı: "Ты настоящий волшебник, с помощью нескольких строк HTML кода творишь чудеса."
-Neden hatalı: Kaynakta olmayan "волшебник" (sihirbaz) övgüsü ve özne eklendi.
-Doğru: Kaynaktaki ifadeyi olduğu gibi çevir, ekleme yapma.
-
-Sadece aşağıdaki JSON formatında cevap ver, başka hiçbir şey yazma:
-{"translation":"${tl.full} dilinde çeviri","src":"kaynak dil Türkçe olarak","tone":"ton Türkçe olarak"}
+Aşağıdaki formatın dışına çıkma:
+<translation>hedef dilde doğal çeviri</translation>
+<src>kaynak dil Türkçe olarak</src>
+<tone>ton Türkçe olarak</tone>
 
 Kullanıcı metni: ${raw}`;
 
@@ -630,7 +698,7 @@ NOT OLARAK GEÇ (tek başına fail sebebi değildir):
 - GRAMMAR_ONLY_NORMALIZATION: Sadece yazım veya küçük dilbilgisi düzeltmesi yapılmış.
 
 KURALLAR:
-1. Kısa selamlaşmalar, doğal eşdeğerler ve hedef dildeki normal ifade farkları hata değildir. Örnek: "Merhaba" → "Hello" geçerlidir.
+1. Kısa selamlaşmalar, doğal eşdeğerler ve hedef dildeki normal ifade farkları hata değildir.
 2. Sadece gerçek anlam ekleme, eksiltme veya çarpıtma varsa fail ver.
 3. Geri çeviri kaynak anlamı koruyorsa bunu güçlü olumlu sinyal say.
 4. Ton farkı küçükse notes alanına yaz ama pass=false yapma.
@@ -644,81 +712,47 @@ JSON:
 {"pass":true,"errors":[],"severity":"none","notes":""}`;
 
   try {
-    // STEP 1: Translation with fallback
-    const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        messages:[{role:'user', content: prompt}],
-        temperature: 0.1,
-        max_tokens: 2000
-      })
-    });
-    if (!res.ok) { const e=await res.json(); throw new Error(e.error?.message||'API hatası'); }
-    let data = await res.json();
-    data._usedModel = 'deepseek-chat';
-    let txt = data.choices?.[0]?.message?.content || '';
-    let parsed;
-    try {
-      const clean = txt.replace(/```json|```/g,'').trim();
-      const jm = clean.match(/\{[\s\S]*\}/);
-      parsed = JSON.parse(jm ? jm[0] : clean);
-      parsed.v = [];
-    } catch { 
-      parsed = {translation: txt, back: null, src: '?', tone: ''};
-      parsed.out = parsed.translation;
-      parsed.v = [];
-    }
-    parsed.out = parsed.out || parsed.translation || txt;
-    parsed.back = null;
-
-    // STEP 1.5: Separate back translation call (only if not TR target)
-    if (currentTargetLang !== 'tr' && parsed.out) {
-      try {
-        const bres = await fetch('https://api.deepseek.com/v1/chat/completions', {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'Authorization': `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            model: 'deepseek-chat',
-            messages:[{role:'user', content: backPrompt(parsed.out)}],
-            temperature: 0.1,
-            max_tokens: 500
-          })
+    const txt = await streamTranslationResponse(prompt, (partialText) => {
+      const partial = extractPartialTranslation(partialText);
+      if (partial) {
+        updateBubbleProgress(lid, raw, {
+          out: partial,
+          statusLine: 'Çeviri akıyor…',
+          translationPending: true
         });
-        if (bres.ok) {
-          const bdata = await bres.json();
-          parsed.back = bdata.choices?.[0]?.message?.content?.trim() || null;
-        }
-      } catch(e) { /* back translation failed silently */ }
+      }
+    });
+
+    let parsed = parseTaggedTranslation(txt);
+    parsed.out = parsed.out || parsed.translation || txt.trim();
+    parsed.back = null;
+    updateBubbleProgress(lid, raw, {
+      out: parsed.out,
+      src: parsed.src,
+      tone: parsed.tone,
+      translationPending: false,
+      statusLine: (showBackTranslation && currentTargetLang !== 'tr') ? 'Geri çeviri hazırlanıyor…' : (useValidator ? 'Doğrulanıyor…' : '')
+    });
+
+    if (showBackTranslation && currentTargetLang !== 'tr' && parsed.out) {
+      updateBubbleProgress(lid, raw, { backPending: true });
+      try {
+        const backTxt = await plainChatCompletion(backPrompt(parsed.out), 500);
+        parsed.back = backTxt.trim() || null;
+      } catch(e) { parsed.back = null; }
+      updateBubbleProgress(lid, raw, {
+        back: parsed.back,
+        backPending: false,
+        statusLine: useValidator ? 'Doğrulanıyor…' : ''
+      });
     }
 
-    // STEP 2: Validator
     let validationWarning = null;
     let validatorRan = false;
-    try {
-      const vres = await fetch('https://api.deepseek.com/v1/chat/completions', {
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages:[{role:'user', content: validatorPrompt(raw, parsed.out, parsed.back, tl.full)}],
-          temperature: 0.1,
-          max_tokens: 300
-        })
-      });
-      if (vres.ok) { validatorRan = true;
-        const vdata = await vres.json();
-        const vtxt = vdata.choices?.[0]?.message?.content || '';
+    if (useValidator) {
+      try {
+        const vtxt = await plainChatCompletion(validatorPrompt(raw, parsed.out, parsed.back, tl.full), 300);
+        validatorRan = true;
         const vjm = vtxt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
         if (vjm) {
           const vresult = JSON.parse(vjm[0]);
@@ -731,40 +765,145 @@ JSON:
               'SUBJECT_INSERTED': 'Kaynakta olmayan özne eklendi'
             };
             const errMsgs = vresult.errors
-.filter(e => !['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e))
+              .filter(e => !['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e))
               .map(e => errorLabels[e] || e);
             if (errMsgs.length > 0) {
               validationWarning = errMsgs.join(' · ') + (vresult.notes ? ' — ' + vresult.notes : '');
-            } else if (vresult.notes) {
-              validationWarning = null;
             }
           }
         }
-      }
-    } catch(e) { /* validator hatası sessizce geç */ }
+      } catch(e) { }
+    }
 
     parsed.warning = validationWarning;
-    parsed.model = data._usedModel ? data._usedModel.split('/').pop().replace(':free','') : null;
+    parsed.model = 'deepseek-chat';
     parsed.targetLang = currentTargetLang;
-    parsed.validated = validatorRan ? (validationWarning === null) : null;
-    // Store in conversation history
+    parsed.validatorEnabled = useValidator;
+    parsed.backEnabled = showBackTranslation && currentTargetLang !== 'tr';
+    parsed.validated = useValidator ? (validatorRan ? (validationWarning === null) : null) : null;
+    parsed.statusLine = '';
+    parsed.translationPending = false;
+    parsed.backPending = false;
+
     convHistory.push({src: raw, tgt: parsed.out});
-    if (convHistory.length > 10) convHistory.shift(); // keep last 10
+    if (convHistory.length > 10) convHistory.shift();
+    bubbleState[lid] = parsed;
     replaceBubble(lid, raw, parsed);
   } catch(e) {
-    removeEl(lid); toast('Hata: '+e.message);
-  } finally { setLoading(false); }
+    removeEl(lid);
+    toast('Hata: ' + e.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function streamTranslationResponse(prompt, onPartial) {
+  const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages:[{role:'user', content: prompt}],
+      temperature: 0.1,
+      max_tokens: 2000,
+      stream: true
+    })
+  });
+  if (!res.ok) {
+    const e = await res.json().catch(()=>({}));
+    throw new Error(e.error?.message || 'API hatası');
+  }
+  if (!res.body) return await plainChatCompletion(prompt, 2000);
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let full = '';
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('data:')) continue;
+      const data = trimmed.slice(5).trim();
+      if (!data || data === '[DONE]') continue;
+      try {
+        const obj = JSON.parse(data);
+        const delta = obj.choices?.[0]?.delta?.content || '';
+        if (delta) {
+          full += delta;
+          if (onPartial) onPartial(full);
+        }
+      } catch(_) {}
+    }
+  }
+  return full;
+}
+
+async function plainChatCompletion(prompt, maxTokens=500) {
+  const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages:[{role:'user', content: prompt}],
+      temperature: 0.1,
+      max_tokens: maxTokens
+    })
+  });
+  if (!res.ok) {
+    const e = await res.json().catch(()=>({}));
+    throw new Error(e.error?.message || 'API hatası');
+  }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || '';
+}
+
+function extractPartialTranslation(text) {
+  const lower = text.toLowerCase();
+  const open = '<translation>';
+  const close = '</translation>';
+  const i = lower.indexOf(open);
+  if (i === -1) return '';
+  const rest = text.slice(i + open.length);
+  const end = rest.toLowerCase().indexOf(close);
+  return (end === -1 ? rest : rest.slice(0, end)).trimStart();
+}
+
+function parseTaggedTranslation(text) {
+  const pick = (tag) => {
+    const m = text.match(new RegExp(`<${tag}>([\s\S]*?)<\/${tag}>`, 'i'));
+    return m ? m[1].trim() : '';
+  };
+  return {
+    translation: pick('translation') || text.trim(),
+    out: pick('translation') || text.trim(),
+    src: pick('src') || '?',
+    tone: pick('tone') || ''
+  };
+}
+
+function updateBubbleProgress(id, inputTxt, patch) {
+  bubbleState[id] = { ...(bubbleState[id] || {}), ...patch };
+  replaceBubble(id, inputTxt, bubbleState[id]);
 }
 
 function addLoadingBubble(inputTxt, id) {
   const h = document.getElementById('hist');
   const d = document.createElement('div');
   d.className='bubble'; d.id=id;
-  d.innerHTML=`<div class="b-in">${esc(inputTxt)}</div>
-    <div class="load-bub" style="margin-top:4px">
-      <div class="dot-a"></div><div class="dot-a"></div><div class="dot-a"></div>
-    </div>`;
   h.appendChild(d); h.scrollTop=h.scrollHeight;
+  replaceBubble(id, inputTxt, bubbleState[id] || {});
 }
 
 function replaceBubble(id, inputTxt, p) {
@@ -772,7 +911,7 @@ function replaceBubble(id, inputTxt, p) {
   if (!el) return;
   const bubbleLang = p.targetLang || targetLang;
   const tl = LM[bubbleLang];
-  const hasBack = p.back && bubbleLang !== 'tr';
+  const hasBack = !!(p.back || p.backPending) && bubbleLang !== 'tr' && p.backEnabled !== false;
   const hasWarning = p.warning;
   const bid = 'b'+Date.now();
   let variants = '';
@@ -783,24 +922,31 @@ function replaceBubble(id, inputTxt, p) {
         <div class="v-lbl">${esc(v.l)}</div>
       </div>`).join('') + `</div>`;
   }
+  const mainText = p.out || '';
+  const stageLine = p.statusLine ? `<div class="b-stage">${esc(p.statusLine)}</div>` : '';
+  const backBlock = hasBack
+    ? `<div class="b-back ${p.backPending ? 'pending' : ''}">↳ ${esc(p.backPending ? 'Geri çeviri hazırlanıyor…' : (p.back || ''))}</div>`
+    : '';
+  const copyDisabled = !mainText;
   el.innerHTML=`
     <div class="b-in">${esc(inputTxt)}</div>
     <div class="b-out">
-      <div class="b-main">${esc(p.out)}</div>
-      ${hasBack?`<div class="b-back">↳ ${esc(p.back)}</div>`:''}
+      <div class="b-main ${p.translationPending ? 'pending' : ''}">${esc(mainText || 'Çeviri hazırlanıyor…')}</div>
+      ${stageLine}
+      ${backBlock}
       ${hasWarning?`<div style="margin-top:6px;padding:6px 10px;background:rgba(196,92,92,0.08);border:1px solid rgba(196,92,92,0.2);border-radius:8px;font-size:11px;color:#c45c5c;">⚠️ ${esc(p.warning)}</div>`:''}
       <div class="b-meta">
         <div class="b-tags">
           <span class="tag tag-l">→ ${esc(tl.name)}</span>
           ${p.tone?`<span class="tag tag-t">${esc(p.tone)}</span>`:''}
           ${p.model?`<span class="tag tag-s">${esc(p.model)}</span>`:''}
-          ${p.validated===true
+          ${p.validatorEnabled===false ? '' : p.validated===true
             ? `<span class="tag" style="background:rgba(45,125,120,0.1);color:var(--teal);border:1px solid rgba(45,125,120,0.3);">✓ doğrulandı</span>`
             : p.validated===false
               ? `<span class="tag" style="background:rgba(201,168,76,0.1);color:#9a7a20;border:1px solid rgba(201,168,76,0.3);">~ doğrulanamadı</span>`
-              : ''}
+              : `<span class="tag" style="background:rgba(26,26,36,0.06);color:var(--muted);border:1px solid var(--muted2);">… doğrulanıyor</span>`}
         </div>
-        <button class="copy-btn" id="${bid}" onclick="copyBubble('${ea(p.out)}','${bid}')">
+        <button class="copy-btn" id="${bid}" onclick="copyBubble('${ea(mainText)}','${bid}')" ${copyDisabled ? 'disabled' : ''}>
           <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
