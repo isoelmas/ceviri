@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar10-00</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar10-30</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
@@ -643,38 +643,22 @@ JSON:
 
   try {
     // STEP 1: Translation with fallback
-    const MODELS = [
-      'qwen/qwen3-next-80b-a3b-instruct:free',
-      'openai/gpt-oss-20b:free',
-      'openrouter/auto'
-    ];
-
-    let data = null;
-    let lastError = null;
-    for (const model of MODELS) {
-      try {
-        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'Authorization': `Bearer ${apiKey}`,
-            'HTTP-Referer': window.location.href,
-            'X-Title': 'ceviri'
-          },
-          body: JSON.stringify({
-            model: model,
-            messages:[{role:'user', content: prompt}],
-            temperature: 0.1,
-            top_p: 0.5,
-            max_tokens: 2000
-          })
-        });
-        if (res.ok) { data = await res.json(); data._usedModel = model; break; }
-        const e = await res.json();
-        lastError = e.error?.message || 'API hatası';
-      } catch(e) { lastError = e.message; }
-    }
-    if (!data) throw new Error(lastError || 'Tüm modeller başarısız');
+    const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages:[{role:'user', content: prompt}],
+        temperature: 0.1,
+        max_tokens: 2000
+      })
+    });
+    if (!res.ok) { const e=await res.json(); throw new Error(e.error?.message||'API hatası'); }
+    let data = await res.json();
+    data._usedModel = 'deepseek-chat';
     let txt = data.choices?.[0]?.message?.content || '';
     let parsed;
     try {
@@ -693,16 +677,14 @@ JSON:
     // STEP 1.5: Separate back translation call (only if not TR target)
     if (targetLang !== 'tr' && parsed.out) {
       try {
-        const bres = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        const bres = await fetch('https://api.deepseek.com/v1/chat/completions', {
           method:'POST',
           headers:{
             'Content-Type':'application/json',
-            'Authorization': `Bearer ${apiKey}`,
-            'HTTP-Referer': window.location.href,
-            'X-Title': 'ceviri'
+            'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            model: 'openrouter/auto',
+            model: 'deepseek-chat',
             messages:[{role:'user', content: backPrompt(parsed.out)}],
             temperature: 0.1,
             max_tokens: 500
@@ -719,16 +701,14 @@ JSON:
     let validationWarning = null;
     let validatorRan = false;
     try {
-      const vres = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const vres = await fetch('https://api.deepseek.com/v1/chat/completions', {
         method:'POST',
         headers:{
           'Content-Type':'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-          'HTTP-Referer': window.location.href,
-          'X-Title': 'ceviri'
+          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: 'google/gemma-3-27b-it:free',
+          model: 'deepseek-chat',
           messages:[{role:'user', content: validatorPrompt(raw, parsed.out)}],
           temperature: 0.1,
           max_tokens: 300
