@@ -384,6 +384,14 @@ body {
   pointer-events:none; white-space:nowrap; z-index:200;
 }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+.retry-btn{border:1px solid rgba(45,125,120,0.22);background:rgba(45,125,120,0.08);color:var(--teal);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer}
+.retry-btn:hover{background:rgba(45,125,120,0.12)}
+.v-detail{margin-top:6px;border:1px solid rgba(196,92,92,0.2);background:rgba(196,92,92,0.08);border-radius:10px;padding:0 10px}
+.v-detail summary{cursor:pointer;list-style:none;padding:8px 0;font-size:11px;color:#c45c5c;font-weight:700}
+.v-detail summary::-webkit-details-marker{display:none}
+.v-body{padding:0 0 8px 0;font-size:11px;color:#9b5f5f;line-height:1.45}
+
 </style>
 </head>
 <body>
@@ -392,7 +400,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar10-50</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar11-10</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
@@ -748,6 +756,8 @@ JSON:
     }
 
     let validationWarning = null;
+    let warningShort = null;
+    let warningDetail = null;
     let validatorRan = false;
     if (useValidator) {
       try {
@@ -764,18 +774,18 @@ JSON:
               'MEANING_DISTORTION': 'Anlam kaydırıldı veya çarpıtıldı',
               'SUBJECT_INSERTED': 'Kaynakta olmayan özne eklendi'
             };
-            const errMsgs = vresult.errors
-              .filter(e => !['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e))
-              .map(e => errorLabels[e] || e);
-            if (errMsgs.length > 0) {
-              validationWarning = errMsgs.join(' · ') + (vresult.notes ? ' — ' + vresult.notes : '');
-            }
+            const summary = summarizeValidation(vresult, errorLabels);
+            validationWarning = summary.detail || summary.short;
+            warningShort = summary.short;
+            warningDetail = summary.detail;
           }
         }
       } catch(e) { }
     }
 
     parsed.warning = validationWarning;
+    parsed.warningShort = warningShort;
+    parsed.warningDetail = warningDetail;
     parsed.model = 'deepseek-chat';
     parsed.targetLang = currentTargetLang;
     parsed.validatorEnabled = useValidator;
@@ -882,17 +892,169 @@ function extractPartialTranslation(text) {
 
 function parseTaggedTranslation(text) {
   const pick = (tag) => {
-    const m = text.match(new RegExp(`<${tag}>([\s\S]*?)<\/${tag}>`, 'i'));
+    const m = text.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, 'i'));
     return m ? m[1].trim() : '';
   };
+  const translation = pick('translation');
   return {
-    translation: pick('translation') || text.trim(),
-    out: pick('translation') || text.trim(),
+    translation: translation || text.trim(),
+    out: translation || text.trim(),
     src: pick('src') || '?',
     tone: pick('tone') || ''
   };
 }
 
+function summarizeValidation(vresult, errorLabels) {
+  const hardErrors = (vresult.errors || []).filter(e => !['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e));
+  const shortText = hardErrors.length ? (errorLabels[hardErrors[0]] || hardErrors[0]) : 'İncelenmesi iyi olur';
+  const detailParts = hardErrors.map(e => errorLabels[e] || e);
+  if (vresult.notes) detailParts.push(vresult.notes);
+  return {
+    short: shortText,
+    detail: detailParts.join(' — ')
+  };
+}
+
+async function retryTranslation(id, inputTxt) {
+  const current = bubbleState[id];
+  if (!current || current.retrying) return;
+  const bubbleLang = current.targetLang || targetLang;
+  const tl = LM[bubbleLang];
+  const feedback = current.warningDetail || current.warning || 'Anlamı daha dikkatli koru.';
+  bubbleState[id] = {
+    ...current,
+    retrying: true,
+    statusLine: 'Çeviri yeniden deneniyor…',
+    validated: current.validatorEnabled === false ? null : 'pending',
+    warning: null,
+    warningShort: null,
+    warningDetail: null
+  };
+  replaceBubble(id, inputTxt, bubbleState[id]);
+
+  const retryPrompt = `Sen yüksek sadakatli bir çeviri motorusun.
+
+GÖREV: Verilen metni ${tl.full} diline yeniden çevir.
+Bu ikinci denemedir. Önceki denemede şu sorun görüldü: ${feedback}
+
+KURALLAR:
+1. Anlamı koru, yeni bilgi ekleme.
+2. Deyimleri literal çevirme.
+3. Belirsizlik varsa koru.
+4. Sadece şu formatta dön:
+<translation>hedef dilde doğal çeviri</translation>
+<src>kaynak dil Türkçe olarak</src>
+<tone>ton Türkçe olarak</tone>
+
+Kullanıcı metni: ${inputTxt}`;
+
+  try {
+    const txt = await streamTranslationResponse(retryPrompt, (partialText) => {
+      const partial = extractPartialTranslation(partialText);
+      if (partial) updateBubbleProgress(id, inputTxt, { out: partial, translationPending: true, statusLine: 'Çeviri yeniden akıyor…' });
+    });
+    let parsed = parseTaggedTranslation(txt);
+    parsed.out = parsed.out || parsed.translation || txt.trim();
+    parsed.back = null;
+    updateBubbleProgress(id, inputTxt, {
+      out: parsed.out,
+      src: parsed.src,
+      tone: parsed.tone,
+      translationPending: false,
+      statusLine: (current.backEnabled && bubbleLang !== 'tr') ? 'Geri çeviri hazırlanıyor…' : (current.validatorEnabled ? 'Doğrulanıyor…' : ''),
+      retrying: true
+    });
+
+    const backPrompt = `Aşağıdaki ${tl.full} metnini Türkçeye çevir.
+
+KURALLAR:
+- Sadece verilen metni çevir, başka hiçbir şey ekleme.
+- Kaynak metnin ne olduğunu bilmiyorsun, sadece bu ${tl.full} metni var.
+- Kelimesi kelimesine değil, doğal Türkçeyle çevir.
+- Tek satır, sadece çeviri, açıklama yok.
+
+Metin: ${parsed.out}`;
+    if (current.backEnabled && bubbleLang !== 'tr' && parsed.out) {
+      updateBubbleProgress(id, inputTxt, { backPending: true });
+      try {
+        parsed.back = (await plainChatCompletion(backPrompt, 500)).trim() || null;
+      } catch(e) { parsed.back = null; }
+      updateBubbleProgress(id, inputTxt, { back: parsed.back, backPending: false, statusLine: current.validatorEnabled ? 'Doğrulanıyor…' : '' });
+    }
+
+    let validationWarning = null, warningShort = null, warningDetail = null, validatorRan = false;
+    if (current.validatorEnabled) {
+      const validatorPrompt = (src, translation, backTranslation, targetLanguage) => `Sen katı değil, dengeli çalışan bir çeviri doğrulayıcısısın.
+
+GÖREV: Kaynak metin, ${targetLanguage} çeviri ve geri çeviriyi birlikte değerlendir. Ana amaç anlamsal sadakati kontrol etmektir.
+
+AĞIR HATALAR (bunlar varsa pass=false):
+- ADDED_CONTENT: Kaynakta olmayan yeni bilgi, övgü, ima, açıklama veya anlam eklenmiş.
+- OMITTED_CONTENT: Kaynağın önemli bir anlam parçası kaybolmuş.
+- MEANING_DISTORTION: Anlam kaymış, yanlış yorumlanmış veya tersine dönmüş.
+- SUBJECT_INSERTED: Kaynakta açık olmayan özne/kişi eklenmiş.
+
+NOT OLARAK GEÇ (tek başına fail sebebi değildir):
+- TONE_SHIFT: Küçük ton farkı var ama ana anlam korunuyor.
+- AWKWARD_WORDING: Anlam doğru ama ifade yapay / fazla literal.
+- GRAMMAR_ONLY_NORMALIZATION: Sadece yazım veya küçük dilbilgisi düzeltmesi yapılmış.
+
+KURALLAR:
+1. Kısa selamlaşmalar, doğal eşdeğerler ve hedef dildeki normal ifade farkları hata değildir.
+2. Sadece gerçek anlam ekleme, eksiltme veya çarpıtma varsa fail ver.
+3. Geri çeviri kaynak anlamı koruyorsa bunu güçlü olumlu sinyal say.
+4. Ton farkı küçükse notes alanına yaz ama pass=false yapma.
+5. Sadece JSON döndür, başka hiçbir şey yazma.
+
+Kaynak: ${src}
+Çeviri (${targetLanguage}): ${translation}
+Geri çeviri (Türkçe): ${backTranslation || 'YOK'}
+
+JSON:
+{"pass":true,"errors":[],"severity":"none","notes":""}`;
+      try {
+        const vtxt = await plainChatCompletion(validatorPrompt(inputTxt, parsed.out, parsed.back, tl.full), 300);
+        validatorRan = true;
+        const vjm = vtxt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
+        if (vjm) {
+          const vresult = JSON.parse(vjm[0]);
+          if (!vresult.pass && vresult.errors && vresult.errors.length > 0) {
+            const errorLabels = {
+              'ADDED_CONTENT': 'Kaynak metinde olmayan içerik eklendi',
+              'OMITTED_CONTENT': 'Kaynak metinden anlam eksiltildi',
+              'TONE_SHIFT': 'Ton gereksiz değiştirildi',
+              'MEANING_DISTORTION': 'Anlam kaydırıldı veya çarpıtıldı',
+              'SUBJECT_INSERTED': 'Kaynakta olmayan özne eklendi'
+            };
+            const summary = summarizeValidation(vresult, errorLabels);
+            validationWarning = summary.detail || summary.short;
+            warningShort = summary.short;
+            warningDetail = summary.detail;
+          }
+        }
+      } catch(e) {}
+    }
+
+    parsed.warning = validationWarning;
+    parsed.warningShort = warningShort;
+    parsed.warningDetail = warningDetail;
+    parsed.model = current.model || 'deepseek-chat';
+    parsed.targetLang = bubbleLang;
+    parsed.validatorEnabled = current.validatorEnabled;
+    parsed.backEnabled = current.backEnabled;
+    parsed.validated = current.validatorEnabled ? (validatorRan ? (validationWarning === null) : null) : null;
+    parsed.statusLine = '';
+    parsed.translationPending = false;
+    parsed.backPending = false;
+    parsed.retrying = false;
+    bubbleState[id] = parsed;
+    replaceBubble(id, inputTxt, parsed);
+  } catch(e) {
+    bubbleState[id] = { ...current, retrying: false, statusLine: '', warning: current.warning, warningShort: current.warningShort, warningDetail: current.warningDetail };
+    replaceBubble(id, inputTxt, bubbleState[id]);
+    toast('Yeniden çeviri hatası: ' + e.message);
+  }
+}
 function updateBubbleProgress(id, inputTxt, patch) {
   bubbleState[id] = { ...(bubbleState[id] || {}), ...patch };
   replaceBubble(id, inputTxt, bubbleState[id]);
@@ -912,8 +1074,9 @@ function replaceBubble(id, inputTxt, p) {
   const bubbleLang = p.targetLang || targetLang;
   const tl = LM[bubbleLang];
   const hasBack = !!(p.back || p.backPending) && bubbleLang !== 'tr' && p.backEnabled !== false;
-  const hasWarning = p.warning;
+  const hasWarning = !!p.warning;
   const bid = 'b'+Date.now();
+  const did = 'd'+Date.now();
   let variants = '';
   if (p.v && p.v.length) {
     variants = `<div class="variants">` +
@@ -928,29 +1091,42 @@ function replaceBubble(id, inputTxt, p) {
     ? `<div class="b-back ${p.backPending ? 'pending' : ''}">↳ ${esc(p.backPending ? 'Geri çeviri hazırlanıyor…' : (p.back || ''))}</div>`
     : '';
   const copyDisabled = !mainText;
+  const warningBlock = hasWarning ? `
+      <details class="v-detail">
+        <summary>⚠️ ${esc(p.warningShort || 'İncelenmesi iyi olur')}</summary>
+        ${p.warningDetail ? `<div class="v-body">${esc(p.warningDetail)}</div>` : ''}
+      </details>` : '';
+  const retryBtn = (p.validated === false && !p.retrying)
+    ? `<button class="retry-btn" onclick="retryTranslation('${id}','${ea(inputTxt)}')">↻ Daha doğru çevir</button>`
+    : '';
+  const retryBadge = p.retrying ? `<span class="tag" style="background:rgba(26,26,36,0.06);color:var(--muted);border:1px solid var(--muted2);">… yeniden deneniyor</span>` : '';
   el.innerHTML=`
     <div class="b-in">${esc(inputTxt)}</div>
     <div class="b-out">
       <div class="b-main ${p.translationPending ? 'pending' : ''}">${esc(mainText || 'Çeviri hazırlanıyor…')}</div>
       ${stageLine}
       ${backBlock}
-      ${hasWarning?`<div style="margin-top:6px;padding:6px 10px;background:rgba(196,92,92,0.08);border:1px solid rgba(196,92,92,0.2);border-radius:8px;font-size:11px;color:#c45c5c;">⚠️ ${esc(p.warning)}</div>`:''}
+      ${warningBlock}
       <div class="b-meta">
         <div class="b-tags">
           <span class="tag tag-l">→ ${esc(tl.name)}</span>
           ${p.tone?`<span class="tag tag-t">${esc(p.tone)}</span>`:''}
           ${p.model?`<span class="tag tag-s">${esc(p.model)}</span>`:''}
+          ${retryBadge}
           ${p.validatorEnabled===false ? '' : p.validated===true
             ? `<span class="tag" style="background:rgba(45,125,120,0.1);color:var(--teal);border:1px solid rgba(45,125,120,0.3);">✓ doğrulandı</span>`
             : p.validated===false
-              ? `<span class="tag" style="background:rgba(201,168,76,0.1);color:#9a7a20;border:1px solid rgba(201,168,76,0.3);">~ doğrulanamadı</span>`
+              ? `<span class="tag" style="background:rgba(201,168,76,0.1);color:#9a7a20;border:1px solid rgba(201,168,76,0.3);">~ incelenmeli</span>`
               : `<span class="tag" style="background:rgba(26,26,36,0.06);color:var(--muted);border:1px solid var(--muted2);">… doğrulanıyor</span>`}
         </div>
-        <button class="copy-btn" id="${bid}" onclick="copyBubble('${ea(mainText)}','${bid}')" ${copyDisabled ? 'disabled' : ''}>
-          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-        </button>
+        <div style="display:flex;gap:8px;align-items:center;">
+          ${retryBtn}
+          <button class="copy-btn" id="${bid}" onclick="copyBubble('${ea(mainText)}','${bid}')" ${copyDisabled ? 'disabled' : ''}>
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+        </div>
       </div>
       ${variants}
     </div>`;
