@@ -371,7 +371,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div class="wordmark">çev<em>.</em></div>
-    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar10-30</div>
+    <div style="position:fixed;bottom:8px;right:12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(26,26,36,0.25);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar10-40</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
@@ -569,7 +569,8 @@ async function doTranslate() {
   const lid = 'l' + Date.now();
   addLoadingBubble(raw, lid);
 
-  const tl = LM[targetLang];
+  const currentTargetLang = targetLang;
+  const tl = LM[currentTargetLang];
 
   // Build conversation context (last 3 pairs)
   const ctxLines = convHistory.slice(-3).map(h => `[Kaynak]: ${h.src}\n[Çeviri]: ${h.tgt}`).join('\n');
@@ -577,7 +578,7 @@ async function doTranslate() {
 
   const prompt = `Sen yüksek sadakatli bir çeviri motorusun.
 
-GÖREV: Verilen metni ${tl.full} diline doğal ve akıcı şekilde çevir.\${contextBlock}
+GÖREV: Verilen metni ${tl.full} diline doğal ve akıcı şekilde çevir.${contextBlock}
 BAĞLAM KULLANIM KURALI: Sohbet bağlamı varsa, kısa ve belirsiz ifadelerin (tamam, olur, boşver, sonra konuşuruz gibi) tonunu ve anlamını doğru anlamak için kullan. Ama bağlamı çeviriye yansıtma — sadece kelime seçimini ve tonu iyileştirmek için kullan.
 
 ZORUNLU KURALLAR:
@@ -613,30 +614,31 @@ KURALLAR:
 
 Metin: ${translatedText}`;
 
-  const validatorPrompt = (src, translation) => `Sen bir translation fidelity validator'sün.
+  const validatorPrompt = (src, translation, backTranslation, targetLanguage) => `Sen katı değil, dengeli çalışan bir çeviri doğrulayıcısısın.
 
-GÖREV: Kaynak metin ile çeviri arasındaki anlamsal sadakati kontrol et.
+GÖREV: Kaynak metin, ${targetLanguage} çeviri ve geri çeviriyi birlikte değerlendir. Ana amaç anlamsal sadakati kontrol etmektir.
 
-HATA TÜRLERİ (ağır — pass=false yapar):
-- ADDED_CONTENT: Kaynakta olmayan bilgi, övgü, ima, duygu, özne, hitap veya açıklama eklenmiş.
-- OMITTED_CONTENT: Kaynaktaki anlamın bir kısmı kaybolmuş.
-- TONE_SHIFT: Ton gereksiz şekilde resmileşmiş, samimileşmiş, sertleşmiş veya yumuşamış.
-- INTERPRETATION: Çeviri yerine yorumlama veya açıklama yapılmış.
-- AMBIGUITY_LOST: Kaynaktaki belirsizlik fazla netleştirilmiş.
-- SUBJECT_INSERTED: Kaynakta açık olmayan özne hedef dilde eklenmiş.
-- GRAMMAR_ONLY_NORMALIZATION: Sadece yazım/dilbilgisi düzeltilmiş, anlam korunmuş. Bu hata değildir.
+AĞIR HATALAR (bunlar varsa pass=false):
+- ADDED_CONTENT: Kaynakta olmayan yeni bilgi, övgü, ima, açıklama veya anlam eklenmiş.
+- OMITTED_CONTENT: Kaynağın önemli bir anlam parçası kaybolmuş.
+- MEANING_DISTORTION: Anlam kaymış, yanlış yorumlanmış veya tersine dönmüş.
+- SUBJECT_INSERTED: Kaynakta açık olmayan özne/kişi eklenmiş.
 
-KALİTE NOTU (ağır hata değil — pass=true olabilir ama notes alanına yaz):
-- AWKWARD_WORDING: Anlam doğru ama kelime seçimi bağlama göre yapay, fazla literal veya yanlış register. Örn: günlük konuşmada sözlük karşılığı kullanmak.
+NOT OLARAK GEÇ (tek başına fail sebebi değildir):
+- TONE_SHIFT: Küçük ton farkı var ama ana anlam korunuyor.
+- AWKWARD_WORDING: Anlam doğru ama ifade yapay / fazla literal.
+- GRAMMAR_ONLY_NORMALIZATION: Sadece yazım veya küçük dilbilgisi düzeltmesi yapılmış.
 
 KURALLAR:
-1. Akıcılık uğruna anlam eklenmesini hata say.
-2. Hedef dilin doğal gereği olan küçük biçimsel değişiklikleri hata sayma.
-3. Yalnızca anlamsal sadakati değerlendir.
-4. Sadece JSON döndür, başka hiçbir şey yazma.
+1. Kısa selamlaşmalar, doğal eşdeğerler ve hedef dildeki normal ifade farkları hata değildir. Örnek: "Merhaba" → "Hello" geçerlidir.
+2. Sadece gerçek anlam ekleme, eksiltme veya çarpıtma varsa fail ver.
+3. Geri çeviri kaynak anlamı koruyorsa bunu güçlü olumlu sinyal say.
+4. Ton farkı küçükse notes alanına yaz ama pass=false yapma.
+5. Sadece JSON döndür, başka hiçbir şey yazma.
 
-Kaynak: \${src}
-Çeviri: \${translation}
+Kaynak: ${src}
+Çeviri (${targetLanguage}): ${translation}
+Geri çeviri (Türkçe): ${backTranslation || 'YOK'}
 
 JSON:
 {"pass":true,"errors":[],"severity":"none","notes":""}`;
@@ -675,7 +677,7 @@ JSON:
     parsed.back = null;
 
     // STEP 1.5: Separate back translation call (only if not TR target)
-    if (targetLang !== 'tr' && parsed.out) {
+    if (currentTargetLang !== 'tr' && parsed.out) {
       try {
         const bres = await fetch('https://api.deepseek.com/v1/chat/completions', {
           method:'POST',
@@ -709,7 +711,7 @@ JSON:
         },
         body: JSON.stringify({
           model: 'deepseek-chat',
-          messages:[{role:'user', content: validatorPrompt(raw, parsed.out)}],
+          messages:[{role:'user', content: validatorPrompt(raw, parsed.out, parsed.back, tl.full)}],
           temperature: 0.1,
           max_tokens: 300
         })
@@ -725,15 +727,16 @@ JSON:
               'ADDED_CONTENT': 'Kaynak metinde olmayan içerik eklendi',
               'OMITTED_CONTENT': 'Kaynak metinden anlam eksiltildi',
               'TONE_SHIFT': 'Ton gereksiz değiştirildi',
-              'INTERPRETATION': 'Çeviri yerine yorum yapıldı',
-              'AMBIGUITY_LOST': 'Kaynaktaki belirsizlik kayboldu',
+              'MEANING_DISTORTION': 'Anlam kaydırıldı veya çarpıtıldı',
               'SUBJECT_INSERTED': 'Kaynakta olmayan özne eklendi'
             };
             const errMsgs = vresult.errors
-              .filter(e => e !== 'GRAMMAR_ONLY_NORMALIZATION')
+.filter(e => !['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e))
               .map(e => errorLabels[e] || e);
             if (errMsgs.length > 0) {
               validationWarning = errMsgs.join(' · ') + (vresult.notes ? ' — ' + vresult.notes : '');
+            } else if (vresult.notes) {
+              validationWarning = null;
             }
           }
         }
@@ -742,6 +745,7 @@ JSON:
 
     parsed.warning = validationWarning;
     parsed.model = data._usedModel ? data._usedModel.split('/').pop().replace(':free','') : null;
+    parsed.targetLang = currentTargetLang;
     parsed.validated = validatorRan ? (validationWarning === null) : null;
     // Store in conversation history
     convHistory.push({src: raw, tgt: parsed.out});
@@ -766,8 +770,9 @@ function addLoadingBubble(inputTxt, id) {
 function replaceBubble(id, inputTxt, p) {
   const el = document.getElementById(id);
   if (!el) return;
-  const tl = LM[targetLang];
-  const hasBack = p.back && targetLang !== 'tr';
+  const bubbleLang = p.targetLang || targetLang;
+  const tl = LM[bubbleLang];
+  const hasBack = p.back && bubbleLang !== 'tr';
   const hasWarning = p.warning;
   const bid = 'b'+Date.now();
   let variants = '';
