@@ -135,6 +135,23 @@ body {
 }
 .s-step-txt { font-size: 13px; color: var(--ink); line-height: 1.6; }
 .s-step-txt a { color: var(--teal); text-decoration: none; font-weight: 600; }
+.onb-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.onb-item {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 13px 12px;
+  display:flex; flex-direction:column; gap:5px;
+  min-height: 88px;
+}
+.onb-k {
+  font-size: 12px; font-weight: 700; color: var(--ink);
+  display:flex; align-items:center; gap:7px;
+}
+.onb-k svg { color: var(--gold2); flex-shrink:0; }
+.onb-v { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.setup-note { font-size: 11px; color: rgba(247,244,238,0.42); text-align:center; margin-top: -4px; }
+@media (max-width: 380px) { .onb-grid { grid-template-columns:1fr; } }
 .field {
   width: 100%; background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
@@ -426,7 +443,7 @@ body {
   <!-- Header -->
   <div class="hdr">
     <div><div class="wordmark">çev<em>.</em></div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.9px;color:rgba(247,244,238,0.34);margin-top:4px;">AI TRANSLATION LAB</div></div>
-    <div style="position:fixed;bottom:14px;right:16px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(247,244,238,0.28);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar11-50</div>
+    <div style="position:fixed;bottom:14px;right:16px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(247,244,238,0.28);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar12-10</div>
     <div class="hdr-r">
       <div class="lang-chip" id="langChip">→ TR</div>
       <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
@@ -447,13 +464,32 @@ body {
       <div class="s-eyebrow">Kişisel Çeviri Asistanı</div>
       <div class="s-title">Kelime değil,<br><em>niyet</em> çevirir.</div>
     </div>
-    <div class="s-body">Yazım hataları, yarım cümleler, aceleyle yazılmış mesajlar — ne demek istediğini anlayıp hedef dilde doğal şekilde ifade eder.</div>
+    <div class="s-body">Çev yalnızca çeviri yapmaz. Geri çeviri üretir, anlam kaymasını işaretler ve gerektiğinde aynı metni yeniden dener.</div>
+    <div class="onb-grid">
+      <div class="onb-item">
+        <div class="onb-k"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Kopyala</div>
+        <div class="onb-v">Son çeviriyi tek dokunuşla panoya alır.</div>
+      </div>
+      <div class="onb-item">
+        <div class="onb-k"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>Validatör</div>
+        <div class="onb-v">Çeviride anlam kayması olup olmadığını kontrol eder.</div>
+      </div>
+      <div class="onb-item">
+        <div class="onb-k"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.13 3.36L1 14"/></svg>Yeniden çevir</div>
+        <div class="onb-v">Hata yakalanırsa aynı metni geri bildirimle tekrar dener.</div>
+      </div>
+      <div class="onb-item">
+        <div class="onb-k"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z"/></svg>Doğrulandı</div>
+        <div class="onb-v">Sonucun güvenilir olup olmadığını kısa rozetle gösterir.</div>
+      </div>
+    </div>
     <div class="s-card">
-      <div class="s-step"><div class="s-num">1</div><div class="s-step-txt"><a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a> → Get API Key</div></div>
-      <div class="s-step"><div class="s-num">2</div><div class="s-step-txt">Ücretsiz Gemini API anahtarını kopyala</div></div>
+      <div class="s-step"><div class="s-num">1</div><div class="s-step-txt"><a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com/api_keys</a> → API anahtarı oluştur</div></div>
+      <div class="s-step"><div class="s-num">2</div><div class="s-step-txt">DeepSeek anahtarını kopyala</div></div>
       <div class="s-step"><div class="s-num">3</div><div class="s-step-txt">Aşağıya yapıştır ve başla</div></div>
     </div>
-    <input type="password" class="field" id="apiKeyInput" placeholder="AIza..." autocomplete="off" autocorrect="off" spellcheck="false">
+    <input type="password" class="field" id="apiKeyInput" placeholder="sk-..." autocomplete="off" autocorrect="off" spellcheck="false">
+    <div class="setup-note">Bu ekranı yalnızca bir kez görürsün.</div>
     <button class="primary-btn" onclick="saveKey()">Başla →</button>
   </div>
 
