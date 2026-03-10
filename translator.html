@@ -3,549 +3,526 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#090c13">
+<meta name="theme-color" content="#0a0c12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="çev.">
 <link rel="apple-touch-icon" href="data:image/png;base64,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">
-<link rel="icon" type="image/png" href="data:image/png;base64,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">
 <title>çev. — Akıllı Çeviri</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-html { background:#090c13; }
+html { background:#0a0c12; }
 :root {
-  --ink: #f7f4ee;
-  --ink2: #d8d1c3;
-  --paper: #0a0d14;
-  --paper2: #111723;
-  --paper3: #1a2231;
-  --panel: #0f1420;
-  --panel2: #131b28;
-  --panel3: #182131;
-  --white: #f8f4ec;
-  --gold: #c9a84c;
-  --gold2: #e8c97a;
-  --teal: #7dc7bf;
-  --teal2: #6ab2ab;
-  --rose: #d37878;
-  --muted: rgba(247,244,238,0.68);
-  --muted2: rgba(247,244,238,0.16);
-  --shadow: 0 18px 48px rgba(0,0,0,0.28);
-  --r: 22px;
-  --rs: 13px;
+  --ink: #f2efe8;
+  --ink2: #c8c2b4;
+  --paper: #0a0c12;
+  --paper2: #10141e;
+  --paper3: #171d2b;
+  --card: #131825;
+  --card2: #1a2133;
+  --gold: #c8a84a;
+  --gold2: #e5c46e;
+  --teal: #5ab8b0;
+  --teal2: #7dd4cc;
+  --rose: #d07070;
+  --blue: #4a8fd4;
+  --muted: rgba(242,239,232,0.55);
+  --muted2: rgba(242,239,232,0.12);
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --shadow: 0 20px 50px rgba(0,0,0,0.35);
+  --r: 20px;
+  --rs: 12px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background:
-    radial-gradient(1200px 500px at 10% -10%, rgba(201,168,76,0.12), transparent 45%),
-    radial-gradient(900px 460px at 100% 0%, rgba(125,199,191,0.08), transparent 34%),
-    linear-gradient(180deg, #090c13 0%, #0d121b 100%);
+  font-family:'Plus Jakarta Sans', sans-serif;
+  background: #0a0c12;
   color: var(--ink);
-  min-height: 100dvh;
-  overflow-x: hidden;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 20px);
+  min-height:100dvh;
+  overflow-x:hidden;
+  padding-top: env(safe-area-inset-top,0px);
+  padding-bottom: env(safe-area-inset-bottom,20px);
 }
+
 .app {
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
+  max-width:480px; margin:0 auto;
+  min-height:100dvh;
+  display:flex; flex-direction:column;
+  position:relative;
 }
 
-/* HEADER */
-.hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 14px;
-  position: relative;
-}
-.wordmark {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: 31px;
-  color: var(--white);
-  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
-  letter-spacing: -0.3px;
-}
-.wordmark em { color: var(--gold); font-style: normal; }
-.hdr-r { display: flex; align-items: center; gap: 8px; }
-.lang-chip {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  color: #8ed8cf;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(12px);
-  padding: 6px 12px;
-  border-radius: 999px;
-  letter-spacing: 0.5px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
-  transition: all 0.25s;
-}
-.icon-btn {
-  width: 38px; height: 38px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(10px);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: rgba(247,244,238,0.82);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
-  transition: all 0.2s;
-}
-.icon-btn:active { transform: scale(0.92); }
-
-/* SETUP */
+/* ── SETUP ── */
 #setupScreen {
-  flex: 1; display: flex; flex-direction: column;
-  justify-content: center; padding: 20px 20px 60px; gap: 18px;
+  flex:1; display:flex; flex-direction:column;
+  justify-content:center; padding:28px 22px 60px; gap:20px;
 }
-.s-eyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--gold);
+.s-logo { font-family:'Fraunces',serif; font-size:36px; font-weight:700; color:var(--ink); }
+.s-logo em { color:var(--gold); font-style:normal; }
+.s-eyebrow { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); }
+.s-headline { font-family:'Fraunces',serif; font-size:28px; font-weight:500; line-height:1.25; }
+.s-headline em { font-style:italic; color:var(--teal2); }
+.s-body { font-size:13px; color:var(--muted); line-height:1.75; }
+
+.feat-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.feat-item {
+  background:rgba(255,255,255,0.03); border:1px solid var(--border);
+  border-radius:16px; padding:14px 12px; display:flex; flex-direction:column; gap:6px;
 }
-.s-title {
-  font-family: 'Fraunces', serif;
-  font-size: 30px; font-weight: 500;
-  line-height: 1.2; color: var(--ink);
-}
-.s-title em { font-style: italic; color: var(--teal); }
-.s-body { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.feat-icon { font-size:18px; }
+.feat-t { font-size:12px; font-weight:700; color:var(--ink); }
+.feat-s { font-size:11px; color:var(--muted); line-height:1.5; }
+
 .s-card {
-  background: linear-gradient(180deg, rgba(22,29,42,0.98), rgba(14,20,32,0.98));
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--r);
-  padding: 18px; display: flex; flex-direction: column; gap: 12px;
-  box-shadow: var(--shadow);
+  background:linear-gradient(180deg,rgba(22,29,44,0.98),rgba(13,18,30,0.98));
+  border:1px solid var(--border2); border-radius:var(--r);
+  padding:18px; display:flex; flex-direction:column; gap:10px;
 }
-.s-step { display: flex; gap: 12px; align-items: flex-start; }
+.s-step { display:flex; gap:12px; align-items:flex-start; }
 .s-num {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--gold); color: white;
-  font-family: 'Fraunces', serif; font-size: 11px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; margin-top: 2px;
+  width:22px; height:22px; border-radius:50%; background:var(--gold); color:#0a0c12;
+  font-family:'Fraunces',serif; font-size:11px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
 }
-.s-step-txt { font-size: 13px; color: var(--ink); line-height: 1.6; }
-.s-step-txt a { color: var(--teal); text-decoration: none; font-weight: 600; }
-.onb-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.onb-item {
-  background: rgba(255,255,255,0.035);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 16px;
-  padding: 13px 12px;
-  display:flex; flex-direction:column; gap:5px;
-  min-height: 88px;
-}
-.onb-k {
-  font-size: 12px; font-weight: 700; color: var(--ink);
-  display:flex; align-items:center; gap:7px;
-}
-.onb-k svg { color: var(--gold2); flex-shrink:0; }
-.onb-v { font-size: 12px; color: var(--muted); line-height: 1.5; }
-.setup-note { font-size: 11px; color: rgba(247,244,238,0.42); text-align:center; margin-top: -4px; }
-@media (max-width: 380px) { .onb-grid { grid-template-columns:1fr; } }
+.s-step-txt { font-size:13px; color:var(--ink); line-height:1.6; }
+.s-step-txt a { color:var(--teal2); text-decoration:none; font-weight:600; }
+
 .field {
-  width: 100%; background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--r); padding: 14px 16px;
-  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
-  color: var(--white); outline: none; transition: border-color 0.2s; backdrop-filter: blur(8px);
-  -webkit-appearance: none;
+  width:100%; background:rgba(255,255,255,0.04);
+  border:1px solid var(--border); border-radius:var(--r);
+  padding:14px 16px; font-family:'IBM Plex Mono',monospace; font-size:13px;
+  color:var(--ink); outline:none; transition:border-color .2s;
+  -webkit-appearance:none;
 }
-.field:focus { border-color: rgba(201,168,76,0.48); background: rgba(255,255,255,0.06); }
-.field::placeholder { color: rgba(247,244,238,0.34); }
+.field:focus { border-color:rgba(200,168,74,0.5); }
+.field::placeholder { color:rgba(242,239,232,0.28); }
+
 .primary-btn {
-  width: 100%; padding: 16px;
-  background: linear-gradient(180deg, #182031, #101621); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r);
-  color: var(--white); font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px; font-weight: 600; letter-spacing: 0.3px;
-  cursor: pointer; transition: all 0.2s;
+  width:100%; padding:15px;
+  background:linear-gradient(135deg,#1a2640,#0e1828);
+  border:1px solid var(--border2); border-radius:var(--r);
+  color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px; font-weight:600; cursor:pointer; transition:all .2s;
 }
-.primary-btn:active { opacity: 0.85; transform: scale(0.99); }
+.primary-btn:active { opacity:.85; transform:scale(.99); }
+.setup-note { font-size:11px; color:rgba(242,239,232,0.35); text-align:center; }
 
-/* MAIN */
-#mainUI {
-  flex: 1; display: flex; flex-direction: column;
-  padding: 0 16px 16px; gap: 10px; overflow: hidden;
+/* ── MAIN UI ── */
+#mainUI { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+/* Header */
+.hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px;
+  border-bottom:1px solid var(--border);
+  background:rgba(10,12,18,0.95);
+  backdrop-filter:blur(20px);
+  position:sticky; top:0; z-index:50;
+}
+.hdr-logo { font-family:'Fraunces',serif; font-size:24px; font-weight:700; color:var(--ink); }
+.hdr-logo em { color:var(--gold); font-style:normal; }
+
+/* Language pair control */
+.lang-pair {
+  display:flex; align-items:center; gap:0;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border2);
+  border-radius:999px;
+  overflow:hidden;
+}
+.lp-btn {
+  font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500;
+  letter-spacing:0.5px; color:var(--ink2);
+  padding:7px 12px; cursor:pointer;
+  background:transparent; border:none;
+  transition:all .15s;
+}
+.lp-btn:active { background:rgba(255,255,255,0.08); }
+.lp-sep {
+  width:1px; height:18px; background:var(--border2);
+  flex-shrink:0;
+}
+.swap-btn {
+  padding:7px 10px; cursor:pointer;
+  background:transparent; border:none;
+  color:var(--teal2); font-size:14px;
+  display:flex; align-items:center;
+  transition:all .2s;
+}
+.swap-btn:active { transform:rotate(180deg); }
+
+.hdr-actions { display:flex; gap:6px; }
+.icon-btn {
+  width:36px; height:36px; border-radius:14px;
+  background:rgba(255,255,255,0.05); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:rgba(242,239,232,0.7); transition:all .2s;
+}
+.icon-btn:active { transform:scale(.92); }
+
+/* Chat area */
+.chat {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  padding:16px 14px 8px;
+  display:flex; flex-direction:column; gap:12px;
+  -webkit-overflow-scrolling:touch;
+}
+.chat::-webkit-scrollbar { display:none; }
+
+.empty-state {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:8px; opacity:.3; text-align:center; padding:40px 24px;
+  pointer-events:none;
+}
+.empty-icon { font-size:32px; }
+.empty-t { font-family:'Fraunces',serif; font-size:18px; font-weight:500; }
+.empty-s { font-size:12px; color:var(--muted); line-height:1.7; }
+
+/* Message rows */
+.msg-row { display:flex; flex-direction:column; gap:4px; animation:msgIn .25s ease; }
+@keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* Source bubble (user) */
+.msg-src {
+  align-self:flex-end;
+  background:var(--card2); border:1px solid var(--border2);
+  border-radius:18px 18px 4px 18px;
+  padding:10px 14px;
+  font-size:14px; color:rgba(242,239,232,0.6);
+  font-style:italic; line-height:1.55;
+  max-width:85%;
 }
 
-/* Lang bar */
-.lang-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  background: linear-gradient(180deg, rgba(18,24,36,0.95), rgba(13,17,27,0.98)); border:1px solid rgba(255,255,255,0.07); border-radius: 24px; padding: 13px 16px; box-shadow: var(--shadow);
+/* Translation bubble */
+.msg-out {
+  align-self:flex-start;
+  background:linear-gradient(160deg,#1b2438,#131a28);
+  border:1px solid rgba(90,184,176,0.2);
+  border-radius:4px 18px 18px 18px;
+  padding:12px 14px 10px;
+  max-width:92%;
+  box-shadow:0 4px 20px rgba(0,0,0,0.2);
 }
-.lb-l .lb-sub { font-size: 11px; color: rgba(245,243,238,0.45); font-weight: 500; }
-.lb-l .lb-main {
-  font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500;
-  color: var(--gold2); display: flex; align-items: center; gap: 6px;
-  margin-top: 1px;
+.msg-text {
+  font-family:'Fraunces',serif; font-size:19px;
+  font-weight:300; line-height:1.5; color:var(--ink);
 }
-.lb-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--teal2); animation: dotpulse 2.5s ease-in-out infinite;
-}
-@keyframes dotpulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.75)} }
-.lb-hint {
-  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
-  color: rgba(247,244,238,0.34); letter-spacing: 0.3px; text-align: right; max-width: 80px;
-}
+.msg-text.streaming { opacity:.85; }
 
-/* History */
-.hist {
-  flex: 1; overflow-y: auto; overflow-x: hidden;
-  display: flex; flex-direction: column; gap: 10px;
-  min-height: 100px; max-height: 50vh;
-  padding: 2px 2px 4px; -webkit-overflow-scrolling: touch;
+/* Status bar */
+.msg-status {
+  display:flex; align-items:center; gap:6px;
+  margin-top:8px; flex-wrap:wrap;
 }
-.hist::-webkit-scrollbar { display: none; }
+.status-pill {
+  font-family:'IBM Plex Mono',monospace; font-size:9px;
+  letter-spacing:0.5px; text-transform:uppercase; font-weight:500;
+  padding:4px 8px; border-radius:999px;
+}
+.sp-lang { background:rgba(90,184,176,0.12); color:var(--teal2); border:1px solid rgba(90,184,176,0.25); }
+.sp-tone { background:rgba(200,168,74,0.1); color:var(--gold2); border:1px solid rgba(200,168,74,0.28); }
+.sp-model { background:rgba(255,255,255,0.04); color:rgba(242,239,232,0.45); border:1px solid var(--border); }
+.sp-ok { background:rgba(90,184,176,0.12); color:var(--teal2); border:1px solid rgba(90,184,176,0.3); }
+.sp-warn { background:rgba(200,168,74,0.1); color:var(--gold2); border:1px solid rgba(200,168,74,0.3); }
+.sp-pending { background:rgba(255,255,255,0.04); color:rgba(242,239,232,0.38); border:1px solid var(--border); }
 
-.empty-st {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 4px; opacity: 0.35; text-align: center; padding: 24px;
-  pointer-events: none;
+/* Back translation */
+.msg-back {
+  margin-top:8px; padding-top:8px;
+  border-top:1px solid rgba(255,255,255,0.07);
+  font-size:12px; color:rgba(242,239,232,0.5); line-height:1.6;
 }
-.empty-icon { font-size: 26px; margin-bottom: 4px; }
-.empty-t { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500; }
-.empty-s { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.back-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.5px; text-transform:uppercase; color:rgba(242,239,232,0.28); margin-bottom:3px; }
 
-/* Bubbles */
-.bubble { display: flex; flex-direction: column; gap: 0; animation: bup 0.28s ease; }
-@keyframes bup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+/* Validator block */
+.validator-block {
+  margin-top:8px; border-radius:12px; overflow:hidden;
+  border:1px solid rgba(200,100,100,0.2);
+  background:linear-gradient(180deg,rgba(200,100,100,0.08),rgba(200,100,100,0.04));
+}
+.validator-summary {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px; cursor:pointer;
+  font-size:12px; color:#c47070; font-weight:600;
+  gap:10px;
+}
+.validator-summary::-webkit-details-marker { display:none; }
+.val-left { display:flex; align-items:center; gap:7px; }
+.val-arrow { color:#d89090; font-size:14px; transition:transform .18s; }
+details.validator-block[open] .val-arrow { transform:rotate(180deg); }
+.validator-body { padding:0 12px 10px; font-size:11px; color:#a06060; line-height:1.5; }
 
-.b-in {
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-  border-radius: var(--r) var(--r) 4px var(--r);
-  padding: 9px 13px; font-size: 13px;
-  color: rgba(247,244,238,0.42); line-height: 1.56; font-style: italic;
+/* Action bar */
+.action-bar {
+  display:flex; align-items:center; gap:4px;
+  margin-top:10px; padding-top:10px;
+  border-top:1px solid rgba(255,255,255,0.06);
+  flex-wrap:wrap;
 }
-.b-out {
-  margin-top: 4px; background: linear-gradient(180deg, rgba(22,29,42,0.98), rgba(14,20,32,0.98));
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 4px var(--r) var(--r) var(--r);
-  padding: 12px 14px 10px;
-  box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+.act-btn {
+  display:flex; align-items:center; gap:5px;
+  padding:6px 10px; border-radius:10px;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border);
+  font-family:'IBM Plex Mono',monospace; font-size:9px;
+  letter-spacing:0.4px; text-transform:uppercase;
+  color:rgba(242,239,232,0.55); cursor:pointer;
+  transition:all .15s; white-space:nowrap;
 }
-.b-main {
-  font-family: 'Fraunces', serif; font-size: 18px;
-  font-weight: 300; line-height: 1.5; color: var(--ink);
+.act-btn:active { background:rgba(255,255,255,0.09); transform:scale(.95); }
+.act-btn.primary-act {
+  background:rgba(90,184,176,0.1); color:var(--teal2);
+  border-color:rgba(90,184,176,0.25);
 }
-.b-back {
-  font-size: 12px; color: rgba(247,244,238,0.62); margin-top: 9px;
-  padding-top: 9px; border-top: 1px solid rgba(255,255,255,0.08); line-height: 1.55;
-}
-.b-meta {
-  display: flex; align-items: center;
-  justify-content: space-between; margin-top: 10px; gap: 10px; flex-wrap: wrap;
-}
-.b-tags { display: flex; gap: 6px; flex-wrap: wrap; flex: 1 1 auto; min-width: 0; }
-.tag {
-  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
-  letter-spacing: 0.42px; text-transform: uppercase;
-  padding: 5px 9px; border-radius: 999px; font-weight: 500;
-  max-width: 100%;
-}
-.tag { white-space: normal; line-height: 1.35; }
-.tag-l { background: rgba(110,209,195,0.14); color:#87d8cf; border:1px solid rgba(110,209,195,0.32); }
-.tag-t { background: rgba(201,168,76,0.12); color:#e2c06a; border:1px solid rgba(201,168,76,0.34); }
-.tag-s { background: rgba(255,255,255,0.04); color:rgba(247,244,238,0.56); border:1px solid rgba(255,255,255,0.08); }
-.copy-btn {
-  width: 42px; height: 42px; border-radius: 16px;
-  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: rgba(247,244,238,0.72); transition: all 0.2s; flex: 0 0 auto; margin-left: auto;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
-}
-.copy-btn:active { transform: scale(0.88); }
-.copy-btn.ok { color: var(--teal); border-color:rgba(45,125,120,0.3); background:rgba(45,125,120,0.08); }
+.act-btn.primary-act:active { background:rgba(90,184,176,0.18); }
+.act-btn svg { flex-shrink:0; }
+.act-copy-ok { color:var(--teal2) !important; border-color:rgba(90,184,176,0.3) !important; background:rgba(90,184,176,0.08) !important; }
 
-/* Variants */
-.variants { display: flex; flex-direction: column; gap: 5px; margin-top: 7px; }
-.v-item {
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-  border-radius: var(--rs); padding: 8px 11px;
-  display: flex; align-items: center; gap: 10px;
-  cursor: pointer; transition: background 0.15s;
+/* Loading dots */
+.typing-dots { display:flex; gap:5px; align-items:center; padding:6px 0; }
+.typing-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--gold); animation:tdot 1.1s ease-in-out infinite;
 }
-.v-item:active { background: var(--paper3); }
-.v-text { font-size: 13px; color: var(--ink); line-height: 1.4; flex: 1; }
-.v-lbl { font-family:'IBM Plex Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); flex-shrink:0; }
+.typing-dot:nth-child(2){animation-delay:.18s}
+.typing-dot:nth-child(3){animation-delay:.36s}
+@keyframes tdot { 0%,80%,100%{transform:scale(.6);opacity:.3} 40%{transform:scale(1);opacity:1} }
 
-/* Loading */
-.load-bub {
-  background: var(--white); border: 1px solid var(--paper3);
-  border-radius: var(--r); padding: 13px 14px;
-  display: flex; gap: 5px; align-items: center;
-  margin-top: 4px;
+.stage-line {
+  font-family:'IBM Plex Mono',monospace; font-size:9px;
+  letter-spacing:.4px; text-transform:uppercase;
+  color:rgba(242,239,232,0.35); margin-top:6px;
 }
-.dot-a {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--gold); animation: dbounce 1.1s ease-in-out infinite;
-}
-.dot-a:nth-child(2){animation-delay:.18s} .dot-a:nth-child(3){animation-delay:.36s}
-@keyframes dbounce { 0%,80%,100%{transform:scale(0.6);opacity:0.35} 40%{transform:scale(1);opacity:1} }
 
 /* Favorites */
-.fav-sec { display: flex; flex-direction: column; gap: 5px; }
-.fav-lbl { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); padding:0 2px; }
-.fav-list { display:flex; flex-direction:column; gap:4px; max-height:130px; overflow-y:auto; }
-.fav-list::-webkit-scrollbar { display:none; }
-.fav-item {
-  background: var(--white); border: 1px solid var(--paper3);
-  border-radius: var(--rs); padding: 8px 12px;
-  display: flex; align-items: center; gap: 8px; cursor: pointer;
-  transition: background 0.15s;
+.fav-tray {
+  border-top:1px solid var(--border); padding:10px 14px;
+  display:none; flex-direction:column; gap:6px;
+  max-height:140px; overflow-y:auto;
 }
-.fav-item:active { background: var(--paper2); }
+.fav-tray.open { display:flex; }
+.fav-tray::-webkit-scrollbar { display:none; }
+.fav-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
+.fav-item {
+  display:flex; align-items:center; gap:8px;
+  padding:7px 10px; border-radius:10px;
+  background:rgba(255,255,255,0.03); border:1px solid var(--border);
+  cursor:pointer; transition:background .15s;
+}
+.fav-item:active { background:rgba(255,255,255,0.07); }
 .fav-txt { font-size:13px; color:var(--ink); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.fav-x { color:var(--muted2); font-size:17px; line-height:1; cursor:pointer; padding:2px 4px; flex-shrink:0; }
+.fav-del { color:var(--muted2); font-size:16px; cursor:pointer; padding:2px 4px; flex-shrink:0; }
 
 /* Input area */
-.inp-area {
-  background: linear-gradient(180deg, rgba(15,19,30,0.92), rgba(10,14,24,0.96)); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 28px;
-  box-shadow: 0 20px 44px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.03);
-  overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-  backdrop-filter: blur(20px);
+.input-wrap {
+  border-top:1px solid var(--border);
+  background:rgba(10,12,18,0.97);
+  padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 12px);
 }
-.inp-area:focus-within {
-  border-color: rgba(201,168,76,0.34);
-  box-shadow: 0 12px 34px rgba(0,0,0,0.38), 0 0 0 1px rgba(201,168,76,0.08);
+.inp-box {
+  background:rgba(255,255,255,0.05); border:1px solid var(--border2);
+  border-radius:22px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.25);
+  transition:border-color .2s;
+  overflow:hidden;
 }
-.inp-area::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-}
+.inp-box:focus-within { border-color:rgba(200,168,74,0.35); }
 #inputText {
-  width: 100%; background: transparent; border: none; outline: none;
-  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px;
-  font-weight: 500; color: var(--white); line-height: 1.6;
-  padding: 16px 16px 10px; resize: none;
-  min-height: 64px; max-height: 140px;
-  caret-color: var(--gold); -webkit-appearance: none;
+  width:100%; background:transparent; border:none; outline:none;
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:16px;
+  font-weight:500; color:var(--ink); line-height:1.55;
+  padding:14px 16px 8px; resize:none;
+  min-height:54px; max-height:130px;
+  caret-color:var(--gold);
+  -webkit-appearance:none;
 }
-#inputText::placeholder { color: rgba(247,244,238,0.32); }
+#inputText::placeholder { color:rgba(242,239,232,0.28); }
 .inp-bar {
-  display: flex; align-items: center;
-  padding: 6px 10px 10px; gap: 6px;
+  display:flex; align-items:center; gap:5px;
+  padding:4px 10px 10px;
 }
-.qlb { display: flex; gap: 4px; }
-.ql {
-  font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500;
-  letter-spacing:0.4px; padding:6px 10px;
-  background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
-  border-radius:12px; color:rgba(247,244,238,0.46); cursor:pointer; transition:all 0.15s;
-}
-.ql.active { background:var(--ink); color:var(--gold2); border-color:var(--ink); }
-.ql:active { transform:scale(0.91); }
-.inp-acts { display:flex; gap:5px; align-items:center; margin-left:auto; }
-.fav-btn {
-  width:36px; height:36px; border-radius:14px;
-  background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+.fav-toggle {
+  width:34px; height:34px; border-radius:12px;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border);
   display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:rgba(247,244,238,0.5); transition:all 0.2s;
+  cursor:pointer; color:rgba(242,239,232,0.45); transition:all .2s;
 }
-.fav-btn:active { transform:scale(0.9); }
-.fav-btn.on { color:var(--gold); border-color:rgba(201,168,76,0.4); background:rgba(201,168,76,0.09); }
+.fav-toggle:active { transform:scale(.9); }
+.fav-toggle.on { color:var(--gold); border-color:rgba(200,168,74,0.4); background:rgba(200,168,74,0.08); }
 .send-btn {
-  width:44px; height:44px; border-radius:18px;
-  background: linear-gradient(180deg, #162138, #0d1424); border:1px solid rgba(255,255,255,0.08); box-shadow: 0 12px 24px rgba(0,0,0,0.32);
+  width:44px; height:44px; border-radius:16px; margin-left:auto;
+  background:linear-gradient(135deg,#1d2d4a,#0f1e35);
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 8px 20px rgba(0,0,0,0.3);
   display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:var(--white); transition:all 0.2s;
-  position:relative; overflow:hidden;
+  cursor:pointer; color:var(--ink); transition:all .2s; position:relative; overflow:hidden;
 }
-.send-btn:active { transform:scale(0.92); }
-.send-btn:disabled { opacity:0.38; cursor:not-allowed; }
-.si { transition:opacity 0.2s; }
+.send-btn:active { transform:scale(.92); }
+.send-btn:disabled { opacity:.35; cursor:not-allowed; }
+.si { transition:opacity .18s; }
 .si.h { opacity:0; }
-.sp { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.2s; }
+.sp { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .18s; }
 .sp.s { opacity:1; }
-.spr { width:16px; height:16px; border:2px solid rgba(245,243,238,0.3); border-top-color:var(--paper); border-radius:50%; animation:spin .7s linear infinite; }
+.spr { width:16px; height:16px; border:2px solid rgba(242,239,232,0.25); border-top-color:var(--ink); border-radius:50%; animation:spin .7s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
 
-
-.opt-row {
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding: 12px 0; border-top: 1px solid rgba(17,23,35,0.12);
-}
-.opt-copy { display:flex; flex-direction:column; gap:2px; }
-.opt-t { font-size:13px; font-weight:600; color:var(--ink); }
-.opt-s { font-size:11px; color:var(--muted); line-height:1.45; }
-.mini-toggle {
-  min-width: 74px; height: 34px; border-radius: 999px; border:1px solid var(--muted2);
-  background: var(--paper2); color: var(--muted); font-family:'IBM Plex Mono', monospace;
-  font-size:10px; letter-spacing:0.4px; text-transform:uppercase; cursor:pointer;
-}
-.mini-toggle.on { background: rgba(45,125,120,0.1); color: var(--teal); border-color: rgba(45,125,120,0.28); }
-.b-stage {
-  font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.35px;
-  text-transform:uppercase; color:var(--muted); margin-top:8px;
-}
-.b-main.pending { opacity:0.72; }
-.b-back.pending { color: rgba(26,26,36,0.34); }
-
 /* Settings sheet */
-.s-ov { display:none; position:fixed; inset:0; background:rgba(26,26,36,0.5); z-index:100; backdrop-filter:blur(4px); }
+.s-ov { display:none; position:fixed; inset:0; background:rgba(5,7,14,0.6); z-index:100; backdrop-filter:blur(6px); }
 .s-ov.open { display:block; }
 .sheet {
-  position:absolute; bottom:0; left:0; right:0; background:linear-gradient(180deg, #141b28, #0d121c);
-  border-radius:24px 24px 0 0; padding:0 20px calc(env(safe-area-inset-bottom,20px) + 20px);
+  position:absolute; bottom:0; left:0; right:0;
+  background:linear-gradient(180deg,#151e30,#0d1525);
+  border-radius:24px 24px 0 0;
+  padding:0 20px calc(env(safe-area-inset-bottom,20px) + 20px);
   max-width:480px; margin:0 auto;
-  box-shadow:0 -8px 40px rgba(0,0,0,0.15);
-  animation:shs .28s ease;
+  box-shadow:0 -10px 50px rgba(0,0,0,0.2);
+  animation:shUp .28s ease;
 }
-@keyframes shs { from{transform:translateY(100%)} to{transform:translateY(0)} }
-.sh-handle { width:36px; height:4px; background:var(--paper3); border-radius:2px; margin:12px auto 20px; }
+@keyframes shUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.sh-handle { width:36px; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; margin:14px auto 22px; }
 .sh-title { font-family:'Fraunces',serif; font-size:20px; font-weight:500; margin-bottom:20px; }
-.sh-lbl { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:0.5px; text-transform:uppercase; margin-bottom:8px; }
-.danger-btn {
-  width:100%; padding:14px; background:transparent;
-  border:1px solid rgba(196,92,92,0.25); border-radius:var(--r);
-  color:var(--rose); font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; margin-top:8px;
+.sh-label { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px; }
+.opt-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:13px 0; border-top:1px solid rgba(255,255,255,0.06); gap:14px;
 }
-.danger-btn:active { background:rgba(196,92,92,0.05); }
+.opt-t { font-size:13px; font-weight:600; color:var(--ink); }
+.opt-s { font-size:11px; color:var(--muted); line-height:1.4; margin-top:2px; }
+.mini-tog {
+  min-width:72px; height:32px; border-radius:999px;
+  border:1px solid var(--muted2); background:var(--paper2);
+  color:var(--muted); font-family:'IBM Plex Mono',monospace;
+  font-size:9px; letter-spacing:.4px; text-transform:uppercase; cursor:pointer;
+  transition:all .2s;
+}
+.mini-tog.on { background:rgba(90,184,176,0.1); color:var(--teal2); border-color:rgba(90,184,176,0.28); }
+.danger-btn {
+  width:100%; padding:13px; background:transparent;
+  border:1px solid rgba(200,90,90,0.25); border-radius:var(--r);
+  color:var(--rose); font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px; font-weight:600; cursor:pointer; margin-top:8px; transition:all .2s;
+}
+.danger-btn:active { background:rgba(200,90,90,0.06); }
+
+/* Lang picker sheet */
+.lang-list { display:flex; flex-direction:column; gap:3px; margin-top:8px; }
+.lang-opt {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px; border-radius:14px; cursor:pointer;
+  font-size:14px; font-weight:500; color:var(--ink);
+  transition:background .15s;
+}
+.lang-opt:active { background:rgba(255,255,255,0.06); }
+.lang-opt.selected { background:rgba(90,184,176,0.1); color:var(--teal2); }
+.lang-opt.selected::after { content:'✓'; font-size:13px; }
 
 /* Toast */
 .toast {
-  position:fixed; bottom:88px; left:50%;
-  transform:translateX(-50%) translateY(10px);
+  position:fixed; bottom:90px; left:50%;
+  transform:translateX(-50%) translateY(8px);
   background:var(--ink); color:var(--paper);
-  padding:10px 18px; border-radius:12px;
-  font-size:13px; font-weight:500;
-  opacity:0; transition:all 0.25s;
+  padding:9px 18px; border-radius:12px;
+  font-size:13px; font-weight:600;
+  opacity:0; transition:all .22s;
   pointer-events:none; white-space:nowrap; z-index:200;
 }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-.retry-btn{width:42px;height:42px;border:1px solid rgba(110,209,195,0.24);background:rgba(110,209,195,0.10);color:#8ed8cf;border-radius:16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;line-height:1;flex:0 0 auto;box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);margin-left:auto}
-.retry-btn:hover{background:rgba(110,209,195,0.16)}
-.v-detail{margin-top:12px;border:1px solid rgba(211,120,120,0.22);background:linear-gradient(180deg, rgba(211,120,120,0.11), rgba(211,120,120,0.07));border-radius:16px;padding:0 14px;box-shadow:0 8px 18px rgba(0,0,0,0.10)}
-.v-detail summary{cursor:pointer;list-style:none;padding:12px 0;font-size:12px;color:#bf6565;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.v-detail summary::-webkit-details-marker{display:none}
-.v-sum-left{display:inline-flex;align-items:center;gap:8px}
-.v-sum-right{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:20px;color:#e7b0b0;font-size:16px;font-weight:700;transition:transform .18s ease, color .18s ease;opacity:.92}
-.v-detail[open] .v-sum-right{transform:rotate(180deg);color:#f1c3c3}
-.v-body{padding:0 0 10px 0;font-size:11px;color:#9b5f5f;line-height:1.45}
-
+/* Version */
+.ver { position:fixed; bottom:12px; right:14px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:rgba(242,239,232,0.2); letter-spacing:.5px; pointer-events:none; z-index:999; }
 </style>
 </head>
 <body>
 <div class="app">
 
+<!-- ── SETUP SCREEN ── -->
+<div id="setupScreen">
+  <div>
+    <div class="s-logo">çev<em>.</em></div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(242,239,232,0.3);margin-top:4px;">AI TRANSLATION LAB</div>
+  </div>
+  <div>
+    <div class="s-eyebrow" style="margin-bottom:8px;">Kişisel Çeviri Asistanı</div>
+    <div class="s-headline">Kelime değil,<br><em>niyet</em> çevirir.</div>
+  </div>
+  <div class="s-body">Çev yalnızca çeviri yapmaz — geri çeviri üretir, anlam kaymasını tespit eder ve gerektiğinde düzeltilmiş sonuç sunar.</div>
+  <div class="feat-grid">
+    <div class="feat-item"><div class="feat-icon">⇄</div><div class="feat-t">Geri Çeviri</div><div class="feat-s">Sistemin ne anladığını gösterir.</div></div>
+    <div class="feat-item"><div class="feat-icon">✓</div><div class="feat-t">Doğrulayıcı</div><div class="feat-s">Anlam kaymasını yakalar.</div></div>
+    <div class="feat-item"><div class="feat-icon">↻</div><div class="feat-t">İyileştir</div><div class="feat-s">Hata varsa geri bildirimle yeniden dener.</div></div>
+    <div class="feat-item"><div class="feat-icon">⚡</div><div class="feat-t">Hızlı Kopyala</div><div class="feat-s">Tek dokunuşla panoya alır.</div></div>
+  </div>
+  <div class="s-card">
+    <div class="s-step"><div class="s-num">1</div><div class="s-step-txt"><a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com</a> → API anahtarı oluştur</div></div>
+    <div class="s-step"><div class="s-num">2</div><div class="s-step-txt">Anahtarı kopyala</div></div>
+    <div class="s-step"><div class="s-num">3</div><div class="s-step-txt">Aşağıya yapıştır ve başla</div></div>
+  </div>
+  <input type="password" class="field" id="apiKeyInput" placeholder="sk-..." autocomplete="off" autocorrect="off" spellcheck="false">
+  <div class="setup-note">Bu ekranı yalnızca bir kez görürsün.</div>
+  <button class="primary-btn" onclick="saveKey()">Başla →</button>
+</div>
+
+<!-- ── MAIN UI ── -->
+<div id="mainUI" style="display:none; flex:1; flex-direction:column; overflow:hidden;">
+
   <!-- Header -->
   <div class="hdr">
-    <div><div class="wordmark">çev<em>.</em></div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.9px;color:rgba(247,244,238,0.34);margin-top:4px;">AI TRANSLATION LAB</div></div>
-    <div style="position:fixed;bottom:14px;right:16px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(247,244,238,0.28);letter-spacing:0.5px;pointer-events:none;z-index:999;">9mar12-10</div>
-    <div class="hdr-r">
-      <div class="lang-chip" id="langChip">→ TR</div>
-      <button class="icon-btn" id="clearBtn" onclick="clearHistory()" style="display:none" title="Geçmişi sil">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+    <div class="hdr-logo">çev<em>.</em></div>
+
+    <!-- Language pair -->
+    <div class="lang-pair">
+      <button class="lp-btn" id="srcBtn" onclick="openLangPicker('src')">TR</button>
+      <div class="lp-sep"></div>
+      <button class="swap-btn" onclick="swapLangs()" title="Dilleri ters çevir">⇄</button>
+      <div class="lp-sep"></div>
+      <button class="lp-btn" id="tgtBtn" onclick="openLangPicker('tgt')">EN</button>
+    </div>
+
+    <div class="hdr-actions">
+      <button class="icon-btn" id="clearBtn" onclick="clearChat()" title="Geçmişi sil" style="display:none">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
       </button>
-      <button class="icon-btn" id="settingsBtn" onclick="openSettings()" style="display:none">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
+      <button class="icon-btn" onclick="openSettings()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
   </div>
 
-  <!-- Setup -->
-  <div id="setupScreen">
-    <div>
-      <div class="s-eyebrow">Kişisel Çeviri Asistanı</div>
-      <div class="s-title">Kelime değil,<br><em>niyet</em> çevirir.</div>
+  <!-- Chat -->
+  <div class="chat" id="chat">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">✦</div>
+      <div class="empty-t">Hazır</div>
+      <div class="empty-s">Bir şeyler yaz, çevirelim.</div>
     </div>
-    <div class="s-body">Çev yalnızca çeviri yapmaz. Geri çeviri üretir, anlam kaymasını işaretler ve gerektiğinde aynı metni yeniden dener.</div>
-    <div class="onb-grid">
-      <div class="onb-item">
-        <div class="onb-k"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Kopyala</div>
-        <div class="onb-v">Son çeviriyi tek dokunuşla panoya alır.</div>
-      </div>
-      <div class="onb-item">
-        <div class="onb-k"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>Validatör</div>
-        <div class="onb-v">Çeviride anlam kayması olup olmadığını kontrol eder.</div>
-      </div>
-      <div class="onb-item">
-        <div class="onb-k"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.13 3.36L1 14"/></svg>Yeniden çevir</div>
-        <div class="onb-v">Hata yakalanırsa aynı metni geri bildirimle tekrar dener.</div>
-      </div>
-      <div class="onb-item">
-        <div class="onb-k"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z"/></svg>Doğrulandı</div>
-        <div class="onb-v">Sonucun güvenilir olup olmadığını kısa rozetle gösterir.</div>
-      </div>
-    </div>
-    <div class="s-card">
-      <div class="s-step"><div class="s-num">1</div><div class="s-step-txt"><a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com/api_keys</a> → API anahtarı oluştur</div></div>
-      <div class="s-step"><div class="s-num">2</div><div class="s-step-txt">DeepSeek anahtarını kopyala</div></div>
-      <div class="s-step"><div class="s-num">3</div><div class="s-step-txt">Aşağıya yapıştır ve başla</div></div>
-    </div>
-    <input type="password" class="field" id="apiKeyInput" placeholder="sk-..." autocomplete="off" autocorrect="off" spellcheck="false">
-    <div class="setup-note">Bu ekranı yalnızca bir kez görürsün.</div>
-    <button class="primary-btn" onclick="saveKey()">Başla →</button>
   </div>
 
-  <!-- Main UI -->
-  <div id="mainUI" style="display:none">
+  <!-- Favorites tray -->
+  <div class="fav-tray" id="favTray">
+    <div class="fav-label">Favoriler</div>
+    <div id="favList"></div>
+  </div>
 
-    <div class="lang-bar">
-      <div class="lb-l">
-        <div class="lb-sub">Hedef dil</div>
-        <div class="lb-main"><div class="lb-dot"></div><span id="activeLangName">Türkçe</span></div>
-      </div>
-      <div class="lb-hint">en / ru / ua yazarak değiştir</div>
-    </div>
-
-    <div class="hist" id="hist">
-      <div class="empty-st" id="emptyState">
-        <div class="empty-icon">✦</div>
-        <div class="empty-t">Hazır</div>
-        <div class="empty-s">Bir şeyler yaz, çevirelim.<br>en / ru / ua ile dil değiştir.</div>
-      </div>
-    </div>
-
-    <div class="fav-sec" id="favSec" style="display:none">
-      <div class="fav-lbl">Favoriler</div>
-      <div class="fav-list" id="favList"></div>
-    </div>
-
-    <div class="inp-area">
-      <textarea id="inputText" placeholder="Yaz... (en / ru / ua komutunu öne ekle)" rows="2"
+  <!-- Input -->
+  <div class="input-wrap">
+    <div class="inp-box">
+      <textarea id="inputText" placeholder="Çevirmek istediğini yaz…" rows="2"
         onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
       <div class="inp-bar">
-        <div class="qlb">
-          <button class="ql" data-l="tr" onclick="setLang('tr',this)">TR</button>
-          <button class="ql" data-l="en" onclick="setLang('en',this)">EN</button>
-          <button class="ql" data-l="ru" onclick="setLang('ru',this)">RU</button>
-          <button class="ql" data-l="ua" onclick="setLang('ua',this)">UA</button>
-        </div>
-        <div class="inp-acts">
-          <button class="fav-btn" id="favBtn" onclick="toggleFav()" title="Favoriler">
-            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-          </button>
-          <button class="send-btn" id="sendBtn" onclick="doTranslate()">
-            <span class="si" id="si">
-              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-              </svg>
-            </span>
-            <div class="sp" id="sp"><div class="spr"></div></div>
-          </button>
-        </div>
+        <button class="fav-toggle" id="favToggleBtn" onclick="toggleFavTray()" title="Favoriler">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </button>
+        <button class="send-btn" id="sendBtn" onclick="doTranslate()">
+          <span class="si" id="si"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
+          <div class="sp" id="sp"><div class="spr"></div></div>
+        </button>
       </div>
     </div>
-
   </div>
+
+</div>
 </div>
 
 <!-- Settings sheet -->
@@ -553,75 +530,75 @@ body {
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="sh-handle"></div>
     <div class="sh-title">Ayarlar</div>
-    <div class="sh-lbl">API Anahtarı</div>
-    <input type="password" class="field" id="newKey" placeholder="Yeni anahtar..." style="margin-bottom:12px">
-    <button class="primary-btn" onclick="updateKey()" style="margin-bottom:8px">Güncelle</button>
-    <button class="danger-btn" onclick="deleteKey()" style="margin-bottom:12px">Anahtarı Sil &amp; Sıfırla</button>
+    <div class="sh-label">API Anahtarı</div>
+    <input type="password" class="field" id="newKey" placeholder="Yeni anahtar…" style="margin-bottom:10px">
+    <button class="primary-btn" onclick="updateKey()" style="margin-bottom:6px">Güncelle</button>
+    <button class="danger-btn" onclick="deleteKey()">Anahtarı Sil &amp; Sıfırla</button>
     <div class="opt-row">
-      <div class="opt-copy">
-        <div class="opt-t">Geri çeviri</div>
-        <div class="opt-s">Çevirinin Türkçeye geri dönüşünü her kartta göster.</div>
-      </div>
-      <button class="mini-toggle" id="btToggle" onclick="toggleBackOption()">Açık</button>
+      <div><div class="opt-t">Geri çeviri</div><div class="opt-s">Sistemin ne anladığını göster.</div></div>
+      <button class="mini-tog" id="btTog" onclick="toggleOpt('bt')">Açık</button>
     </div>
     <div class="opt-row">
-      <div class="opt-copy">
-        <div class="opt-t">Doğrulayıcı</div>
-        <div class="opt-s">Geri çeviri geldikten sonra anlam kontrolü yap.</div>
-      </div>
-      <button class="mini-toggle" id="valToggle" onclick="toggleValidatorOption()">Açık</button>
+      <div><div class="opt-t">Doğrulayıcı</div><div class="opt-s">Anlam kontrolü yap.</div></div>
+      <button class="mini-tog" id="valTog" onclick="toggleOpt('val')">Açık</button>
     </div>
   </div>
 </div>
 
+<!-- Lang picker sheet -->
+<div class="s-ov" id="lpOv" onclick="closeLangPicker()">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sh-handle"></div>
+    <div class="sh-title" id="lpTitle">Kaynak Dil</div>
+    <div class="lang-list" id="langList"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+<div class="ver">10mar09-00</div>
 
 <script>
-let apiKey = '', targetLang = 'tr', favorites = [], showFavs = false, busy = false, convHistory = [], bubbleState = [];
-let showBackTranslation = true, useValidator = true;
+// ── STATE ──
+let apiKey = '', srcLang = 'tr', tgtLang = 'en';
+let favorites = [], favOpen = false, busy = false;
+let convHistory = [], bubbles = {};
+let showBack = true, useValidator = true;
+let langPickerMode = 'tgt';
 
-const LM = {
-  tr:{name:'Türkçe',full:'Turkish'},
-  en:{name:'İngilizce',full:'English'},
-  ru:{name:'Rusça',full:'Russian'},
-  ua:{name:'Ukraynaca',full:'Ukrainian'}
+const LANGS = {
+  tr: { name: 'Türkçe', short: 'TR', full: 'Turkish' },
+  en: { name: 'İngilizce', short: 'EN', full: 'English' },
+  ru: { name: 'Rusça', short: 'RU', full: 'Russian' },
+  ua: { name: 'Ukraynaca', short: 'UA', full: 'Ukrainian' }
 };
 
+// ── INIT ──
 function init() {
   apiKey = localStorage.getItem('cv_k') || '';
-  targetLang = localStorage.getItem('cv_l') || 'tr';
+  srcLang = localStorage.getItem('cv_src') || 'tr';
+  tgtLang = localStorage.getItem('cv_tgt') || 'en';
   favorites = JSON.parse(localStorage.getItem('cv_f') || '[]');
-  showBackTranslation = localStorage.getItem('cv_bt') !== '0';
+  showBack = localStorage.getItem('cv_bt') !== '0';
   useValidator = localStorage.getItem('cv_val') !== '0';
   if (apiKey) showMain();
 }
 
 function showMain() {
   document.getElementById('setupScreen').style.display = 'none';
-  document.getElementById('mainUI').style.display = 'flex';
-  document.getElementById('mainUI').style.flexDirection = 'column';
-  document.getElementById('settingsBtn').style.display = 'flex';
+  const m = document.getElementById('mainUI');
+  m.style.display = 'flex';
+  m.style.flexDirection = 'column';
+  m.style.overflow = 'hidden';
+  m.style.flex = '1';
   document.getElementById('clearBtn').style.display = 'flex';
-  updateLangUI(); renderFavs(); renderSettingsToggles();
+  updateLangUI();
+  renderFavs();
+  renderToggles();
 }
 
 function updateLangUI() {
-  const l = LM[targetLang];
-  document.getElementById('activeLangName').textContent = l.name;
-  document.getElementById('langChip').textContent = '→ ' + targetLang.toUpperCase();
-  document.querySelectorAll('.ql').forEach(b => b.classList.toggle('active', b.dataset.l === targetLang));
-}
-
-function setLang(c, btn) {
-  targetLang = c; localStorage.setItem('cv_l', c); updateLangUI();
-  document.getElementById('inputText').focus();
-}
-
-function clearHistory() {
-  if (!confirm('Tüm mesaj geçmişi silinecektir. Emin misiniz?')) return;
-  document.getElementById('hist').innerHTML = '<div class="empty-st" id="emptyState"><div class="empty-icon">✦</div><div class="empty-t">Hazır</div><div class="empty-s">Bir şeyler yaz, çevirelim.<br>en / ru / ua ile dil değiştir.</div></div>';
-  convHistory = [];
-  toast('Geçmiş silindi');
+  document.getElementById('srcBtn').textContent = LANGS[srcLang]?.short || srcLang.toUpperCase();
+  document.getElementById('tgtBtn').textContent = LANGS[tgtLang]?.short || tgtLang.toUpperCase();
 }
 
 function saveKey() {
@@ -630,6 +607,38 @@ function saveKey() {
   apiKey = k; localStorage.setItem('cv_k', k); showMain();
 }
 
+// ── LANG SWAP ──
+function swapLangs() {
+  [srcLang, tgtLang] = [tgtLang, srcLang];
+  localStorage.setItem('cv_src', srcLang);
+  localStorage.setItem('cv_tgt', tgtLang);
+  updateLangUI();
+  toast(LANGS[srcLang].short + ' ⇄ ' + LANGS[tgtLang].short);
+}
+
+function openLangPicker(mode) {
+  langPickerMode = mode;
+  document.getElementById('lpTitle').textContent = mode === 'src' ? 'Kaynak Dil' : 'Hedef Dil';
+  const cur = mode === 'src' ? srcLang : tgtLang;
+  document.getElementById('langList').innerHTML = Object.entries(LANGS).map(([k, v]) =>
+    `<div class="lang-opt ${k === cur ? 'selected' : ''}" onclick="selectLang('${k}')">${v.name}</div>`
+  ).join('');
+  document.getElementById('lpOv').classList.add('open');
+}
+
+function selectLang(k) {
+  if (langPickerMode === 'src') {
+    srcLang = k; localStorage.setItem('cv_src', k);
+  } else {
+    tgtLang = k; localStorage.setItem('cv_tgt', k);
+  }
+  updateLangUI();
+  closeLangPicker();
+}
+
+function closeLangPicker() { document.getElementById('lpOv').classList.remove('open'); }
+
+// ── SETTINGS ──
 function openSettings() { document.getElementById('sOv').classList.add('open'); }
 function closeSettings() { document.getElementById('sOv').classList.remove('open'); }
 
@@ -640,627 +649,463 @@ function updateKey() {
 }
 
 function deleteKey() {
-  ['cv_k','cv_l','cv_f','cv_bt','cv_val'].forEach(k => localStorage.removeItem(k));
+  ['cv_k','cv_src','cv_tgt','cv_f','cv_bt','cv_val'].forEach(k => localStorage.removeItem(k));
   location.reload();
 }
 
-function renderSettingsToggles() {
-  const bt = document.getElementById('btToggle');
-  const vt = document.getElementById('valToggle');
-  if (bt) {
-    bt.textContent = showBackTranslation ? 'Açık' : 'Kapalı';
-    bt.classList.toggle('on', showBackTranslation);
-  }
-  if (vt) {
-    vt.textContent = useValidator ? 'Açık' : 'Kapalı';
-    vt.classList.toggle('on', useValidator);
-  }
+function toggleOpt(key) {
+  if (key === 'bt') { showBack = !showBack; localStorage.setItem('cv_bt', showBack ? '1' : '0'); }
+  else { useValidator = !useValidator; localStorage.setItem('cv_val', useValidator ? '1' : '0'); }
+  renderToggles();
 }
 
-function toggleBackOption() {
-  showBackTranslation = !showBackTranslation;
-  localStorage.setItem('cv_bt', showBackTranslation ? '1' : '0');
-  renderSettingsToggles();
-  toast(showBackTranslation ? 'Geri çeviri açık' : 'Geri çeviri kapalı');
+function renderToggles() {
+  const bt = document.getElementById('btTog');
+  const vl = document.getElementById('valTog');
+  bt.textContent = showBack ? 'Açık' : 'Kapalı'; bt.classList.toggle('on', showBack);
+  vl.textContent = useValidator ? 'Açık' : 'Kapalı'; vl.classList.toggle('on', useValidator);
 }
 
-function toggleValidatorOption() {
-  useValidator = !useValidator;
-  localStorage.setItem('cv_val', useValidator ? '1' : '0');
-  renderSettingsToggles();
-  toast(useValidator ? 'Doğrulayıcı açık' : 'Doğrulayıcı kapalı');
+// ── CHAT ──
+function clearChat() {
+  if (!confirm('Tüm geçmiş silinecek. Emin misin?')) return;
+  document.getElementById('chat').innerHTML = `<div class="empty-state" id="emptyState"><div class="empty-icon">✦</div><div class="empty-t">Hazır</div><div class="empty-s">Bir şeyler yaz, çevirelim.</div></div>`;
+  convHistory = []; bubbles = {};
+  toast('Geçmiş silindi');
 }
 
 function autoResize(el) {
   el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
 }
 
 function handleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doTranslate(); }
 }
 
+// ── TRANSLATE ──
 async function doTranslate() {
   if (busy) return;
   let raw = document.getElementById('inputText').value.trim();
   if (!raw) return;
 
-  const m = raw.match(/^(en|ru|ua|tr)\s+(.+)/is);
-  if (m) {
-    targetLang = m[1].toLowerCase();
-    raw = m[2].trim();
-    localStorage.setItem('cv_l', targetLang);
-    updateLangUI();
-  }
-
-  const inputEl = document.getElementById('inputText');
-  inputEl.value = ''; inputEl.style.height = 'auto';
+  const el = document.getElementById('inputText');
+  el.value = ''; el.style.height = 'auto';
   setLoading(true);
 
   const es = document.getElementById('emptyState');
   if (es) es.remove();
 
-  const lid = 'l' + Date.now();
-  const currentTargetLang = targetLang;
-  const tl = LM[currentTargetLang];
-  bubbleState[lid] = {
+  const lid = 'msg_' + Date.now();
+  const sl = LANGS[srcLang], tl = LANGS[tgtLang];
+  const curSrc = srcLang, curTgt = tgtLang;
+
+  bubbles[lid] = {
     out: '', back: null, src: '?', tone: '', warning: null,
-    model: 'deepseek-chat', targetLang: currentTargetLang,
+    warningShort: null, warningDetail: null,
+    srcLang: curSrc, tgtLang: curTgt,
     validated: useValidator ? 'pending' : null,
     validatorEnabled: useValidator,
-    backEnabled: showBackTranslation && currentTargetLang !== 'tr',
+    backEnabled: showBack,
     statusLine: 'Çeviri akıyor…',
-    translationPending: true,
-    backPending: false
+    translationPending: true, backPending: false, retrying: false
   };
-  addLoadingBubble(raw, lid);
 
+  appendRow(raw, lid);
+
+  // Build context
   const ctxLines = convHistory.slice(-3).map(h => `[Kaynak]: ${h.src}\n[Çeviri]: ${h.tgt}`).join('\n');
-  const contextBlock = ctxLines ? `\nSOHBET BAĞLAMI (sadece referans, çeviri yapma):\n${ctxLines}\n` : '';
+  const contextBlock = ctxLines ? `\nSOHBET BAĞLAMI (sadece referans):\n${ctxLines}\n` : '';
 
-  const prompt = `Sen yüksek sadakatli bir çeviri motorusun.
+  const mainPrompt = `Sen yüksek sadakatli bir çeviri motorusun.
 
 GÖREV: Verilen metni ${tl.full} diline doğal ve akıcı şekilde çevir.${contextBlock}
-BAĞLAM KULLANIM KURALI: Sohbet bağlamı varsa, kısa ve belirsiz ifadelerin tonunu ve anlamını doğru anlamak için kullan. Ama bağlamı çeviriye yansıtma — sadece kelime seçimini ve tonu iyileştirmek için kullan.
+BAĞLAM KURALI: Bağlam varsa ton ve kelime seçimini iyileştirmek için kullan, çeviriye yansıtma.
 
 ZORUNLU KURALLAR:
 1. Kaynak metindeki anlamı koru.
-2. Kaynakta olmayan hiçbir bilgi, övgü, duygu, özne, hitap, açıklama veya yorum ekleme.
-3. Yazım hatalarını düzeltebilirsin ama düzelttiğin şey anlamı değiştirmemeli.
+2. Kaynakta olmayan bilgi, övgü, duygu, özne veya yorum ekleme.
+3. Yazım hatalarını düzelt ama anlamı değiştirme.
 4. Kelime kelime çeviri yapma; hedef dilde doğal yaz.
-5. Doğallık için cümleyi yeniden kurabilirsin ama bilgi ekleyemez, eksiltemez, abartamazsın.
-6. Kaynak metinde kişi açık değilse özne uydurma.
-7. Metindeki ton samimi / resmi / nötr ise bunu koru; tonu güçlendirme veya abartma.
-8. Belirsiz bir ifade varsa onu açıklamaya çalışma, belirsizliği koru.
-9. Metafor, övgü, duygusal yükseltme ve ima eklemek kesinlikle yasaktır.
-10. Kelime kelime en yakın sözlük karşılığını değil, bağlama en uygun doğal karşılığı seç.
+5. Belirsizliği koru, açıklamaya çalışma.
+6. Özne açık değilse uydurma.
+7. Tonu koru, güçlendirme veya abartma.
+8. Bağlama en uygun doğal karşılığı seç, sözlük karşılığını değil.
 
-Aşağıdaki formatın dışına çıkma:
-<translation>hedef dilde doğal çeviri</translation>
-<src>kaynak dil Türkçe olarak</src>
-<tone>ton Türkçe olarak</tone>
+Format (sadece bu):
+<translation>çeviri</translation>
+<src>kaynak dil Türkçe</src>
+<tone>ton Türkçe</tone>
 
 Kullanıcı metni: ${raw}`;
 
-  const backPrompt = (translatedText) => `Aşağıdaki ${tl.full} metnini Türkçeye çevir.
+  const backPrompt = (txt) => `Aşağıdaki ${tl.full} metnini ${sl.full} diline çevir.
+KURALLAR: Sadece bu metni çevir. Kaynak metnin ne olduğunu bilmiyorsun. Doğal çevir. Tek satır, sadece çeviri.
+Metin: ${txt}`;
 
-KURALLAR:
-- Sadece verilen metni çevir, başka hiçbir şey ekleme.
-- Kaynak metnin ne olduğunu bilmiyorsun, sadece bu ${tl.full} metni var.
-- Kelimesi kelimesine değil, doğal Türkçeyle çevir.
-- Tek satır, sadece çeviri, açıklama yok.
+  const validatorPrompt = (src, tr, bk) => `Sen dengeli bir çeviri doğrulayıcısısın.
+GÖREV: Kaynak, çeviri ve geri çeviriyi değerlendir.
 
-Metin: ${translatedText}`;
+AĞIR HATALAR (pass=false):
+- ADDED_CONTENT: Kaynakta olmayan anlam eklendi
+- OMITTED_CONTENT: Önemli anlam kaybedildi
+- MEANING_DISTORTION: Anlam çarpıtıldı
+- SUBJECT_INSERTED: Kaynak olmayan özne eklendi
 
-  const validatorPrompt = (src, translation, backTranslation, targetLanguage) => `Sen katı değil, dengeli çalışan bir çeviri doğrulayıcısısın.
+NOT OLARAK GEÇ (fail değil):
+- TONE_SHIFT, AWKWARD_WORDING, GRAMMAR_ONLY_NORMALIZATION
 
-GÖREV: Kaynak metin, ${targetLanguage} çeviri ve geri çeviriyi birlikte değerlendir. Ana amaç anlamsal sadakati kontrol etmektir.
-
-AĞIR HATALAR (bunlar varsa pass=false):
-- ADDED_CONTENT: Kaynakta olmayan yeni bilgi, övgü, ima, açıklama veya anlam eklenmiş.
-- OMITTED_CONTENT: Kaynağın önemli bir anlam parçası kaybolmuş.
-- MEANING_DISTORTION: Anlam kaymış, yanlış yorumlanmış veya tersine dönmüş.
-- SUBJECT_INSERTED: Kaynakta açık olmayan özne/kişi eklenmiş.
-
-NOT OLARAK GEÇ (tek başına fail sebebi değildir):
-- TONE_SHIFT: Küçük ton farkı var ama ana anlam korunuyor.
-- AWKWARD_WORDING: Anlam doğru ama ifade yapay / fazla literal.
-- GRAMMAR_ONLY_NORMALIZATION: Sadece yazım veya küçük dilbilgisi düzeltmesi yapılmış.
-
-KURALLAR:
-1. Kısa selamlaşmalar, doğal eşdeğerler ve hedef dildeki normal ifade farkları hata değildir.
-2. Sadece gerçek anlam ekleme, eksiltme veya çarpıtma varsa fail ver.
-3. Geri çeviri kaynak anlamı koruyorsa bunu güçlü olumlu sinyal say.
-4. Ton farkı küçükse notes alanına yaz ama pass=false yapma.
-5. Sadece JSON döndür, başka hiçbir şey yazma.
+KURALLAR: Doğal eşdeğerler hata değildir. Geri çeviri anlamı koruyorsa pozitif sinyal. Sadece JSON döndür.
 
 Kaynak: ${src}
-Çeviri (${targetLanguage}): ${translation}
-Geri çeviri (Türkçe): ${backTranslation || 'YOK'}
+Çeviri (${tl.full}): ${tr}
+Geri çeviri (${sl.full}): ${bk || 'YOK'}
 
-JSON:
-{"pass":true,"errors":[],"severity":"none","notes":""}`;
+JSON: {"pass":true,"errors":[],"severity":"none","notes":""}`;
 
   try {
-    const txt = await streamTranslationResponse(prompt, (partialText) => {
-      const partial = extractPartialTranslation(partialText);
-      if (partial) {
-        updateBubbleProgress(lid, raw, {
-          out: partial,
-          statusLine: 'Çeviri akıyor…',
-          translationPending: true
-        });
-      }
+    const txt = await streamChat(mainPrompt, (partial) => {
+      const p = extractTag(partial, 'translation');
+      if (p) updateBubble(lid, raw, { out: p, statusLine: 'Çeviri akıyor…', translationPending: true });
     });
 
-    let parsed = parseTaggedTranslation(txt);
-    parsed.out = parsed.out || parsed.translation || txt.trim();
+    let parsed = parseTags(txt);
     parsed.back = null;
-    updateBubbleProgress(lid, raw, {
-      out: parsed.out,
-      src: parsed.src,
-      tone: parsed.tone,
+    updateBubble(lid, raw, {
+      out: parsed.out, src: parsed.src, tone: parsed.tone,
       translationPending: false,
-      statusLine: (showBackTranslation && currentTargetLang !== 'tr') ? 'Geri çeviri hazırlanıyor…' : (useValidator ? 'Doğrulanıyor…' : '')
+      statusLine: (showBack) ? 'Geri çeviri hazırlanıyor…' : (useValidator ? 'Doğrulanıyor…' : '')
     });
 
-    if (showBackTranslation && currentTargetLang !== 'tr' && parsed.out) {
-      updateBubbleProgress(lid, raw, { backPending: true });
+    if (showBack && parsed.out) {
+      updateBubble(lid, raw, { backPending: true });
       try {
-        const backTxt = await plainChatCompletion(backPrompt(parsed.out), 500);
-        parsed.back = backTxt.trim() || null;
+        const bt = await plainChat(backPrompt(parsed.out), 500);
+        parsed.back = bt.trim() || null;
       } catch(e) { parsed.back = null; }
-      updateBubbleProgress(lid, raw, {
-        back: parsed.back,
-        backPending: false,
-        statusLine: useValidator ? 'Doğrulanıyor…' : ''
-      });
+      updateBubble(lid, raw, { back: parsed.back, backPending: false, statusLine: useValidator ? 'Doğrulanıyor…' : '' });
     }
 
-    let validationWarning = null;
-    let warningShort = null;
-    let warningDetail = null;
-    let validatorRan = false;
+    let validationWarning = null, warningShort = null, warningDetail = null, validatorRan = false;
     if (useValidator) {
       try {
-        const vtxt = await plainChatCompletion(validatorPrompt(raw, parsed.out, parsed.back, tl.full), 300);
+        const vt = await plainChat(validatorPrompt(raw, parsed.out, parsed.back), 300);
         validatorRan = true;
-        const vjm = vtxt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
-        if (vjm) {
-          const vresult = JSON.parse(vjm[0]);
-          if (!vresult.pass && vresult.errors && vresult.errors.length > 0) {
-            const errorLabels = {
+        const vm = vt.replace(/```json|```/g, '').trim().match(/\{[\s\S]*\}/);
+        if (vm) {
+          const vr = JSON.parse(vm[0]);
+          if (!vr.pass && vr.errors?.length) {
+            const labels = {
               'ADDED_CONTENT': 'Kaynak metinde olmayan içerik eklendi',
               'OMITTED_CONTENT': 'Kaynak metinden anlam eksiltildi',
-              'TONE_SHIFT': 'Ton gereksiz değiştirildi',
               'MEANING_DISTORTION': 'Anlam kaydırıldı veya çarpıtıldı',
               'SUBJECT_INSERTED': 'Kaynakta olmayan özne eklendi'
             };
-            const summary = summarizeValidation(vresult, errorLabels);
-            validationWarning = summary.detail || summary.short;
-            warningShort = summary.short;
-            warningDetail = summary.detail;
+            const hard = vr.errors.filter(e => !['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e));
+            if (hard.length) {
+              warningShort = labels[hard[0]] || hard[0];
+              const parts = hard.map(e => labels[e] || e);
+              if (vr.notes) parts.push(vr.notes);
+              warningDetail = parts.join(' — ');
+              validationWarning = warningDetail;
+            }
           }
         }
-      } catch(e) { }
+      } catch(e) {}
     }
 
-    parsed.warning = validationWarning;
-    parsed.warningShort = warningShort;
-    parsed.warningDetail = warningDetail;
-    parsed.model = 'deepseek-chat';
-    parsed.targetLang = currentTargetLang;
-    parsed.validatorEnabled = useValidator;
-    parsed.backEnabled = showBackTranslation && currentTargetLang !== 'tr';
-    parsed.validated = useValidator ? (validatorRan ? (validationWarning === null) : null) : null;
-    parsed.statusLine = '';
-    parsed.translationPending = false;
-    parsed.backPending = false;
-
-    convHistory.push({src: raw, tgt: parsed.out});
+    convHistory.push({ src: raw, tgt: parsed.out });
     if (convHistory.length > 10) convHistory.shift();
-    bubbleState[lid] = parsed;
-    replaceBubble(lid, raw, parsed);
+
+    Object.assign(bubbles[lid], {
+      out: parsed.out, src: parsed.src, tone: parsed.tone, back: parsed.back,
+      warning: validationWarning, warningShort, warningDetail,
+      validated: useValidator ? (validatorRan ? (validationWarning === null) : null) : null,
+      statusLine: '', translationPending: false, backPending: false
+    });
+    renderBubble(lid, raw);
   } catch(e) {
-    removeEl(lid);
+    const row = document.getElementById(lid);
+    if (row) row.querySelector('.msg-out').innerHTML = `<div style="color:var(--rose);font-size:13px;">Hata: ${esc(e.message)}</div>`;
     toast('Hata: ' + e.message);
   } finally {
     setLoading(false);
   }
 }
 
-async function streamTranslationResponse(prompt, onPartial) {
-  const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: 'deepseek-chat',
-      messages:[{role:'user', content: prompt}],
-      temperature: 0.1,
-      max_tokens: 2000,
-      stream: true
-    })
+// ── RETRY ──
+async function improveTranslation(lid, rawText) {
+  const cur = bubbles[lid];
+  if (!cur || cur.retrying) return;
+  const tl = LANGS[cur.tgtLang], sl = LANGS[cur.srcLang];
+  const feedback = cur.warningDetail || cur.warning || 'Anlamı daha dikkatli koru.';
+
+  Object.assign(bubbles[lid], {
+    retrying: true, statusLine: 'İyileştiriliyor…',
+    validated: 'pending', warning: null, warningShort: null, warningDetail: null
   });
-  if (!res.ok) {
-    const e = await res.json().catch(()=>({}));
-    throw new Error(e.error?.message || 'API hatası');
-  }
-  if (!res.body) return await plainChatCompletion(prompt, 2000);
-
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = '';
-  let full = '';
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop() || '';
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed.startsWith('data:')) continue;
-      const data = trimmed.slice(5).trim();
-      if (!data || data === '[DONE]') continue;
-      try {
-        const obj = JSON.parse(data);
-        const delta = obj.choices?.[0]?.delta?.content || '';
-        if (delta) {
-          full += delta;
-          if (onPartial) onPartial(full);
-        }
-      } catch(_) {}
-    }
-  }
-  return full;
-}
-
-async function plainChatCompletion(prompt, maxTokens=500) {
-  const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: 'deepseek-chat',
-      messages:[{role:'user', content: prompt}],
-      temperature: 0.1,
-      max_tokens: maxTokens
-    })
-  });
-  if (!res.ok) {
-    const e = await res.json().catch(()=>({}));
-    throw new Error(e.error?.message || 'API hatası');
-  }
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content || '';
-}
-
-function extractPartialTranslation(text) {
-  const lower = text.toLowerCase();
-  const open = '<translation>';
-  const close = '</translation>';
-  const i = lower.indexOf(open);
-  if (i === -1) return '';
-  const rest = text.slice(i + open.length);
-  const end = rest.toLowerCase().indexOf(close);
-  return (end === -1 ? rest : rest.slice(0, end)).trimStart();
-}
-
-function parseTaggedTranslation(text) {
-  const pick = (tag) => {
-    const m = text.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, 'i'));
-    return m ? m[1].trim() : '';
-  };
-  const translation = pick('translation');
-  return {
-    translation: translation || text.trim(),
-    out: translation || text.trim(),
-    src: pick('src') || '?',
-    tone: pick('tone') || ''
-  };
-}
-
-function summarizeValidation(vresult, errorLabels) {
-  const hardErrors = (vresult.errors || []).filter(e => !['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e));
-  const shortText = hardErrors.length ? (errorLabels[hardErrors[0]] || hardErrors[0]) : 'İncelenmesi iyi olur';
-  const detailParts = hardErrors.map(e => errorLabels[e] || e);
-  if (vresult.notes) detailParts.push(vresult.notes);
-  return {
-    short: shortText,
-    detail: detailParts.join(' — ')
-  };
-}
-
-async function retryTranslation(id, inputTxt) {
-  const current = bubbleState[id];
-  if (!current || current.retrying) return;
-  const bubbleLang = current.targetLang || targetLang;
-  const tl = LM[bubbleLang];
-  const feedback = current.warningDetail || current.warning || 'Anlamı daha dikkatli koru.';
-  bubbleState[id] = {
-    ...current,
-    retrying: true,
-    statusLine: 'Çeviri yeniden deneniyor…',
-    validated: current.validatorEnabled === false ? null : 'pending',
-    warning: null,
-    warningShort: null,
-    warningDetail: null
-  };
-  replaceBubble(id, inputTxt, bubbleState[id]);
+  renderBubble(lid, rawText);
 
   const retryPrompt = `Sen yüksek sadakatli bir çeviri motorusun.
+GÖREV: Verilen metni ${tl.full} diline yeniden çevir. Bu ikinci denemedir.
+Önceki denemede şu sorun tespit edildi: ${feedback}
 
-GÖREV: Verilen metni ${tl.full} diline yeniden çevir.
-Bu ikinci denemedir. Önceki denemede şu sorun görüldü: ${feedback}
+FORMAT:
+<translation>çeviri</translation>
+<src>kaynak dil Türkçe</src>
+<tone>ton Türkçe</tone>
 
-KURALLAR:
-1. Anlamı koru, yeni bilgi ekleme.
-2. Deyimleri literal çevirme.
-3. Belirsizlik varsa koru.
-4. Sadece şu formatta dön:
-<translation>hedef dilde doğal çeviri</translation>
-<src>kaynak dil Türkçe olarak</src>
-<tone>ton Türkçe olarak</tone>
+Kullanıcı metni: ${rawText}`;
 
-Kullanıcı metni: ${inputTxt}`;
+  const backP = (txt) => `Aşağıdaki ${tl.full} metnini ${sl.full} diline çevir. Sadece bu metni çevir. Doğal çevir. Tek satır.
+Metin: ${txt}`;
+
+  const valP = (src, tr, bk) => `Sen dengeli bir çeviri doğrulayıcısısın.
+Kaynak: ${src}\nÇeviri (${tl.full}): ${tr}\nGeri çeviri (${sl.full}): ${bk || 'YOK'}
+KURALLAR: Sadece gerçek anlam ekleme/eksiltme/çarpıtma varsa fail ver. Sadece JSON.
+JSON: {"pass":true,"errors":[],"severity":"none","notes":""}`;
 
   try {
-    const txt = await streamTranslationResponse(retryPrompt, (partialText) => {
-      const partial = extractPartialTranslation(partialText);
-      if (partial) updateBubbleProgress(id, inputTxt, { out: partial, translationPending: true, statusLine: 'Çeviri yeniden akıyor…' });
+    const txt = await streamChat(retryPrompt, (p) => {
+      const part = extractTag(p, 'translation');
+      if (part) updateBubble(lid, rawText, { out: part, translationPending: true, statusLine: 'İyileştirme akıyor…' });
     });
-    let parsed = parseTaggedTranslation(txt);
-    parsed.out = parsed.out || parsed.translation || txt.trim();
+    let parsed = parseTags(txt);
     parsed.back = null;
-    updateBubbleProgress(id, inputTxt, {
-      out: parsed.out,
-      src: parsed.src,
-      tone: parsed.tone,
-      translationPending: false,
-      statusLine: (current.backEnabled && bubbleLang !== 'tr') ? 'Geri çeviri hazırlanıyor…' : (current.validatorEnabled ? 'Doğrulanıyor…' : ''),
-      retrying: true
-    });
+    updateBubble(lid, rawText, { out: parsed.out, src: parsed.src, tone: parsed.tone, translationPending: false, statusLine: cur.backEnabled ? 'Geri çeviri hazırlanıyor…' : (cur.validatorEnabled ? 'Doğrulanıyor…' : '') });
 
-    const backPrompt = `Aşağıdaki ${tl.full} metnini Türkçeye çevir.
-
-KURALLAR:
-- Sadece verilen metni çevir, başka hiçbir şey ekleme.
-- Kaynak metnin ne olduğunu bilmiyorsun, sadece bu ${tl.full} metni var.
-- Kelimesi kelimesine değil, doğal Türkçeyle çevir.
-- Tek satır, sadece çeviri, açıklama yok.
-
-Metin: ${parsed.out}`;
-    if (current.backEnabled && bubbleLang !== 'tr' && parsed.out) {
-      updateBubbleProgress(id, inputTxt, { backPending: true });
-      try {
-        parsed.back = (await plainChatCompletion(backPrompt, 500)).trim() || null;
-      } catch(e) { parsed.back = null; }
-      updateBubbleProgress(id, inputTxt, { back: parsed.back, backPending: false, statusLine: current.validatorEnabled ? 'Doğrulanıyor…' : '' });
+    if (cur.backEnabled && parsed.out) {
+      try { parsed.back = (await plainChat(backP(parsed.out), 500)).trim() || null; } catch(e) { parsed.back = null; }
+      updateBubble(lid, rawText, { back: parsed.back, backPending: false, statusLine: cur.validatorEnabled ? 'Doğrulanıyor…' : '' });
     }
 
     let validationWarning = null, warningShort = null, warningDetail = null, validatorRan = false;
-    if (current.validatorEnabled) {
-      const validatorPrompt = (src, translation, backTranslation, targetLanguage) => `Sen katı değil, dengeli çalışan bir çeviri doğrulayıcısısın.
-
-GÖREV: Kaynak metin, ${targetLanguage} çeviri ve geri çeviriyi birlikte değerlendir. Ana amaç anlamsal sadakati kontrol etmektir.
-
-AĞIR HATALAR (bunlar varsa pass=false):
-- ADDED_CONTENT: Kaynakta olmayan yeni bilgi, övgü, ima, açıklama veya anlam eklenmiş.
-- OMITTED_CONTENT: Kaynağın önemli bir anlam parçası kaybolmuş.
-- MEANING_DISTORTION: Anlam kaymış, yanlış yorumlanmış veya tersine dönmüş.
-- SUBJECT_INSERTED: Kaynakta açık olmayan özne/kişi eklenmiş.
-
-NOT OLARAK GEÇ (tek başına fail sebebi değildir):
-- TONE_SHIFT: Küçük ton farkı var ama ana anlam korunuyor.
-- AWKWARD_WORDING: Anlam doğru ama ifade yapay / fazla literal.
-- GRAMMAR_ONLY_NORMALIZATION: Sadece yazım veya küçük dilbilgisi düzeltmesi yapılmış.
-
-KURALLAR:
-1. Kısa selamlaşmalar, doğal eşdeğerler ve hedef dildeki normal ifade farkları hata değildir.
-2. Sadece gerçek anlam ekleme, eksiltme veya çarpıtma varsa fail ver.
-3. Geri çeviri kaynak anlamı koruyorsa bunu güçlü olumlu sinyal say.
-4. Ton farkı küçükse notes alanına yaz ama pass=false yapma.
-5. Sadece JSON döndür, başka hiçbir şey yazma.
-
-Kaynak: ${src}
-Çeviri (${targetLanguage}): ${translation}
-Geri çeviri (Türkçe): ${backTranslation || 'YOK'}
-
-JSON:
-{"pass":true,"errors":[],"severity":"none","notes":""}`;
+    if (cur.validatorEnabled) {
       try {
-        const vtxt = await plainChatCompletion(validatorPrompt(inputTxt, parsed.out, parsed.back, tl.full), 300);
+        const vt = await plainChat(valP(rawText, parsed.out, parsed.back), 300);
         validatorRan = true;
-        const vjm = vtxt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
-        if (vjm) {
-          const vresult = JSON.parse(vjm[0]);
-          if (!vresult.pass && vresult.errors && vresult.errors.length > 0) {
-            const errorLabels = {
-              'ADDED_CONTENT': 'Kaynak metinde olmayan içerik eklendi',
-              'OMITTED_CONTENT': 'Kaynak metinden anlam eksiltildi',
-              'TONE_SHIFT': 'Ton gereksiz değiştirildi',
-              'MEANING_DISTORTION': 'Anlam kaydırıldı veya çarpıtıldı',
-              'SUBJECT_INSERTED': 'Kaynakta olmayan özne eklendi'
-            };
-            const summary = summarizeValidation(vresult, errorLabels);
-            validationWarning = summary.detail || summary.short;
-            warningShort = summary.short;
-            warningDetail = summary.detail;
+        const vm = vt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
+        if (vm) {
+          const vr = JSON.parse(vm[0]);
+          if (!vr.pass && vr.errors?.length) {
+            const labels = { 'ADDED_CONTENT':'Kaynak metinde olmayan içerik eklendi','OMITTED_CONTENT':'Kaynak metinden anlam eksiltildi','MEANING_DISTORTION':'Anlam kaydırıldı veya çarpıtıldı','SUBJECT_INSERTED':'Kaynakta olmayan özne eklendi' };
+            const hard = vr.errors.filter(e => !['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e));
+            if (hard.length) { warningShort = labels[hard[0]] || hard[0]; warningDetail = hard.map(e=>labels[e]||e).join(' — '); if(vr.notes) warningDetail += ' — '+vr.notes; validationWarning = warningDetail; }
           }
         }
       } catch(e) {}
     }
 
-    parsed.warning = validationWarning;
-    parsed.warningShort = warningShort;
-    parsed.warningDetail = warningDetail;
-    parsed.model = current.model || 'deepseek-chat';
-    parsed.targetLang = bubbleLang;
-    parsed.validatorEnabled = current.validatorEnabled;
-    parsed.backEnabled = current.backEnabled;
-    parsed.validated = current.validatorEnabled ? (validatorRan ? (validationWarning === null) : null) : null;
-    parsed.statusLine = '';
-    parsed.translationPending = false;
-    parsed.backPending = false;
-    parsed.retrying = false;
-    bubbleState[id] = parsed;
-    replaceBubble(id, inputTxt, parsed);
+    Object.assign(bubbles[lid], {
+      out: parsed.out, src: parsed.src, tone: parsed.tone, back: parsed.back,
+      warning: validationWarning, warningShort, warningDetail,
+      validated: cur.validatorEnabled ? (validatorRan ? (validationWarning === null) : null) : null,
+      statusLine: '', translationPending: false, backPending: false, retrying: false
+    });
+    renderBubble(lid, rawText);
   } catch(e) {
-    bubbleState[id] = { ...current, retrying: false, statusLine: '', warning: current.warning, warningShort: current.warningShort, warningDetail: current.warningDetail };
-    replaceBubble(id, inputTxt, bubbleState[id]);
-    toast('Yeniden çeviri hatası: ' + e.message);
+    Object.assign(bubbles[lid], { retrying: false, statusLine: '' });
+    renderBubble(lid, rawText);
+    toast('İyileştirme hatası: ' + e.message);
   }
 }
-function updateBubbleProgress(id, inputTxt, patch) {
-  bubbleState[id] = { ...(bubbleState[id] || {}), ...patch };
-  replaceBubble(id, inputTxt, bubbleState[id]);
+
+// ── RENDER ──
+function appendRow(rawText, lid) {
+  const chat = document.getElementById('chat');
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = lid;
+  chat.appendChild(row);
+  renderBubble(lid, rawText);
+  chat.scrollTop = chat.scrollHeight;
 }
 
-function addLoadingBubble(inputTxt, id) {
-  const h = document.getElementById('hist');
-  const d = document.createElement('div');
-  d.className='bubble'; d.id=id;
-  h.appendChild(d); h.scrollTop=h.scrollHeight;
-  replaceBubble(id, inputTxt, bubbleState[id] || {});
+function updateBubble(lid, rawText, patch) {
+  bubbles[lid] = { ...(bubbles[lid] || {}), ...patch };
+  renderBubble(lid, rawText);
 }
 
-function replaceBubble(id, inputTxt, p) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const bubbleLang = p.targetLang || targetLang;
-  const tl = LM[bubbleLang];
-  const hasBack = !!(p.back || p.backPending) && bubbleLang !== 'tr' && p.backEnabled !== false;
-  const hasWarning = !!p.warning;
-  const bid = 'b'+Date.now();
-  const did = 'd'+Date.now();
-  let variants = '';
-  if (p.v && p.v.length) {
-    variants = `<div class="variants">` +
-      p.v.map(v=>`<div class="v-item" onclick="copyD('${ea(v.t)}')">
-        <div class="v-text">${esc(v.t)}</div>
-        <div class="v-lbl">${esc(v.l)}</div>
-      </div>`).join('') + `</div>`;
-  }
+function renderBubble(lid, rawText) {
+  const row = document.getElementById(lid);
+  if (!row) return;
+  const p = bubbles[lid] || {};
+  const tl = LANGS[p.tgtLang] || LANGS[tgtLang];
   const mainText = p.out || '';
-  const stageLine = p.statusLine ? `<div class="b-stage">${esc(p.statusLine)}</div>` : '';
-  const backBlock = hasBack
-    ? `<div class="b-back ${p.backPending ? 'pending' : ''}">↳ ${esc(p.backPending ? 'Geri çeviri hazırlanıyor…' : (p.back || ''))}</div>`
-    : '';
-  const copyDisabled = !mainText;
-  const warningBlock = hasWarning ? `
-      <details class="v-detail">
-        <summary><span class="v-sum-left">⚠️ <span>${esc(p.warningShort || 'İncelenmesi iyi olur')}</span></span><span class="v-sum-right">▾</span></summary>
-        ${p.warningDetail ? `<div class="v-body">${esc(p.warningDetail)}</div>` : ''}
-      </details>` : '';
-  const retryBtn = (p.validated === false && !p.retrying)
-    ? `<button class="retry-btn" onclick="retryTranslation('${id}','${ea(inputTxt)}')" title="Çeviriyi geri bildirime göre yeniden dene">↻</button>`
-    : '';
-  const retryBadge = p.retrying ? `<span class="tag" style="background:rgba(26,26,36,0.06);color:var(--muted);border:1px solid var(--muted2);">… yeniden deneniyor</span>` : '';
-  el.innerHTML=`
-    <div class="b-in">${esc(inputTxt)}</div>
-    <div class="b-out">
-      <div class="b-main ${p.translationPending ? 'pending' : ''}">${esc(mainText || 'Çeviri hazırlanıyor…')}</div>
-      ${stageLine}
-      ${backBlock}
-      ${warningBlock}
-      <div class="b-meta">
-        <div class="b-tags">
-          <span class="tag tag-l">→ ${esc(tl.name)}</span>
-          ${p.tone?`<span class="tag tag-t">${esc(p.tone)}</span>`:''}
-          ${p.model?`<span class="tag tag-s">${esc(p.model)}</span>`:''}
-          ${retryBadge}
-          ${p.validatorEnabled===false ? '' : p.validated===true
-            ? `<span class="tag" style="background:rgba(45,125,120,0.1);color:var(--teal);border:1px solid rgba(45,125,120,0.3);">✓ doğrulandı</span>`
-            : p.validated===false
-              ? `<span class="tag" style="background:rgba(201,168,76,0.1);color:#9a7a20;border:1px solid rgba(201,168,76,0.3);">~ incelenmeli</span>`
-              : `<span class="tag" style="background:rgba(26,26,36,0.06);color:var(--muted);border:1px solid var(--muted2);">… doğrulanıyor</span>`}
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          ${retryBtn}
-          <button class="copy-btn" id="${bid}" onclick="copyBubble('${ea(mainText)}','${bid}')" ${copyDisabled ? 'disabled' : ''}>
-            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-      ${variants}
+
+  // Status pill
+  let validPill = '';
+  if (p.validatorEnabled !== false) {
+    if (p.validated === true) validPill = `<span class="status-pill sp-ok">✓ Doğrulandı</span>`;
+    else if (p.validated === false) validPill = `<span class="status-pill sp-warn">⚠ İncelenmeli</span>`;
+    else if (p.validated === 'pending') validPill = `<span class="status-pill sp-pending">… doğrulanıyor</span>`;
+  }
+
+  // Back translation
+  let backHtml = '';
+  if (p.backEnabled !== false && (p.back || p.backPending)) {
+    backHtml = `<div class="msg-back">
+      <div class="back-label">Geri çeviri</div>
+      ${esc(p.backPending ? 'Hazırlanıyor…' : (p.back || ''))}
     </div>`;
-  const h=document.getElementById('hist'); h.scrollTop=h.scrollHeight;
+  }
+
+  // Validator warning
+  let warnHtml = '';
+  if (p.warning) {
+    warnHtml = `<details class="validator-block">
+      <summary class="validator-summary">
+        <span class="val-left">⚠️ <span>${esc(p.warningShort || 'İncelenmesi iyi olur')}</span></span>
+        <span class="val-arrow">▾</span>
+      </summary>
+      ${p.warningDetail ? `<div class="validator-body">${esc(p.warningDetail)}</div>` : ''}
+    </details>`;
+  }
+
+  // Action bar
+  const copyId = 'cp_' + lid;
+  const improveBtn = (p.validated === false && !p.retrying)
+    ? `<button class="act-btn primary-act" onclick="improveTranslation('${lid}','${ea(rawText)}')">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+        İyileştir
+      </button>` : '';
+  const retryBadge = p.retrying ? `<span class="status-pill sp-pending">… iyileştiriliyor</span>` : '';
+
+  const actBar = mainText ? `<div class="action-bar">
+    ${improveBtn}
+    <button class="act-btn" id="${copyId}" onclick="copyText('${ea(mainText)}','${copyId}')">
+      <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Kopyala
+    </button>
+    <button class="act-btn" onclick="addFav('${ea(rawText)}')">★ Favori</button>
+  </div>` : '';
+
+  const stageLine = p.statusLine ? `<div class="stage-line">${esc(p.statusLine)}</div>` : '';
+
+  row.innerHTML = `
+    <div class="msg-src">${esc(rawText)}</div>
+    <div class="msg-out">
+      <div class="msg-text ${p.translationPending ? 'streaming' : ''}">${esc(mainText || '…')}</div>
+      ${stageLine}
+      ${backHtml}
+      ${warnHtml}
+      <div class="msg-status">
+        <span class="status-pill sp-lang">→ ${esc(tl.name)}</span>
+        ${p.tone ? `<span class="status-pill sp-tone">${esc(p.tone)}</span>` : ''}
+        <span class="status-pill sp-model">DeepSeek</span>
+        ${validPill}
+        ${retryBadge}
+      </div>
+      ${actBar}
+    </div>`;
+
+  const chat = document.getElementById('chat');
+  chat.scrollTop = chat.scrollHeight;
 }
 
-function removeEl(id) { const e=document.getElementById(id); if(e) e.remove(); }
+// ── API ──
+async function streamChat(prompt, onPartial) {
+  const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'user', content: prompt }], temperature: 0.1, max_tokens: 2000, stream: true })
+  });
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error?.message || 'API hatası'); }
+  if (!res.body) return plainChat(prompt, 2000);
 
-async function copyBubble(txt, bid) {
-  await cp(txt);
-  const b=document.getElementById(bid); if(!b) return;
-  b.classList.add('ok');
-  b.innerHTML='<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
-  setTimeout(()=>{b.classList.remove('ok');b.innerHTML='<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';},1800);
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = '', full = '';
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    const lines = buf.split('\n'); buf = lines.pop() || '';
+    for (const line of lines) {
+      const t = line.trim();
+      if (!t.startsWith('data:')) continue;
+      const d = t.slice(5).trim();
+      if (!d || d === '[DONE]') continue;
+      try { const o = JSON.parse(d); const delta = o.choices?.[0]?.delta?.content || ''; if (delta) { full += delta; if (onPartial) onPartial(full); } } catch(_) {}
+    }
+  }
+  return full;
 }
 
-async function copyD(txt) { await cp(txt); }
+async function plainChat(prompt, maxTokens = 500) {
+  const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'user', content: prompt }], temperature: 0.1, max_tokens: maxTokens })
+  });
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error?.message || 'API hatası'); }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || '';
+}
 
-async function cp(txt) {
+function extractTag(text, tag) {
+  const i = text.toLowerCase().indexOf(`<${tag}>`);
+  if (i === -1) return '';
+  const rest = text.slice(i + tag.length + 2);
+  const end = rest.toLowerCase().indexOf(`</${tag}>`);
+  return (end === -1 ? rest : rest.slice(0, end)).trimStart();
+}
+
+function parseTags(text) {
+  const pick = (tag) => { const m = text.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, 'i')); return m ? m[1].trim() : ''; };
+  const t = pick('translation');
+  return { out: t || text.trim(), src: pick('src') || '?', tone: pick('tone') || '' };
+}
+
+// ── COPY ──
+async function copyText(txt, btnId) {
   try { await navigator.clipboard.writeText(txt); toast('Kopyalandı ✓'); }
   catch { toast('Kopyalanamadı'); }
+  const b = document.getElementById(btnId);
+  if (b) { b.classList.add('act-copy-ok'); b.textContent = '✓ Kopyalandı'; setTimeout(() => { b.classList.remove('act-copy-ok'); b.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Kopyala'; }, 2000); }
 }
 
-function toggleFav() {
-  const inp = document.getElementById('inputText').value.trim();
-  if (inp) {
-    if (!favorites.includes(inp)) {
-      favorites.unshift(inp); if(favorites.length>20) favorites.pop();
-      localStorage.setItem('cv_f', JSON.stringify(favorites));
-      renderFavs(); toast('Favorilere eklendi ★');
-      const fb=document.getElementById('favBtn'); fb.classList.add('on');
-      setTimeout(()=>fb.classList.remove('on'),1500);
-    } else toast('Zaten favoride');
-  } else {
-    showFavs=!showFavs;
-    document.getElementById('favSec').style.display = showFavs && favorites.length ? 'flex':'none';
-    document.getElementById('favBtn').classList.toggle('on', showFavs);
-  }
+// ── FAVS ──
+function addFav(txt) {
+  if (!txt) return;
+  if (!favorites.includes(txt)) {
+    favorites.unshift(txt); if (favorites.length > 20) favorites.pop();
+    localStorage.setItem('cv_f', JSON.stringify(favorites));
+    renderFavs(); toast('Favorilere eklendi ★');
+  } else toast('Zaten favoride');
+}
+
+function toggleFavTray() {
+  favOpen = !favOpen;
+  document.getElementById('favTray').classList.toggle('open', favOpen && favorites.length > 0);
+  document.getElementById('favToggleBtn').classList.toggle('on', favOpen);
 }
 
 function renderFavs() {
-  const list=document.getElementById('favList');
-  list.innerHTML=favorites.map((f,i)=>`
-    <div class="fav-item">
-      <div class="fav-txt" onclick="useFav('${ea(f)}')">${esc(f)}</div>
-      <div class="fav-x" onclick="delFav(${i})">×</div>
-    </div>`).join('');
-  if(!favorites.length){ document.getElementById('favSec').style.display='none'; showFavs=false; document.getElementById('favBtn').classList.remove('on'); }
+  document.getElementById('favList').innerHTML = favorites.map((f, i) =>
+    `<div class="fav-item"><div class="fav-txt" onclick="useFav('${ea(f)}')">${esc(f)}</div><div class="fav-del" onclick="delFav(${i})">×</div></div>`
+  ).join('');
+  if (!favorites.length) { document.getElementById('favTray').classList.remove('open'); favOpen = false; document.getElementById('favToggleBtn').classList.remove('on'); }
 }
 
-function useFav(txt) {
-  const el=document.getElementById('inputText'); el.value=txt; autoResize(el); el.focus();
-}
+function useFav(txt) { const e = document.getElementById('inputText'); e.value = txt; autoResize(e); e.focus(); }
+function delFav(i) { favorites.splice(i, 1); localStorage.setItem('cv_f', JSON.stringify(favorites)); renderFavs(); }
 
-function delFav(i) {
-  favorites.splice(i,1); localStorage.setItem('cv_f',JSON.stringify(favorites)); renderFavs();
-}
-
+// ── UI HELPERS ──
 function setLoading(v) {
-  busy=v;
-  document.getElementById('sendBtn').disabled=v;
-  document.getElementById('si').classList.toggle('h',v);
-  document.getElementById('sp').classList.toggle('s',v);
+  busy = v;
+  document.getElementById('sendBtn').disabled = v;
+  document.getElementById('si').classList.toggle('h', v);
+  document.getElementById('sp').classList.toggle('s', v);
 }
 
 function toast(msg) {
-  const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),2200);
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function ea(s){ return String(s||'').replace(/'/g,"\\'").replace(/\n/g,' '); }
+function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function ea(s) { return String(s || '').replace(/'/g, "\\'").replace(/\n/g, ' '); }
 
 init();
 </script>
