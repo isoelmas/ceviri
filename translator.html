@@ -327,6 +327,14 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
   padding:4px 10px 10px;
 }
 /* favorites removed */
+.paste-icon-btn {
+  width:34px; height:34px; border-radius:12px; flex-shrink:0;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:rgba(242,239,232,0.45); transition:all .2s;
+}
+.paste-icon-btn:active { background:rgba(255,255,255,0.1); transform:scale(.92); }
+
 /* Lang switcher in input bar */
 .inp-lang-sw {
   display:flex; align-items:center; gap:2px;
@@ -433,6 +441,39 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 
 /* Version */
 .ver { position:fixed; bottom:12px; right:14px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:rgba(242,239,232,0.2); letter-spacing:.5px; pointer-events:none; z-index:999; }
+
+/* Paste button */
+.paste-big {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  margin:20px auto 0;
+  padding:16px 28px; border-radius:16px;
+  background:rgba(255,255,255,0.05); border:1px solid var(--border2);
+  color:var(--ink2); font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:15px; font-weight:600; cursor:pointer;
+  transition:all .2s; max-width:220px;
+}
+.paste-big:active { background:rgba(255,255,255,0.1); transform:scale(.97); }
+.paste-big svg { color:var(--teal2); }
+
+/* More menu */
+.more-menu-wrap { position:relative; }
+.more-menu {
+  position:absolute; bottom:calc(100% + 6px); right:0;
+  background:linear-gradient(180deg,#1d2840,#151f32);
+  border:1px solid var(--border2); border-radius:14px;
+  padding:6px; min-width:160px; z-index:50;
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  animation:menuIn .15s ease;
+}
+@keyframes menuIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+.more-item {
+  display:flex; align-items:center; gap:9px;
+  padding:9px 11px; border-radius:9px; cursor:pointer;
+  font-size:13px; color:var(--ink2); transition:background .12s;
+  white-space:nowrap;
+}
+.more-item:active { background:rgba(255,255,255,0.08); }
+.more-item svg { color:var(--teal2); flex-shrink:0; }
 </style>
 </head>
 <body>
@@ -497,6 +538,10 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
       <div class="empty-icon">✦</div>
       <div class="empty-t">Hazır</div>
       <div class="empty-s">Bir şeyler yaz, çevirelim.</div>
+      <button class="paste-big" onclick="pasteFromClipboard()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Yapıştır
+      </button>
     </div>
   </div>
 
@@ -513,6 +558,9 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
           <span class="ils-arrow">▾</span>
         </div>
         <div class="ils-swap" onclick="swapLangs()" title="Dilleri ters çevir">⇄</div>
+        <button class="paste-icon-btn" onclick="pasteFromClipboard()" title="Yapıştır">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
         <button class="send-btn" id="sendBtn" onclick="doTranslate()">
           <span class="si" id="si"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
           <div class="sp" id="sp"><div class="spr"></div></div>
@@ -534,12 +582,25 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
     <button class="primary-btn" onclick="updateKey()" style="margin-bottom:6px">Güncelle</button>
     <button class="danger-btn" onclick="deleteKey()">Anahtarı Sil &amp; Sıfırla</button>
     <div class="opt-row">
-      <div><div class="opt-t">Geri çeviri</div><div class="opt-s">Sistemin ne anladığını göster.</div></div>
+      <div>
+        <div class="opt-t">Geri Çeviri</div>
+        <div class="opt-s">Çeviriyi tekrar kaynak dile çevirir. Sistemin metni doğru anlayıp anlamadığını görmeni sağlar. Anlam kayması varsa burada fark edilir.</div>
+      </div>
       <button class="mini-tog" id="btTog" onclick="toggleOpt('bt')">Açık</button>
     </div>
     <div class="opt-row">
-      <div><div class="opt-t">Doğrulayıcı</div><div class="opt-s">Anlam kontrolü yap.</div></div>
+      <div>
+        <div class="opt-t">Doğrulayıcı</div>
+        <div class="opt-s">Çeviri tamamlandıktan sonra ayrı bir kontrol yapar. Anlam ekleme, eksiltme veya çarpıtma varsa uyarır. Hata bulunursa "İyileştir" seçeneği çıkar.</div>
+      </div>
       <button class="mini-tog" id="valTog" onclick="toggleOpt('val')">Açık</button>
+    </div>
+    <div class="opt-row">
+      <div>
+        <div class="opt-t">Ton Etiketi</div>
+        <div class="opt-s">Her çeviride metnin tonunu gösterir — örneğin "Samimi ve nazik" veya "Resmi, mesafeli". Doğru tonu yakaladığını anlamana yardımcı olur.</div>
+      </div>
+      <button class="mini-tog" id="toneTog" onclick="toggleOpt('tone')">Açık</button>
     </div>
   </div>
 </div>
@@ -554,12 +615,13 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">10mar10-10</div>
+<div class="ver">10mar11-00</div>
 
 <script>
 // ── STATE ──
 let apiKey = '', srcLang = 'tr', tgtLang = 'en';
 let busy = false;
+let showTone = true;
 let convHistory = [], bubbles = {};
 let showBack = true, useValidator = true;
 let langPickerMode = 'tgt';
@@ -579,6 +641,7 @@ function init() {
 
   showBack = localStorage.getItem('cv_bt') !== '0';
   useValidator = localStorage.getItem('cv_val') !== '0';
+  showTone = localStorage.getItem('cv_tone') !== '0';
   if (apiKey) showMain();
 }
 
@@ -657,15 +720,18 @@ function deleteKey() {
 
 function toggleOpt(key) {
   if (key === 'bt') { showBack = !showBack; localStorage.setItem('cv_bt', showBack ? '1' : '0'); }
-  else { useValidator = !useValidator; localStorage.setItem('cv_val', useValidator ? '1' : '0'); }
+  else if (key === 'val') { useValidator = !useValidator; localStorage.setItem('cv_val', useValidator ? '1' : '0'); }
+  else if (key === 'tone') { showTone = !showTone; localStorage.setItem('cv_tone', showTone ? '1' : '0'); }
   renderToggles();
 }
 
 function renderToggles() {
   const bt = document.getElementById('btTog');
   const vl = document.getElementById('valTog');
+  const tn = document.getElementById('toneTog');
   bt.textContent = showBack ? 'Açık' : 'Kapalı'; bt.classList.toggle('on', showBack);
   vl.textContent = useValidator ? 'Açık' : 'Kapalı'; vl.classList.toggle('on', useValidator);
+  if (tn) { tn.textContent = showTone ? 'Açık' : 'Kapalı'; tn.classList.toggle('on', showTone); }
 }
 
 // ── CHAT ──
@@ -1004,12 +1070,30 @@ function renderBubble(lid, rawText) {
       </button>` : '';
   const retryBadge = p.retrying ? `<span class="status-pill sp-pending">… iyileştiriliyor</span>` : '';
 
+  const moreId = 'more_' + lid;
   const actBar = mainText ? `<div class="action-bar">
     ${improveBtn}
     <button class="act-btn" id="${copyId}" onclick="copyText('${ea(mainText)}','${copyId}')">
       <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       Kopyala
     </button>
+    <div class="more-menu-wrap">
+      <button class="act-btn" onclick="toggleMore('${moreId}')">··· Daha fazla</button>
+      <div class="more-menu" id="${moreId}" style="display:none">
+        <div class="more-item" onclick="copyText('${ea(mainText)}','${copyId}');closeMore('${moreId}')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Kopyala
+        </div>
+        <div class="more-item" onclick="shareText('${ea(mainText)}');closeMore('${moreId}')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Paylaş
+        </div>
+        <div class="more-item" onclick="retranslate('${lid}','${ea(rawText)}');closeMore('${moreId}')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+          Yeniden çevir
+        </div>
+      </div>
+    </div>
   </div>` : '';
 
   const stageLine = p.statusLine ? `<div class="stage-line">${esc(p.statusLine)}</div>` : '';
@@ -1023,7 +1107,7 @@ function renderBubble(lid, rawText) {
       ${warnHtml}
       <div class="msg-status">
         <span class="status-pill sp-lang">→ ${esc(tl.name)}</span>
-        ${p.tone ? `<span class="status-pill sp-tone">${esc(p.tone)}</span>` : ''}
+        ${(p.tone && showTone) ? `<span class="status-pill sp-tone">${esc(p.tone)}</span>` : ''}
         <span class="status-pill sp-model">DeepSeek</span>
         ${validPill}
         ${retryBadge}
@@ -1087,6 +1171,53 @@ function parseTags(text) {
   const pick = (tag) => { const m = text.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, 'i')); return m ? m[1].trim() : ''; };
   const t = pick('translation');
   return { out: t || text.trim(), src: pick('src') || '?', tone: pick('tone') || '' };
+}
+
+// ── PASTE ──
+async function pasteFromClipboard() {
+  try {
+    const txt = await navigator.clipboard.readText();
+    if (!txt.trim()) { toast('Pano boş'); return; }
+    document.getElementById('inputText').value = txt;
+    autoResize(document.getElementById('inputText'));
+    document.getElementById('inputText').focus();
+  } catch(e) {
+    toast('Yapıştırma izni gerekli');
+  }
+}
+
+// ── MORE MENU ──
+function toggleMore(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isOpen = el.style.display !== 'none';
+  // close all open menus first
+  document.querySelectorAll('.more-menu').forEach(m => m.style.display = 'none');
+  el.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) {
+    setTimeout(() => document.addEventListener('click', function handler(e) {
+      if (!el.contains(e.target)) { el.style.display = 'none'; document.removeEventListener('click', handler); }
+    }), 50);
+  }
+}
+
+function closeMore(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+}
+
+async function shareText(txt) {
+  if (navigator.share) {
+    try { await navigator.share({ text: txt }); } catch(e) {}
+  } else {
+    await copyText(txt, null);
+    toast('Panoya kopyalandı (paylaşım desteklenmiyor)');
+  }
+}
+
+function retranslate(lid, rawText) {
+  // Re-run translation from scratch for this bubble
+  improveTranslation(lid, rawText);
 }
 
 // ── COPY ──
