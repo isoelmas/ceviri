@@ -296,24 +296,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
   color:rgba(242,239,232,0.35); margin-top:6px;
 }
 
-/* Favorites */
-.fav-tray {
-  border-top:1px solid var(--border); padding:10px 14px;
-  display:none; flex-direction:column; gap:6px;
-  max-height:140px; overflow-y:auto;
-}
-.fav-tray.open { display:flex; }
-.fav-tray::-webkit-scrollbar { display:none; }
-.fav-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
-.fav-item {
-  display:flex; align-items:center; gap:8px;
-  padding:7px 10px; border-radius:10px;
-  background:rgba(255,255,255,0.03); border:1px solid var(--border);
-  cursor:pointer; transition:background .15s;
-}
-.fav-item:active { background:rgba(255,255,255,0.07); }
-.fav-txt { font-size:13px; color:var(--ink); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.fav-del { color:var(--muted2); font-size:16px; cursor:pointer; padding:2px 4px; flex-shrink:0; }
+
 
 /* Input area */
 .input-wrap {
@@ -343,14 +326,32 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
   display:flex; align-items:center; gap:5px;
   padding:4px 10px 10px;
 }
-.fav-toggle {
-  width:34px; height:34px; border-radius:12px;
-  background:rgba(255,255,255,0.04); border:1px solid var(--border);
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:rgba(242,239,232,0.45); transition:all .2s;
+/* favorites removed */
+/* Lang switcher in input bar */
+.inp-lang-sw {
+  display:flex; align-items:center; gap:2px;
+  background:rgba(255,255,255,0.06); border:1px solid var(--border2);
+  border-radius:12px; padding:0 4px 0 8px; height:34px;
+  cursor:pointer; transition:all .15s; flex-shrink:0;
 }
-.fav-toggle:active { transform:scale(.9); }
-.fav-toggle.on { color:var(--gold); border-color:rgba(200,168,74,0.4); background:rgba(200,168,74,0.08); }
+.inp-lang-sw:active { background:rgba(255,255,255,0.1); }
+.ils-pair {
+  font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500;
+  color:var(--ink2); letter-spacing:0.3px; white-space:nowrap;
+}
+.ils-arrow {
+  font-size:10px; color:rgba(242,239,232,0.4); margin-left:2px;
+  transition:transform .2s;
+}
+.ils-swap {
+  width:26px; height:26px; border-radius:8px; margin-left:4px;
+  background:rgba(90,184,176,0.12); border:1px solid rgba(90,184,176,0.2);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--teal2); font-size:13px;
+  transition:all .2s;
+}
+.ils-swap:active { transform:rotate(180deg); background:rgba(90,184,176,0.2); }
+
 .send-btn {
   width:44px; height:44px; border-radius:16px; margin-left:auto;
   background:linear-gradient(135deg,#1d2d4a,#0f1e35);
@@ -499,11 +500,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
     </div>
   </div>
 
-  <!-- Favorites tray -->
-  <div class="fav-tray" id="favTray">
-    <div class="fav-label">Favoriler</div>
-    <div id="favList"></div>
-  </div>
+
 
   <!-- Input -->
   <div class="input-wrap">
@@ -511,9 +508,11 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
       <textarea id="inputText" placeholder="Çevirmek istediğini yaz…" rows="2"
         onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
       <div class="inp-bar">
-        <button class="fav-toggle" id="favToggleBtn" onclick="toggleFavTray()" title="Favoriler">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </button>
+        <div class="inp-lang-sw" onclick="openLangPicker('tgt')" title="Hedef dili değiştir">
+          <span class="ils-pair" id="ilsPair">TR → EN</span>
+          <span class="ils-arrow">▾</span>
+        </div>
+        <div class="ils-swap" onclick="swapLangs()" title="Dilleri ters çevir">⇄</div>
         <button class="send-btn" id="sendBtn" onclick="doTranslate()">
           <span class="si" id="si"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
           <div class="sp" id="sp"><div class="spr"></div></div>
@@ -555,12 +554,12 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">10mar09-00</div>
+<div class="ver">10mar10-00</div>
 
 <script>
 // ── STATE ──
 let apiKey = '', srcLang = 'tr', tgtLang = 'en';
-let favorites = [], favOpen = false, busy = false;
+let busy = false;
 let convHistory = [], bubbles = {};
 let showBack = true, useValidator = true;
 let langPickerMode = 'tgt';
@@ -577,7 +576,7 @@ function init() {
   apiKey = localStorage.getItem('cv_k') || '';
   srcLang = localStorage.getItem('cv_src') || 'tr';
   tgtLang = localStorage.getItem('cv_tgt') || 'en';
-  favorites = JSON.parse(localStorage.getItem('cv_f') || '[]');
+
   showBack = localStorage.getItem('cv_bt') !== '0';
   useValidator = localStorage.getItem('cv_val') !== '0';
   if (apiKey) showMain();
@@ -592,13 +591,16 @@ function showMain() {
   m.style.flex = '1';
   document.getElementById('clearBtn').style.display = 'flex';
   updateLangUI();
-  renderFavs();
   renderToggles();
 }
 
 function updateLangUI() {
-  document.getElementById('srcBtn').textContent = LANGS[srcLang]?.short || srcLang.toUpperCase();
-  document.getElementById('tgtBtn').textContent = LANGS[tgtLang]?.short || tgtLang.toUpperCase();
+  const sl = LANGS[srcLang]?.short || srcLang.toUpperCase();
+  const tl = LANGS[tgtLang]?.short || tgtLang.toUpperCase();
+  document.getElementById('srcBtn').textContent = sl;
+  document.getElementById('tgtBtn').textContent = tl;
+  const pair = document.getElementById('ilsPair');
+  if (pair) pair.textContent = sl + ' → ' + tl;
 }
 
 function saveKey() {
@@ -689,6 +691,15 @@ async function doTranslate() {
   let raw = document.getElementById('inputText').value.trim();
   if (!raw) return;
 
+  // Prefix dil değiştirme: "en merhaba" -> hedef EN, metin "merhaba"
+  const prefixMatch = raw.match(/^(en|ru|ua|tr)\s+(.+)/is);
+  if (prefixMatch) {
+    tgtLang = prefixMatch[1].toLowerCase();
+    raw = prefixMatch[2].trim();
+    localStorage.setItem('cv_tgt', tgtLang);
+    updateLangUI();
+  }
+
   const el = document.getElementById('inputText');
   el.value = ''; el.style.height = 'auto';
   setLoading(true);
@@ -734,8 +745,8 @@ ZORUNLU KURALLAR:
 
 Format (sadece bu):
 <translation>çeviri</translation>
-<src>kaynak dil Türkçe</src>
-<tone>ton Türkçe</tone>
+<src>kaynak dil Türkçe olarak, örn: Türkçe</src>
+<tone>tonun tam Türkçe açıklaması, örn: "Samimi ve resmi arası, nazik bir talep tonu" veya "Alaycı ve eleştirel, hafif agresif" gibi</tone>
 
 Kullanıcı metni: ${raw}`;
 
@@ -976,7 +987,6 @@ function renderBubble(lid, rawText) {
       <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       Kopyala
     </button>
-    <button class="act-btn" onclick="addFav('${ea(rawText)}')">★ Favori</button>
   </div>` : '';
 
   const stageLine = p.statusLine ? `<div class="stage-line">${esc(p.statusLine)}</div>` : '';
@@ -1064,33 +1074,6 @@ async function copyText(txt, btnId) {
   if (b) { b.classList.add('act-copy-ok'); b.textContent = '✓ Kopyalandı'; setTimeout(() => { b.classList.remove('act-copy-ok'); b.innerHTML = '<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Kopyala'; }, 2000); }
 }
 
-// ── FAVS ──
-function addFav(txt) {
-  if (!txt) return;
-  if (!favorites.includes(txt)) {
-    favorites.unshift(txt); if (favorites.length > 20) favorites.pop();
-    localStorage.setItem('cv_f', JSON.stringify(favorites));
-    renderFavs(); toast('Favorilere eklendi ★');
-  } else toast('Zaten favoride');
-}
-
-function toggleFavTray() {
-  favOpen = !favOpen;
-  document.getElementById('favTray').classList.toggle('open', favOpen && favorites.length > 0);
-  document.getElementById('favToggleBtn').classList.toggle('on', favOpen);
-}
-
-function renderFavs() {
-  document.getElementById('favList').innerHTML = favorites.map((f, i) =>
-    `<div class="fav-item"><div class="fav-txt" onclick="useFav('${ea(f)}')">${esc(f)}</div><div class="fav-del" onclick="delFav(${i})">×</div></div>`
-  ).join('');
-  if (!favorites.length) { document.getElementById('favTray').classList.remove('open'); favOpen = false; document.getElementById('favToggleBtn').classList.remove('on'); }
-}
-
-function useFav(txt) { const e = document.getElementById('inputText'); e.value = txt; autoResize(e); e.focus(); }
-function delFav(i) { favorites.splice(i, 1); localStorage.setItem('cv_f', JSON.stringify(favorites)); renderFavs(); }
-
-// ── UI HELPERS ──
 function setLoading(v) {
   busy = v;
   document.getElementById('sendBtn').disabled = v;
