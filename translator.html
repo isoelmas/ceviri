@@ -554,7 +554,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">10mar10-00</div>
+<div class="ver">10mar10-10</div>
 
 <script>
 // ── STATE ──
@@ -690,6 +690,29 @@ async function doTranslate() {
   if (busy) return;
   let raw = document.getElementById('inputText').value.trim();
   if (!raw) return;
+
+  // Developer test modu
+  if (raw.toLowerCase() === 'diatestmode') {
+    const es = document.getElementById('emptyState');
+    if (es) es.remove();
+    const lid = 'msg_' + Date.now();
+    bubbles[lid] = {
+      out: 'This is very wonderful and you are truly a magnificent person.',
+      back: 'Bu çok harika ve sen gerçekten muhteşem bir insansın.',
+      src: 'Türkçe', tone: 'Nötr ve sade bir ifade',
+      warning: 'Kaynak metinde olmayan içerik eklendi — ADDED_CONTENT',
+      warningShort: 'Kaynak metinde olmayan içerik eklendi',
+      warningDetail: 'Kaynak metinde olmayan içerik eklendi — "magnificent" ve "wonderful" kelimeleri kaynakta yoktu',
+      srcLang: srcLang, tgtLang: tgtLang,
+      validated: false, validatorEnabled: true, backEnabled: true,
+      statusLine: '', translationPending: false, backPending: false, retrying: false
+    };
+    document.getElementById('inputText').value = '';
+    document.getElementById('inputText').style.height = 'auto';
+    appendRow('[TEST] Bu çok iyi.', lid);
+    toast('🧪 Test modu aktif');
+    return;
+  }
 
   // Prefix dil değiştirme: "en merhaba" -> hedef EN, metin "merhaba"
   const prefixMatch = raw.match(/^(en|ru|ua|tr)\s+(.+)/is);
