@@ -40,21 +40,26 @@ html { background:#0a0c12; }
 }
 * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   font-family:'Plus Jakarta Sans', sans-serif;
   background: #0a0c12;
   color: var(--ink);
-  min-height:100dvh;
-  overflow-x:hidden;
+  position: fixed;
+  inset: 0;
   padding-top: env(safe-area-inset-top,0px);
-  padding-bottom: env(safe-area-inset-bottom,20px);
 }
 
 .app {
   max-width:480px; margin:0 auto;
-  min-height:100dvh;
+  height: var(--app-h, 100dvh);
   display:flex; flex-direction:column;
   position:relative;
+  overflow: hidden;
 }
 
 /* ── SETUP ── */
@@ -115,12 +120,14 @@ body {
 /* ── MAIN UI ── */
 #mainUI { 
   flex:1; display:flex; flex-direction:column; 
-  height:100%; overflow:hidden;
-  position:relative;
+  overflow:hidden;
+  min-height:0;
+  height: var(--app-h, 100dvh);
 }
 
 /* Header */
 .hdr {
+  flex: 0 0 auto;
   display:flex; align-items:center; justify-content:space-between;
   padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px;
   border-bottom:1px solid var(--border);
@@ -171,7 +178,9 @@ body {
 
 /* Chat area */
 .chat {
-  flex:1; overflow-y:auto; overflow-x:hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y:auto; overflow-x:hidden;
   padding:16px 14px 8px;
   display:flex; flex-direction:column; gap:12px;
   -webkit-overflow-scrolling:touch;
@@ -307,7 +316,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 
 /* Input area */
 .input-wrap {
-  flex-shrink:0;
+  flex: 0 0 auto;
   border-top:1px solid var(--border);
   background:rgba(10,12,18,0.97);
   padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 12px);
@@ -644,7 +653,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar10-40</div>
+<div class="ver">12mar11-00</div>
 
 <script>
 // ── STATE ──
@@ -664,6 +673,19 @@ const LANGS = {
 };
 
 // ── INIT ──
+function syncAppHeight() {
+  const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  document.documentElement.style.setProperty('--app-h', h + 'px');
+}
+syncAppHeight();
+window.addEventListener('resize', syncAppHeight);
+window.visualViewport?.addEventListener('resize', syncAppHeight);
+
+function stickToBottom() {
+  const chat = document.getElementById('chat');
+  if (chat) requestAnimationFrame(() => { chat.scrollTop = chat.scrollHeight; });
+}
+
 function init() {
   apiKey = localStorage.getItem('cv_k') || '';
   srcLang = localStorage.getItem('cv_src') || 'tr';
@@ -672,6 +694,14 @@ function init() {
   showBack = localStorage.getItem('cv_bt') !== '0';
   useValidator = localStorage.getItem('cv_val') !== '0';
   showTone = localStorage.getItem('cv_tone') !== '0';
+
+  // Stick to bottom on keyboard open
+  const inp = document.getElementById('inputText');
+  if (inp) {
+    inp.addEventListener('focus', stickToBottom);
+  }
+  window.visualViewport?.addEventListener('resize', stickToBottom);
+
   if (apiKey) showMain();
 }
 
@@ -829,20 +859,20 @@ async function doTranslate() {
     return;
   }
 
-  // Slash prefix dil değiştirme: "/en merhaba" -> hedef EN, metin "merhaba"
+  // Slash prefix — geçici override, localStorage'a yazma
+  let reqSrc = srcLang;
+  let reqTgt = tgtLang;
   const prefixMatch = raw.match(/^\/([a-z]{2})\s+(.+)/is);
   if (prefixMatch) {
     const langCode = prefixMatch[1].toLowerCase();
     if (['en','ru','ua','tr','de'].includes(langCode)) {
-      tgtLang = langCode;
+      reqTgt = langCode;
       raw = prefixMatch[2].trim();
-      localStorage.setItem('cv_tgt', tgtLang);
-      updateLangUI();
     }
   }
 
-  // Sanity check: src ve tgt aynıysa uyar
-  if (srcLang === tgtLang) {
+  // Sanity check
+  if (reqSrc === reqTgt) {
     toast('Kaynak ve hedef dil aynı — lütfen farklı bir dil seç');
     return;
   }
@@ -855,12 +885,9 @@ async function doTranslate() {
   if (es) es.remove();
 
   const lid = 'msg_' + Date.now();
-  // Re-read from localStorage to ensure consistency
-  srcLang = localStorage.getItem('cv_src') || srcLang;
-  tgtLang = localStorage.getItem('cv_tgt') || tgtLang;
-  const sl = LANGS[srcLang] || { name: srcLang, short: srcLang.toUpperCase(), full: srcLang };
-  const tl = LANGS[tgtLang] || { name: tgtLang, short: tgtLang.toUpperCase(), full: tgtLang };
-  const curSrc = srcLang, curTgt = tgtLang;
+  const sl = LANGS[reqSrc] || { name: reqSrc, short: reqSrc.toUpperCase(), full: reqSrc };
+  const tl = LANGS[reqTgt] || { name: reqTgt, short: reqTgt.toUpperCase(), full: reqTgt };
+  const curSrc = reqSrc, curTgt = reqTgt;
 
   bubbles[lid] = {
     out: '', back: null, src: '?', tone: '', warning: null,
@@ -893,6 +920,8 @@ ZORUNLU KURALLAR:
 6. Özne açık değilse uydurma.
 7. Tonu koru, güçlendirme veya abartma.
 8. Bağlama en uygun doğal karşılığı seç, sözlük karşılığını değil.
+9. ZAMİR KURALI: Kaynak metindeki kişi ve hitap ilişkisini koru. "sen/siz/bize/sana/bana" gibi zamirler kaybolmamalı. Kaynakta açık olan zamiri silme veya genelleştirme.
+10. Almanca için: kaynak açıkça resmi ise "Sie", samimi ise "du" kullan. Belirsizse mümkünse nötr yapı tercih et.
 
 Format (sadece bu):
 <translation>çeviri</translation>
@@ -905,25 +934,34 @@ Kullanıcı metni: ${raw}`;
 KURALLAR: Sadece bu metni çevir. Kaynak metnin ne olduğunu bilmiyorsun. Doğal çevir. Tek satır, sadece çeviri.
 Metin: ${txt}`;
 
-  const validatorPrompt = (src, tr, bk) => `Sen dengeli bir çeviri doğrulayıcısısın.
-GÖREV: Kaynak, çeviri ve geri çeviriyi değerlendir.
+  const validatorPrompt = (src, tr, bk) => `Sen çok katı bir çeviri doğrulayıcısısın.
+GÖREV: Önce kaynak metindeki KRİTİK ANLAM BİRİMLERİNİ tespit et, sonra çeviride korunup korunmadığını kontrol et.
+
+KRİTİK ANLAM BİRİMLERİ — bunlardan biri değişirse kesinlikle FAIL ver:
+- KİŞİ/ZAMİR: sen, siz, ben, biz, bize, sana, bana, ona — kaybolursa veya değişirse FAIL
+- ZAMAN: bugün, yarın, şimdi, dün, hemen — eklenir veya çıkarılırsa FAIL
+- YER/YÖN: buraya, bize, eve, oraya — kaybolursa FAIL
+- OLUMSUZLUK: değil, yok, hayır, istemiyorum — kaybolursa FAIL
+- MİKTAR/SAYI: bir, iki, çok, az — değişirse FAIL
+- SORU/TALEP TONU: değişirse FAIL
 
 AĞIR HATALAR (pass=false):
-- ADDED_CONTENT: Kaynakta olmayan anlam eklendi
-- OMITTED_CONTENT: Önemli anlam kaybedildi
+- ADDED_CONTENT: Kaynakta olmayan bilgi/zaman/yer/kişi eklendi
+- OMITTED_CONTENT: Kritik anlam birimi kayboldu
 - MEANING_DISTORTION: Anlam çarpıtıldı
 - SUBJECT_INSERTED: Kaynak olmayan özne eklendi
 
 NOT OLARAK GEÇ (fail değil):
 - TONE_SHIFT, AWKWARD_WORDING, GRAMMAR_ONLY_NORMALIZATION
 
-KURALLAR: Doğal eşdeğerler hata değildir. Geri çeviri anlamı koruyorsa pozitif sinyal. Sadece JSON döndür.
+KURAL: "Doğal eşdeğer" gerekçesiyle kritik anlam birimini silme. Geri çeviri anlamı koruyorsa pozitif sinyal ama zamir/zaman/yer kaybını affetme.
 
-Kaynak: ${src}
-Çeviri (${tl.full}): ${tr}
-Geri çeviri (${sl.full}): ${bk || 'YOK'}
+Kaynak: \${src}
+Çeviri (\${tl.full}): \${tr}
+Geri çeviri (\${sl.full}): \${bk || 'YOK'}
 
-JSON: {"pass":true,"errors":[],"severity":"none","notes":""}`;
+Sadece JSON döndür:
+{"pass":true,"errors":[],"severity":"none","notes":"","evidence":[]}`;
 
   try {
     const txt = await streamChat(mainPrompt, (partial) => {
