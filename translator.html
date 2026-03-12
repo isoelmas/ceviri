@@ -653,7 +653,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar11-10</div>
+<div class="ver">12mar11-30</div>
 
 <script>
 // ── STATE ──
@@ -934,34 +934,29 @@ Kullanıcı metni: ${raw}`;
 KURALLAR: Sadece bu metni çevir. Kaynak metnin ne olduğunu bilmiyorsun. Doğal çevir. Tek satır, sadece çeviri.
 Metin: ${txt}`;
 
-  const validatorPrompt = (src, tr, bk) => `Sen çok katı bir çeviri doğrulayıcısısın.
-GÖREV: Önce kaynak metindeki KRİTİK ANLAM BİRİMLERİNİ tespit et, sonra çeviride korunup korunmadığını kontrol et.
+  const validatorPrompt = (src, tr, bk) => `Sen dengeli ama titiz bir çeviri doğrulayıcısısın.
+GÖREV: Kaynak ile çeviri arasında gerçek anlam kaybı veya ekleme var mı kontrol et.
 
-KRİTİK ANLAM BİRİMLERİ — bunlardan biri değişirse kesinlikle FAIL ver:
-- KİŞİ/ZAMİR: sen, siz, ben, biz, bize, sana, bana, ona — kaybolursa veya değişirse FAIL
-- ZAMAN: bugün, yarın, şimdi, dün, hemen — eklenir veya çıkarılırsa FAIL
-- YER/YÖN: buraya, bize, eve, oraya — kaybolursa FAIL
-- OLUMSUZLUK: değil, yok, hayır, istemiyorum — kaybolursa FAIL
-- MİKTAR/SAYI: bir, iki, çok, az — değişirse FAIL
-- SORU/TALEP TONU: değişirse FAIL
+FAIL ver (pass=false) — sadece bunlar:
+- Kaynakta açık olan ZAMİR kayboldu: "bize", "sana", "sen", "siz", "bana" gibi hitap bilgisi silindiyse
+- Kaynakta olmayan ZAMAN eklendi veya var olan zaman silindi: "bugün", "yarın", "hemen" gibi
+- Kaynakta olmayan YER/YÖN eklendi veya silindi: "buraya", "bize", "eve" gibi
+- OLUMSUZLUK kayboldu: "değil", "yok", "istemiyorum" gibi
+- Kaynakta olmayan anlam/bilgi eklendi (ADDED_CONTENT)
+- Önemli içerik tamamen çıkarıldı (OMITTED_CONTENT)
+- Anlam tersine döndü (MEANING_DISTORTION)
 
-AĞIR HATALAR (pass=false):
-- ADDED_CONTENT: Kaynakta olmayan bilgi/zaman/yer/kişi eklendi
-- OMITTED_CONTENT: Kritik anlam birimi kayboldu
-- MEANING_DISTORTION: Anlam çarpıtıldı
-- SUBJECT_INSERTED: Kaynak olmayan özne eklendi
+PASS ver — bunlar hata değil:
+- Doğal dil dönüşümleri: "dinleyin" → "listen to these", "gelin" → "come over"
+- Ton farkı, üslup değişikliği, dilbilgisi normalizasyonu
+- Geri çeviri birebir değil ama anlam aynıysa — bu güçlü pozitif sinyaldir
 
-NOT OLARAK GEÇ (fail değil):
-- TONE_SHIFT, AWKWARD_WORDING, GRAMMAR_ONLY_NORMALIZATION
+Kaynak: \${src}
+Çeviri (\${tl.full}): \${tr}
+Geri çeviri (\${sl.full}): \${bk || 'YOK'}
 
-KURAL: "Doğal eşdeğer" gerekçesiyle kritik anlam birimini silme. Geri çeviri anlamı koruyorsa pozitif sinyal ama zamir/zaman/yer kaybını affetme.
-
-Kaynak: ${src}
-Çeviri (${tl.full}): ${tr}
-Geri çeviri (${sl.full}): ${bk || 'YOK'}
-
-Sadece JSON döndür:
-{"pass":true,"errors":[],"severity":"none","notes":"","evidence":[]}`;
+Sadece JSON döndür. Hata varsa "notes" alanına kısa Türkçe açıklama yaz — hangi kelime/bilgi kayboldu veya eklendi, örn: '"bize" kelimesi çeviriye yansıtılmadı' veya '"bugün" kaynakta yoktu ama eklendi'.
+{"pass":true,"errors":[],"severity":"none","notes":""}`;
 
   try {
     const txt = await streamChat(mainPrompt, (partial) => {
