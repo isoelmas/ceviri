@@ -481,9 +481,81 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
 /* Version */
+/* Help modal */
+.help-ov {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+  display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity .25s;
+}
+.help-ov.open { opacity:1; pointer-events:all; }
+.help-sheet {
+  width:100%; max-width:480px;
+  background:linear-gradient(180deg,#1a2035,#111827);
+  border-radius:24px 24px 0 0; border-top:1px solid var(--border2);
+  padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 24px);
+  max-height:88vh; overflow-y:auto;
+  transform:translateY(40px); transition:transform .3s ease;
+}
+.help-ov.open .help-sheet { transform:translateY(0); }
+.help-title {
+  font-family:'Fraunces',serif; font-size:22px; font-weight:700;
+  color:var(--ink); margin-bottom:4px;
+}
+.help-sub { font-size:13px; color:var(--muted); margin-bottom:20px; }
+.help-card {
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:18px; padding:18px; margin-bottom:20px;
+}
+.help-src-bubble {
+  align-self:flex-end; background:var(--card2);
+  border:1px solid var(--border2); border-radius:18px 18px 4px 18px;
+  padding:10px 14px; font-style:italic; font-size:14px;
+  color:var(--ink2); margin-bottom:12px; display:inline-block;
+  max-width:85%; float:right; clear:both;
+}
+.help-translation {
+  font-family:'Fraunces',serif; font-size:20px; color:var(--ink);
+  margin-bottom:8px; clear:both;
+}
+.help-back { font-size:13px; color:var(--muted); margin-bottom:12px; }
+.help-back-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted2); margin-bottom:3px; }
+.help-pills { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:14px; }
+.help-annotations { display:flex; flex-direction:column; gap:10px; }
+.help-ann {
+  display:flex; gap:10px; align-items:flex-start;
+  padding:10px 12px; border-radius:12px;
+  background:rgba(255,255,255,0.03); border:1px solid var(--border);
+}
+.help-ann-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+.help-ann-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:2px; }
+.help-ann-desc { font-size:12px; color:var(--muted); line-height:1.5; }
+.help-close {
+  width:100%; padding:13px; border-radius:14px; margin-top:16px;
+  background:rgba(255,255,255,0.06); border:1px solid var(--border2);
+  color:var(--ink2); font-size:14px; font-weight:600; cursor:pointer;
+}
+
 .ver { position:fixed; bottom:12px; right:14px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:rgba(242,239,232,0.2); letter-spacing:.5px; pointer-events:none; z-index:999; }
 
 /* Paste button */
+/* Demo card */
+.demo-card {
+  margin-top:16px; width:100%; max-width:320px;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border2);
+  border-radius:18px; padding:16px; cursor:pointer;
+  transition:all .2s; text-align:left; pointer-events:all;
+}
+.demo-card:active { background:rgba(255,255,255,0.07); transform:scale(.98); }
+.demo-label { font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:1.5px; color:var(--muted2); margin-bottom:8px; }
+.demo-src { font-size:13px; color:var(--ink2); margin-bottom:6px; font-style:italic; }
+.demo-out { font-family:'Fraunces',serif; font-size:16px; color:var(--ink); margin-bottom:10px; }
+.demo-meta { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px; }
+.demo-pill { font-family:'IBM Plex Mono',monospace; font-size:9px; padding:3px 8px; border-radius:999px; background:rgba(255,255,255,0.06); border:1px solid var(--border2); color:var(--ink2); }
+.demo-pill.tone { color:var(--gold); border-color:rgba(200,168,74,0.3); background:rgba(200,168,74,0.08); }
+.demo-pill.ok { color:var(--teal2); border-color:rgba(90,184,176,0.3); background:rgba(90,184,176,0.08); }
+.demo-hint { font-size:11px; color:var(--muted2); }
+
 .paste-big {
   display:flex; align-items:center; justify-content:center; gap:10px;
   margin:20px auto 0;
@@ -554,6 +626,9 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
   <div class="hdr">
     <div class="hdr-logo">çev<em>.</em></div>
     <div class="hdr-actions">
+      <button class="icon-btn" onclick="openHelp()" title="Nasıl çalışır?">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
       <button class="icon-btn" onclick="clearChat()" title="Sohbeti temizle">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
       </button>
@@ -573,6 +648,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         Yapıştır
       </button>
+
     </div>
   </div>
 
@@ -596,8 +672,9 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
       <textarea id="inputText" placeholder="Çevirmek istediğini yaz…" rows="2"
         onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
       <div class="inp-bar">
-        <button class="paste-icon-btn" onclick="pasteFromClipboard()" title="Yapıştır">
+        <button class="paste-icon-btn" id="pasteBtn" onclick="pasteFromClipboard()" title="Yapıştır">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg>
+          <span id="pasteBtnTxt" style="font-size:12px;font-weight:600;margin-left:4px;">Yapıştır</span>
         </button>
         <button class="send-btn" id="sendBtn" onclick="doTranslate()">
           <span class="si" id="si"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
@@ -608,6 +685,62 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
   </div>
 
 </div>
+</div>
+
+<!-- Help modal -->
+<div class="help-ov" id="helpOv" onclick="closeHelp()">
+  <div class="help-sheet" onclick="event.stopPropagation()">
+    <div class="sh-handle"></div>
+    <div class="help-title">Kartı nasıl okursun?</div>
+    <div class="help-sub">Örnek bir çeviri üzerinde her alanın ne anlama geldiğini gör.</div>
+
+    <div class="help-card">
+      <div style="overflow:hidden;margin-bottom:12px;">
+        <div class="help-src-bubble">I really need to talk to you.</div>
+      </div>
+      <div class="help-translation">Seninle gerçekten konuşmam lazım.</div>
+      <div class="help-back-label">GERİ ÇEVİRİ</div>
+      <div class="help-back">I really need to talk to you.</div>
+      <div class="help-pills">
+        <span class="status-pill sp-lang">→ Türkçe</span>
+        <span class="status-pill sp-tone">Samimi, doğrudan ve acil bir ton</span>
+        <span class="status-pill sp-ok">✓ Doğrulandı</span>
+      </div>
+    </div>
+
+    <div class="help-annotations">
+      <div class="help-ann">
+        <div class="help-ann-icon">↩️</div>
+        <div>
+          <div class="help-ann-title">Geri Çeviri</div>
+          <div class="help-ann-desc">Çeviri tekrar kaynak dile çevrilir. Geri çeviri orijinale yakınsa anlam korunmuş demektir.</div>
+        </div>
+      </div>
+      <div class="help-ann">
+        <div class="help-ann-icon">🎭</div>
+        <div>
+          <div class="help-ann-title">Ton Etiketi</div>
+          <div class="help-ann-desc">Metnin duygusal tonu — samimi mi, resmi mi, acil mi? Doğru tonu yakaladığını buradan anlarsın.</div>
+        </div>
+      </div>
+      <div class="help-ann">
+        <div class="help-ann-icon">✓</div>
+        <div>
+          <div class="help-ann-title">Doğrulandı / İncelenmeli</div>
+          <div class="help-ann-desc">"Doğrulandı" — anlam kaybı yok. "İncelenmeli" — zamir, zaman veya anlam kayması tespit edildi, İyileştir butonu çıkar.</div>
+        </div>
+      </div>
+      <div class="help-ann">
+        <div class="help-ann-icon">🔄</div>
+        <div>
+          <div class="help-ann-title">İyileştir</div>
+          <div class="help-ann-desc">Hata varsa hatayı geri bildirim olarak modele iletir ve çeviriyi yeniden yapar.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="help-close" onclick="closeHelp()">Anladım</button>
+  </div>
 </div>
 
 <!-- Settings sheet -->
@@ -654,7 +787,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar11-60</div>
+<div class="ver">12mar12-10</div>
 
 <script>
 // ── STATE ──
@@ -775,6 +908,9 @@ function selectLang(k) {
 function closeLangPicker() { document.getElementById('lpOv').classList.remove('open'); }
 
 // ── SETTINGS ──
+function openHelp() { document.getElementById('helpOv').classList.add('open'); }
+function closeHelp() { document.getElementById('helpOv').classList.remove('open'); }
+
 function openSettings() { document.getElementById('sOv').classList.add('open'); }
 function closeSettings() { document.getElementById('sOv').classList.remove('open'); }
 
@@ -833,7 +969,8 @@ function autoResize(el) {
 }
 
 function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doTranslate(); }
+  if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); doTranslate(); }
+  // Enter alone = new line (default behavior)
 }
 
 // ── TRANSLATE ──
@@ -1128,6 +1265,9 @@ function appendRow(rawText, lid) {
   chat.appendChild(row);
   renderBubble(lid, rawText);
   chat.scrollTop = chat.scrollHeight;
+  // Hide paste label after first message
+  const pt = document.getElementById('pasteBtnTxt');
+  if (pt) pt.style.display = 'none';
 }
 
 function updateBubble(lid, rawText, patch) {
@@ -1214,7 +1354,7 @@ function renderBubble(lid, rawText) {
       <div class="msg-status">
         <span class="status-pill sp-lang">→ ${esc(tl.name)}</span>
         ${(p.tone && showTone) ? `<span class="status-pill sp-tone">${esc(p.tone)}</span>` : ''}
-        <span class="status-pill sp-model">DeepSeek</span>
+
         ${validPill}
         ${retryBadge}
       </div>
@@ -1280,6 +1420,25 @@ function parseTags(text) {
 }
 
 // ── PASTE ──
+function loadDemo() {
+  const es = document.getElementById('emptyState');
+  if (es) es.remove();
+  const lid = 'msg_demo';
+  bubbles[lid] = {
+    out: 'Es war so schön, dich heute zu sehen.',
+    back: 'Bugün seni görmek çok güzeldi.',
+    src: 'Türkçe', tone: 'Samimi ve içten bir ifade tonu',
+    warning: null, warningShort: null, warningDetail: null,
+    srcLang: 'tr', tgtLang: 'de',
+    validated: true, validatorEnabled: true, backEnabled: true,
+    statusLine: '', translationPending: false, backPending: false, retrying: false
+  };
+  appendRow('Bugün seni görmek çok iyi oldu.', lid);
+  // Hide paste label
+  const pt = document.getElementById('pasteBtnTxt');
+  if (pt) pt.style.display = 'none';
+}
+
 async function pasteFromClipboard() {
   const inp = document.getElementById('inputText');
   inp.focus();
