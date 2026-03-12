@@ -653,7 +653,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar11-00</div>
+<div class="ver">12mar11-10</div>
 
 <script>
 // ── STATE ──
@@ -956,9 +956,9 @@ NOT OLARAK GEÇ (fail değil):
 
 KURAL: "Doğal eşdeğer" gerekçesiyle kritik anlam birimini silme. Geri çeviri anlamı koruyorsa pozitif sinyal ama zamir/zaman/yer kaybını affetme.
 
-Kaynak: \${src}
-Çeviri (\${tl.full}): \${tr}
-Geri çeviri (\${sl.full}): \${bk || 'YOK'}
+Kaynak: ${src}
+Çeviri (${tl.full}): ${tr}
+Geri çeviri (${sl.full}): ${bk || 'YOK'}
 
 Sadece JSON döndür:
 {"pass":true,"errors":[],"severity":"none","notes":"","evidence":[]}`;
@@ -1060,10 +1060,16 @@ Kullanıcı metni: ${rawText}`;
   const backP = (txt) => `Aşağıdaki ${tl.full} metnini ${sl.full} diline çevir. Sadece bu metni çevir. Doğal çevir. Tek satır.
 Metin: ${txt}`;
 
-  const valP = (src, tr, bk) => `Sen dengeli bir çeviri doğrulayıcısısın.
-Kaynak: ${src}\nÇeviri (${tl.full}): ${tr}\nGeri çeviri (${sl.full}): ${bk || 'YOK'}
-KURALLAR: Sadece gerçek anlam ekleme/eksiltme/çarpıtma varsa fail ver. Sadece JSON.
-JSON: {"pass":true,"errors":[],"severity":"none","notes":""}`;
+  const valP = (src, tr, bk) => `Sen çok katı bir çeviri doğrulayıcısısın.
+KRİTİK ANLAM BİRİMLERİ — biri değişirse FAIL: zamir(sen/siz/bize/sana), zaman(bugün/yarın), yer(buraya/bize), olumsuzluk, miktar, soru tonu.
+AĞIR HATALAR (pass=false): ADDED_CONTENT, OMITTED_CONTENT, MEANING_DISTORTION, SUBJECT_INSERTED.
+NOT OLARAK GEÇ: TONE_SHIFT, AWKWARD_WORDING.
+
+Kaynak: ${src}
+Çeviri (${tl.full}): ${tr}
+Geri çeviri (${sl.full}): ${bk || 'YOK'}
+
+Sadece JSON: {"pass":true,"errors":[],"severity":"none","notes":""}`;
 
   try {
     const txt = await streamChat(retryPrompt, (p) => {
