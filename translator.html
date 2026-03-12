@@ -65,7 +65,8 @@ body {
 /* ── SETUP ── */
 #setupScreen {
   flex:1; display:flex; flex-direction:column;
-  justify-content:center; padding:28px 22px 60px; gap:20px;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding:28px 22px 60px; gap:20px;
 }
 .s-logo { font-family:'Fraunces',serif; font-size:36px; font-weight:700; color:var(--ink); }
 .s-logo em { color:var(--gold); font-style:normal; }
@@ -653,7 +654,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar11-30</div>
+<div class="ver">12mar11-50</div>
 
 <script>
 // ── STATE ──
@@ -948,8 +949,11 @@ FAIL ver (pass=false) — sadece bunlar:
 
 PASS ver — bunlar hata değil:
 - Doğal dil dönüşümleri: "dinleyin" → "listen to these", "gelin" → "come over"
+- Hedef dilin doğal güçlendirmeleri: "planım yok" → "hiçbir planım yok", "iyi" → "çok iyi"
+- Almanca "nichts", "kein", "gar nicht" gibi yapıların Türkçe'de "hiçbir/hiç" ile karşılanması
 - Ton farkı, üslup değişikliği, dilbilgisi normalizasyonu
-- Geri çeviri birebir değil ama anlam aynıysa — bu güçlü pozitif sinyaldir
+- Geri çeviri birebir değil ama genel anlam aynıysa — bu güçlü pozitif sinyaldir
+- Kaynak kısa/özlü, çeviri biraz daha açıksa ama anlam aynıysa
 
 Kaynak: \${src}
 Çeviri (\${tl.full}): \${tr}
