@@ -303,10 +303,34 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 
 /* Input area */
 .input-wrap {
+  position:sticky; bottom:0; left:0; right:0;
   border-top:1px solid var(--border);
   background:rgba(10,12,18,0.97);
   padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 12px);
+  z-index:20;
 }
+/* DeepL style lang bar */
+.lang-bar {
+  display:flex; align-items:center;
+  margin-bottom:8px; gap:6px;
+}
+.lb-btn {
+  flex:1; height:38px; border-radius:12px;
+  background:rgba(255,255,255,0.06); border:1px solid var(--border2);
+  color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px; font-weight:600; cursor:pointer;
+  transition:all .15s; display:flex; align-items:center; justify-content:center; gap:5px;
+}
+.lb-btn:active { background:rgba(255,255,255,0.12); }
+.lb-btn.active-lang { border-color:rgba(90,184,176,0.4); color:var(--teal2); background:rgba(90,184,176,0.08); }
+.lb-swap {
+  width:38px; height:38px; border-radius:12px; flex-shrink:0;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border2);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--ink2); font-size:16px; transition:all .2s;
+}
+.lb-swap:active { transform:rotate(180deg); }
+
 .inp-box {
   background:rgba(255,255,255,0.05); border:1px solid var(--border2);
   border-radius:22px;
@@ -516,23 +540,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
   <div class="hdr">
     <div class="hdr-logo">çev<em>.</em></div>
 
-    <!-- Language pair -->
-    <div class="lang-pair">
-      <button class="lp-btn" id="srcBtn" onclick="openLangPicker('src')">TR</button>
-      <div class="lp-sep"></div>
-      <button class="swap-btn" onclick="swapLangs()" title="Dilleri ters çevir">⇄</button>
-      <div class="lp-sep"></div>
-      <button class="lp-btn" id="tgtBtn" onclick="openLangPicker('tgt')">EN</button>
-    </div>
-
-    <div class="hdr-actions">
-      <button class="icon-btn" id="clearBtn" onclick="clearChat()" title="Geçmişi sil" style="display:none">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-      </button>
-      <button class="icon-btn" onclick="openSettings()">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
-    </div>
+    
   </div>
 
   <!-- Chat -->
@@ -552,15 +560,22 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 
   <!-- Input -->
   <div class="input-wrap">
+    <!-- DeepL style lang bar -->
+    <div class="lang-bar">
+      <button class="lb-btn" id="lbSrc" onclick="openLangPicker('src')">
+        <span id="lbSrcTxt">Türkçe</span>
+        <span style="opacity:.5;font-size:10px">▾</span>
+      </button>
+      <div class="lb-swap" onclick="swapLangs()">⇄</div>
+      <button class="lb-btn" id="lbTgt" onclick="openLangPicker('tgt')">
+        <span id="lbTgtTxt">İngilizce</span>
+        <span style="opacity:.5;font-size:10px">▾</span>
+      </button>
+    </div>
     <div class="inp-box">
       <textarea id="inputText" placeholder="Çevirmek istediğini yaz…" rows="2"
         onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
       <div class="inp-bar">
-        <div class="inp-lang-sw" onclick="openLangPicker('tgt')" title="Hedef dili değiştir">
-          <span class="ils-pair" id="ilsPair">TR → EN</span>
-          <span class="ils-arrow">▾</span>
-        </div>
-        <div class="ils-swap" onclick="swapLangs()" title="Dilleri ters çevir">⇄</div>
         <button class="paste-icon-btn" onclick="pasteFromClipboard()" title="Yapıştır">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg>
         </button>
@@ -618,7 +633,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar09-30</div>
+<div class="ver">12mar10-00</div>
 
 <script>
 // ── STATE ──
@@ -662,12 +677,12 @@ function showMain() {
 }
 
 function updateLangUI() {
-  const sl = LANGS[srcLang]?.short || srcLang.toUpperCase();
-  const tl = LANGS[tgtLang]?.short || tgtLang.toUpperCase();
-  document.getElementById('srcBtn').textContent = sl;
-  document.getElementById('tgtBtn').textContent = tl;
-  const pair = document.getElementById('ilsPair');
-  if (pair) pair.textContent = sl + ' → ' + tl;
+  const sl = LANGS[srcLang]?.name || srcLang.toUpperCase();
+  const tl = LANGS[tgtLang]?.name || tgtLang.toUpperCase();
+  const lbSrc = document.getElementById('lbSrcTxt');
+  const lbTgt = document.getElementById('lbTgtTxt');
+  if (lbSrc) lbSrc.textContent = sl;
+  if (lbTgt) lbTgt.textContent = tl;
 }
 
 function saveKey() {
@@ -1178,15 +1193,27 @@ function parseTags(text) {
 
 // ── PASTE ──
 async function pasteFromClipboard() {
+  const inp = document.getElementById('inputText');
+  inp.focus();
+  // Android Chrome + desktop
   try {
-    const txt = await navigator.clipboard.readText();
-    if (!txt.trim()) { toast('Pano boş'); return; }
-    document.getElementById('inputText').value = txt;
-    autoResize(document.getElementById('inputText'));
-    document.getElementById('inputText').focus();
-  } catch(e) {
-    toast('Yapıştırma izni gerekli');
-  }
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      const txt = await navigator.clipboard.readText();
+      if (txt && txt.trim()) {
+        inp.value = txt;
+        autoResize(inp);
+        toast('Yapıştırıldı ✓');
+        return;
+      }
+    }
+  } catch(e) {}
+  // iOS fallback
+  inp.select();
+  try {
+    const ok = document.execCommand('paste');
+    if (ok && inp.value.trim()) { autoResize(inp); toast('Yapıştırıldı ✓'); return; }
+  } catch(e) {}
+  toast('Alana uzun bas → Yapıştır');
 }
 
 // ── MORE MENU ──
