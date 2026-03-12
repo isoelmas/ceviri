@@ -6,595 +6,172 @@
 <meta name="theme-color" content="#0a0c12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0e1420">
-<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIsOHZXZpcmkiLAogICJzaG9ydF9uYW1lIjogIsOHZXZpcmkiLAogICJkZXNjcmlwdGlvbiI6ICJLacWfaXNlbCDDp2V2aXJpIHV5Z3VsYW1hc8SxIOKAlCB0b24gZG/En3J1bGFtYWzEsSIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZTE0MjAiLAogICJ0aGVtZV9jb2xvciI6ICIjMGUxNDIwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9pc29lbG1hcy5naXRodWIuaW8vaWNvbi0xOTIucG5nIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAicHVycG9zZSI6ICJhbnkgbWFza2FibGUiCiAgICB9CiAgXQp9">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="çev.">
-<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIsOHZXZpcmkiLAogICJzaG9ydF9uYW1lIjogIsOHZXZpcmkiLAogICJkZXNjcmlwdGlvbiI6ICJLacWfaXNlbCDDp2V2aXJpIHV5Z3VsYW1hc8SxIOKAlCB0b24gZG/En3J1bGFtYWzEsSIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZTE0MjAiLAogICJ0aGVtZV9jb2xvciI6ICIjMGUxNDIwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9pc29lbG1hcy5naXRodWIuaW8vaWNvbi0xOTIucG5nIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAicHVycG9zZSI6ICJhbnkgbWFza2FibGUiCiAgICB9CiAgXQp9">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAK4UlEQVR4nO3dW2wcVwHG8W9217vr9TW+3xInbpMmTVOFhNC4VdUoKQ69qJCAktI0ERKClwpKEQ88IAQSDyBQEbxARQWiaquCSt1KSVEKNS2B3JTSEifBSZzaceK1Y6/vl73v8BA7cpy9nzM7u2e+n9SX2j07cv85OZ45M6PBZE1Nd+tmHwPJ5fX2amZ9ds4/mAFbTy4Dz8kHMWJaZHTchg7OkCkRo8I2ZFCGTOmSHbbUwRgyZUtW2FIGYcgki2jYNtEDYMwkk2hPQkEzZjKCSFdZTe8MmXIl0yVIxjM0Y6ZcyrS3jIJmzGSGTLpLO2jGTGZKt7+0gmbMlA/S6VD4tB1RPkkZNGdnyiepekwaNGOmfJSsy4RBM2bKZ4n65BqalBI3aM7OVAjidcoZmpRyR9CcnamQLO+VMzQp5bagOTtTIVraLWdoUsqtoDk7UyFb7JczNCmFQZNSNIDLDVIHZ2hSCoMmpTBoUoqN62dSCWdoUgqDJqUwaFIKgyalMGhSCoMmpTBoUgqDJqUwaFIKgyalMGhSCoMmpTBoUgqDJqUwaFIKgyalMGhSCoMmpTBoUoqN62dSCWdoUgqDJqUwaFIKgyalMGhSCoMmpTBoUoqN62dSCWdoUgqDJqUwaFIKgyalMGhSCoMmpTBoUgqDJqUwaFIKgyalMGhSCoMmpTBoUoqN62dSCWdoUgqDJqUwaFIKgyalMGhSCoMmpTBoUoqN62dSCWdoUgqDJqUwaFIKgyalMGhSCoPWSVXVDrS3utHe6kZzrRPVFQ5UVTjgKbbDWaTBWaRBDsDXiRn2BGJa6OjI2PY2P3sQAAAABJRU5ErkJggg==">
 <title>çev. — Akıllı Çeviri</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 html { background:#0a0c12; }
 :root {
-  --ink: #f2efe8;
-  --ink2: #c8c2b4;
-  --paper: #0a0c12;
-  --paper2: #10141e;
-  --paper3: #171d2b;
-  --card: #131825;
-  --card2: #1a2133;
-  --gold: #c8a84a;
-  --gold2: #e5c46e;
-  --teal: #5ab8b0;
-  --teal2: #7dd4cc;
-  --rose: #d07070;
-  --blue: #4a8fd4;
-  --muted: rgba(242,239,232,0.55);
-  --muted2: rgba(242,239,232,0.12);
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --shadow: 0 20px 50px rgba(0,0,0,0.35);
-  --r: 20px;
-  --rs: 12px;
+  --ink:#f2efe8; --ink2:#c8c2b4; --paper:#0a0c12; --paper2:#10141e;
+  --card:#131825; --card2:#1a2133; --gold:#c8a84a; --gold2:#e5c46e;
+  --teal:#5ab8b0; --teal2:#7dd4cc; --rose:#d07070;
+  --muted:rgba(242,239,232,0.55); --muted2:rgba(242,239,232,0.12);
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+  --r:20px;
 }
 * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; overflow:hidden; }
+body { font-family:'Plus Jakarta Sans',sans-serif; background:#0a0c12; color:var(--ink); position:fixed; inset:0; padding-top:env(safe-area-inset-top,0px); }
+.app { max-width:480px; margin:0 auto; height:var(--app-h,100dvh); display:flex; flex-direction:column; position:relative; overflow:hidden; }
 
-html, body {
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
-  font-family:'Plus Jakarta Sans', sans-serif;
-  background: #0a0c12;
-  color: var(--ink);
-  position: fixed;
-  inset: 0;
-  padding-top: env(safe-area-inset-top,0px);
-}
-
-.app {
-  max-width:480px; margin:0 auto;
-  height: var(--app-h, 100dvh);
-  display:flex; flex-direction:column;
-  position:relative;
-  overflow: hidden;
-}
-
-/* ── SETUP ── */
-#setupScreen {
-  flex:1; display:flex; flex-direction:column;
-  overflow-y:auto; -webkit-overflow-scrolling:touch;
-  padding:28px 22px 60px; gap:20px;
-}
+/* SETUP */
+#setupScreen { flex:1; display:flex; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:28px 22px 60px; gap:20px; }
 .s-logo { font-family:'Fraunces',serif; font-size:36px; font-weight:700; color:var(--ink); }
 .s-logo em { color:var(--gold); font-style:normal; }
 .s-eyebrow { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); }
 .s-headline { font-family:'Fraunces',serif; font-size:28px; font-weight:500; line-height:1.25; }
 .s-headline em { font-style:italic; color:var(--teal2); }
 .s-body { font-size:13px; color:var(--muted); line-height:1.75; }
-
 .feat-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.feat-item {
-  background:rgba(255,255,255,0.03); border:1px solid var(--border);
-  border-radius:16px; padding:14px 12px; display:flex; flex-direction:column; gap:6px;
-}
-.feat-icon { font-size:18px; }
-.feat-t { font-size:12px; font-weight:700; color:var(--ink); }
-.feat-s { font-size:11px; color:var(--muted); line-height:1.5; }
-
-.s-card {
-  background:linear-gradient(180deg,rgba(22,29,44,0.98),rgba(13,18,30,0.98));
-  border:1px solid var(--border2); border-radius:var(--r);
-  padding:18px; display:flex; flex-direction:column; gap:10px;
-}
+.feat-item { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:14px 12px; display:flex; flex-direction:column; gap:6px; }
+.feat-icon { font-size:18px; } .feat-t { font-size:12px; font-weight:700; } .feat-s { font-size:11px; color:var(--muted); line-height:1.5; }
+.s-card { background:linear-gradient(180deg,rgba(22,29,44,0.98),rgba(13,18,30,0.98)); border:1px solid var(--border2); border-radius:var(--r); padding:18px; display:flex; flex-direction:column; gap:10px; }
 .s-step { display:flex; gap:12px; align-items:flex-start; }
-.s-num {
-  width:22px; height:22px; border-radius:50%; background:var(--gold); color:#0a0c12;
-  font-family:'Fraunces',serif; font-size:11px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
-}
+.s-num { width:22px; height:22px; border-radius:50%; background:var(--gold); color:#0a0c12; font-family:'Fraunces',serif; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
 .s-step-txt { font-size:13px; color:var(--ink); line-height:1.6; }
 .s-step-txt a { color:var(--teal2); text-decoration:none; font-weight:600; }
-
-.field {
-  width:100%; background:rgba(255,255,255,0.04);
-  border:1px solid var(--border); border-radius:var(--r);
-  padding:14px 16px; font-family:'IBM Plex Mono',monospace; font-size:13px;
-  color:var(--ink); outline:none; transition:border-color .2s;
-  -webkit-appearance:none;
-}
+.field { width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:var(--r); padding:14px 16px; font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--ink); outline:none; transition:border-color .2s; -webkit-appearance:none; }
 .field:focus { border-color:rgba(200,168,74,0.5); }
 .field::placeholder { color:rgba(242,239,232,0.28); }
-
-.primary-btn {
-  width:100%; padding:15px;
-  background:linear-gradient(135deg,#1a2640,#0e1828);
-  border:1px solid var(--border2); border-radius:var(--r);
-  color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:14px; font-weight:600; cursor:pointer; transition:all .2s;
-}
+.primary-btn { width:100%; padding:15px; background:linear-gradient(135deg,#1a2640,#0e1828); border:1px solid var(--border2); border-radius:var(--r); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; }
 .primary-btn:active { opacity:.85; transform:scale(.99); }
 .setup-note { font-size:11px; color:rgba(242,239,232,0.35); text-align:center; }
 
-/* ── MAIN UI ── */
-#mainUI { 
-  flex:1; display:flex; flex-direction:column; 
-  overflow:hidden;
-  min-height:0;
-  height: var(--app-h, 100dvh);
-}
-
-/* Header */
-.hdr {
-  flex: 0 0 auto;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px;
-  border-bottom:1px solid var(--border);
-  background:rgba(10,12,18,0.95);
-  backdrop-filter:blur(20px);
-  position:sticky; top:0; z-index:50;
-}
-.hdr-logo { font-family:'Fraunces',serif; font-size:24px; font-weight:700; color:var(--ink); }
+/* MAIN */
+#mainUI { flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; height:var(--app-h,100dvh); }
+.hdr { flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px; border-bottom:1px solid var(--border); background:rgba(10,12,18,0.95); backdrop-filter:blur(20px); position:sticky; top:0; z-index:50; }
+.hdr-logo { font-family:'Fraunces',serif; font-size:24px; font-weight:700; }
 .hdr-logo em { color:var(--gold); font-style:normal; }
-
-/* Language pair control */
-.lang-pair {
-  display:flex; align-items:center; gap:0;
-  background:rgba(255,255,255,0.05);
-  border:1px solid var(--border2);
-  border-radius:999px;
-  overflow:hidden;
-}
-.lp-btn {
-  font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500;
-  letter-spacing:0.5px; color:var(--ink2);
-  padding:7px 12px; cursor:pointer;
-  background:transparent; border:none;
-  transition:all .15s;
-}
-.lp-btn:active { background:rgba(255,255,255,0.08); }
-.lp-sep {
-  width:1px; height:18px; background:var(--border2);
-  flex-shrink:0;
-}
-.swap-btn {
-  padding:7px 10px; cursor:pointer;
-  background:transparent; border:none;
-  color:var(--teal2); font-size:14px;
-  display:flex; align-items:center;
-  transition:all .2s;
-}
-.swap-btn:active { transform:rotate(180deg); }
-
 .hdr-actions { display:flex; gap:6px; }
-.icon-btn {
-  width:36px; height:36px; border-radius:14px;
-  background:rgba(255,255,255,0.05); border:1px solid var(--border);
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:rgba(242,239,232,0.7); transition:all .2s;
-}
+.icon-btn { width:36px; height:36px; border-radius:14px; background:rgba(255,255,255,0.05); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:rgba(242,239,232,0.7); transition:all .2s; }
 .icon-btn:active { transform:scale(.92); }
 
-/* Chat area */
-.chat {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y:auto; overflow-x:hidden;
-  padding:16px 14px 8px;
-  display:flex; flex-direction:column; gap:12px;
-  -webkit-overflow-scrolling:touch;
-}
+/* Chat */
+.chat { flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding:16px 14px 8px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch; }
 .chat::-webkit-scrollbar { display:none; }
-
-.empty-state {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:8px; opacity:.3; text-align:center; padding:40px 24px;
-  pointer-events:none;
-}
-.empty-icon { font-size:32px; }
-.empty-t { font-family:'Fraunces',serif; font-size:18px; font-weight:500; }
-.empty-s { font-size:12px; color:var(--muted); line-height:1.7; }
-
-/* Message rows */
+.empty-state { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; opacity:.3; text-align:center; padding:40px 24px; pointer-events:none; }
+.empty-icon { font-size:32px; } .empty-t { font-family:'Fraunces',serif; font-size:18px; font-weight:500; } .empty-s { font-size:12px; color:var(--muted); line-height:1.7; }
 .msg-row { display:flex; flex-direction:column; gap:4px; animation:msgIn .25s ease; }
 @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-
-/* Source bubble (user) */
-.msg-src {
-  align-self:flex-end;
-  background:var(--card2); border:1px solid var(--border2);
-  border-radius:18px 18px 4px 18px;
-  padding:10px 14px;
-  font-size:14px; color:rgba(242,239,232,0.6);
-  font-style:italic; line-height:1.55;
-  max-width:85%;
-}
-
-/* Translation bubble */
-.msg-out {
-  align-self:flex-start;
-  background:linear-gradient(160deg,#1b2438,#131a28);
-  border:1px solid rgba(90,184,176,0.2);
-  border-radius:4px 18px 18px 18px;
-  padding:12px 14px 10px;
-  max-width:92%;
-  box-shadow:0 4px 20px rgba(0,0,0,0.2);
-}
-.msg-text {
-  font-family:'Fraunces',serif; font-size:19px;
-  font-weight:300; line-height:1.5; color:var(--ink);
-}
+.msg-src { align-self:flex-end; background:var(--card2); border:1px solid var(--border2); border-radius:18px 18px 4px 18px; padding:10px 14px; font-size:14px; color:rgba(242,239,232,0.6); font-style:italic; line-height:1.55; max-width:85%; }
+.msg-out { align-self:flex-start; background:linear-gradient(160deg,#1b2438,#131a28); border:1px solid rgba(90,184,176,0.2); border-radius:4px 18px 18px 18px; padding:12px 14px 10px; max-width:92%; box-shadow:0 4px 20px rgba(0,0,0,0.2); }
+.msg-text { font-family:'Fraunces',serif; font-size:19px; font-weight:300; line-height:1.5; color:var(--ink); }
 .msg-text.streaming { opacity:.85; }
-
-/* Status bar */
-.msg-status {
-  display:flex; align-items:center; gap:6px;
-  margin-top:8px; flex-wrap:wrap;
-}
-.status-pill {
-  font-family:'IBM Plex Mono',monospace; font-size:9px;
-  letter-spacing:0.5px; text-transform:uppercase; font-weight:500;
-  padding:4px 8px; border-radius:999px;
-}
+.msg-status { display:flex; align-items:center; gap:6px; margin-top:8px; flex-wrap:wrap; }
+.status-pill { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.5px; text-transform:uppercase; font-weight:500; padding:4px 8px; border-radius:999px; }
 .sp-lang { background:rgba(90,184,176,0.12); color:var(--teal2); border:1px solid rgba(90,184,176,0.25); }
 .sp-tone { background:rgba(200,168,74,0.1); color:var(--gold2); border:1px solid rgba(200,168,74,0.28); }
-.sp-model { background:rgba(255,255,255,0.04); color:rgba(242,239,232,0.45); border:1px solid var(--border); }
 .sp-ok { background:rgba(90,184,176,0.12); color:var(--teal2); border:1px solid rgba(90,184,176,0.3); }
 .sp-warn { background:rgba(200,168,74,0.1); color:var(--gold2); border:1px solid rgba(200,168,74,0.3); }
 .sp-pending { background:rgba(255,255,255,0.04); color:rgba(242,239,232,0.38); border:1px solid var(--border); }
-
-/* Back translation */
-.msg-back {
-  margin-top:8px; padding-top:8px;
-  border-top:1px solid rgba(255,255,255,0.07);
-  font-size:12px; color:rgba(242,239,232,0.5); line-height:1.6;
-}
+.msg-back { margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.07); font-size:12px; color:rgba(242,239,232,0.5); line-height:1.6; }
 .back-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.5px; text-transform:uppercase; color:rgba(242,239,232,0.28); margin-bottom:3px; }
-
-/* Validator block */
-.validator-block {
-  margin-top:8px; border-radius:12px; overflow:hidden;
-  border:1px solid rgba(200,100,100,0.2);
-  background:linear-gradient(180deg,rgba(200,100,100,0.08),rgba(200,100,100,0.04));
-}
-.validator-summary {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:10px 12px; cursor:pointer;
-  font-size:12px; color:#c47070; font-weight:600;
-  gap:10px;
-}
-.validator-summary::-webkit-details-marker { display:none; }
+.validator-block { margin-top:8px; border-radius:12px; overflow:hidden; border:1px solid rgba(200,100,100,0.2); background:linear-gradient(180deg,rgba(200,100,100,0.08),rgba(200,100,100,0.04)); }
+.validator-summary { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; cursor:pointer; font-size:12px; color:#c47070; font-weight:600; gap:10px; }
 .val-left { display:flex; align-items:center; gap:7px; }
 .val-arrow { color:#d89090; font-size:14px; transition:transform .18s; }
 details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 .validator-body { padding:0 12px 10px; font-size:11px; color:#a06060; line-height:1.5; }
-
-/* Action bar */
-.action-bar {
-  display:flex; align-items:center; gap:4px;
-  margin-top:10px; padding-top:10px;
-  border-top:1px solid rgba(255,255,255,0.06);
-  flex-wrap:wrap;
-}
-.act-btn {
-  display:flex; align-items:center; gap:5px;
-  padding:6px 10px; border-radius:10px;
-  background:rgba(255,255,255,0.04); border:1px solid var(--border);
-  font-family:'IBM Plex Mono',monospace; font-size:9px;
-  letter-spacing:0.4px; text-transform:uppercase;
-  color:rgba(242,239,232,0.55); cursor:pointer;
-  transition:all .15s; white-space:nowrap;
-}
+.action-bar { display:flex; align-items:center; gap:4px; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.06); flex-wrap:wrap; }
+.act-btn { display:flex; align-items:center; gap:5px; padding:6px 10px; border-radius:10px; background:rgba(255,255,255,0.04); border:1px solid var(--border); font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.4px; text-transform:uppercase; color:rgba(242,239,232,0.55); cursor:pointer; transition:all .15s; white-space:nowrap; }
 .act-btn:active { background:rgba(255,255,255,0.09); transform:scale(.95); }
-.act-btn.primary-act {
-  background:rgba(90,184,176,0.1); color:var(--teal2);
-  border-color:rgba(90,184,176,0.25);
-}
+.act-btn.primary-act { background:rgba(90,184,176,0.1); color:var(--teal2); border-color:rgba(90,184,176,0.25); }
 .act-btn.primary-act:active { background:rgba(90,184,176,0.18); }
-.act-btn svg { flex-shrink:0; }
 .act-copy-ok { color:var(--teal2) !important; border-color:rgba(90,184,176,0.3) !important; background:rgba(90,184,176,0.08) !important; }
+.stage-line { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.4px; text-transform:uppercase; color:rgba(242,239,232,0.35); margin-top:6px; }
 
-/* Loading dots */
-.typing-dots { display:flex; gap:5px; align-items:center; padding:6px 0; }
-.typing-dot {
-  width:7px; height:7px; border-radius:50%;
-  background:var(--gold); animation:tdot 1.1s ease-in-out infinite;
-}
-.typing-dot:nth-child(2){animation-delay:.18s}
-.typing-dot:nth-child(3){animation-delay:.36s}
-@keyframes tdot { 0%,80%,100%{transform:scale(.6);opacity:.3} 40%{transform:scale(1);opacity:1} }
-
-.stage-line {
-  font-family:'IBM Plex Mono',monospace; font-size:9px;
-  letter-spacing:.4px; text-transform:uppercase;
-  color:rgba(242,239,232,0.35); margin-top:6px;
-}
-
-
-
-/* Input area */
-.input-wrap {
-  flex: 0 0 auto;
-  border-top:1px solid var(--border);
-  background:rgba(10,12,18,0.97);
-  padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 12px);
-  z-index:20;
-}
-/* DeepL style lang bar */
-.lang-bar {
-  display:flex; align-items:center;
-  margin-bottom:8px; gap:6px;
-}
-.lb-btn {
-  flex:1; height:38px; border-radius:12px;
-  background:rgba(255,255,255,0.06); border:1px solid var(--border2);
-  color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:13px; font-weight:600; cursor:pointer;
-  transition:all .15s; display:flex; align-items:center; justify-content:center; gap:5px;
-}
+/* Input */
+.input-wrap { flex:0 0 auto; border-top:1px solid var(--border); background:rgba(10,12,18,0.97); padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 12px); z-index:20; }
+.lang-bar { display:flex; align-items:center; margin-bottom:8px; gap:6px; }
+.lb-btn { flex:1; height:38px; border-radius:12px; background:rgba(255,255,255,0.06); border:1px solid var(--border2); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; display:flex; align-items:center; justify-content:center; gap:5px; }
 .lb-btn:active { background:rgba(255,255,255,0.12); }
-.lb-btn.active-lang { border-color:rgba(90,184,176,0.4); color:var(--teal2); background:rgba(90,184,176,0.08); }
-.lb-swap {
-  width:38px; height:38px; border-radius:12px; flex-shrink:0;
-  background:rgba(255,255,255,0.04); border:1px solid var(--border2);
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:var(--ink2); font-size:16px; transition:all .2s;
-}
+.lb-swap { width:38px; height:38px; border-radius:12px; flex-shrink:0; background:rgba(255,255,255,0.04); border:1px solid var(--border2); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink2); font-size:16px; transition:all .2s; }
 .lb-swap:active { transform:rotate(180deg); }
-
-.inp-box {
-  background:rgba(255,255,255,0.05); border:1px solid var(--border2);
-  border-radius:22px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.25);
-  transition:border-color .2s;
-  overflow:hidden;
-}
+.inp-box { background:rgba(255,255,255,0.05); border:1px solid var(--border2); border-radius:22px; box-shadow:0 12px 30px rgba(0,0,0,0.25); transition:border-color .2s; overflow:hidden; }
 .inp-box:focus-within { border-color:rgba(200,168,74,0.35); }
-#inputText {
-  width:100%; background:transparent; border:none; outline:none;
-  font-family:'Plus Jakarta Sans',sans-serif; font-size:16px;
-  font-weight:500; color:var(--ink); line-height:1.55;
-  padding:14px 16px 8px; resize:none;
-  min-height:54px; max-height:130px;
-  caret-color:var(--gold);
-  -webkit-appearance:none;
-}
+#inputText { width:100%; background:transparent; border:none; outline:none; font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:500; color:var(--ink); line-height:1.55; padding:14px 16px 8px; resize:none; min-height:54px; max-height:130px; caret-color:var(--gold); -webkit-appearance:none; }
 #inputText::placeholder { color:rgba(242,239,232,0.28); }
-.inp-bar {
-  display:flex; align-items:flex-end; gap:6px;
-  padding:6px 10px 10px;
-  min-width:0;
-}
-/* favorites removed */
-.paste-icon-btn {
-  height:34px; border-radius:12px; flex-shrink:0;
-  background:rgba(255,255,255,0.04); border:1px solid var(--border);
-  display:flex; align-items:center; justify-content:center;
-  gap:5px; padding:0 10px;
-  cursor:pointer; color:rgba(242,239,232,0.45); transition:all .2s;
-}
+.inp-bar { display:flex; align-items:center; gap:6px; padding:4px 10px 10px; }
+.paste-icon-btn { height:34px; border-radius:12px; flex-shrink:0; background:rgba(255,255,255,0.04); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:5px; padding:0 10px; cursor:pointer; color:rgba(242,239,232,0.45); transition:all .2s; }
 .paste-icon-btn:active { background:rgba(255,255,255,0.1); transform:scale(.92); }
-
-/* Lang switcher in input bar */
-.inp-lang-sw {
-  display:flex; align-items:center; gap:2px;
-  background:rgba(255,255,255,0.06); border:1px solid var(--border2);
-  border-radius:12px; padding:0 4px 0 8px; height:34px;
-  cursor:pointer; transition:all .15s; flex-shrink:0;
-}
-.inp-lang-sw:active { background:rgba(255,255,255,0.1); }
-.ils-pair {
-  font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500;
-  color:var(--ink2); letter-spacing:0.3px; white-space:nowrap;
-}
-.ils-arrow {
-  font-size:10px; color:rgba(242,239,232,0.4); margin-left:2px;
-  transition:transform .2s;
-}
-.ils-swap {
-  width:26px; height:26px; border-radius:8px; margin-left:4px;
-  background:rgba(90,184,176,0.12); border:1px solid rgba(90,184,176,0.2);
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:var(--teal2); font-size:13px;
-  transition:all .2s;
-}
-.ils-swap:active { transform:rotate(180deg); background:rgba(90,184,176,0.2); }
-
-.send-btn {
-  width:44px; height:44px; border-radius:16px; flex-shrink:0;
-  background:linear-gradient(135deg,#1d2d4a,#0f1e35);
-  border:1px solid rgba(255,255,255,0.1);
-  box-shadow:0 8px 20px rgba(0,0,0,0.3);
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:var(--ink); transition:all .2s; position:relative; overflow:hidden;
-}
+.send-btn { width:44px; height:44px; border-radius:16px; flex-shrink:0; margin-left:auto; background:linear-gradient(135deg,#1d2d4a,#0f1e35); border:1px solid rgba(255,255,255,0.1); box-shadow:0 8px 20px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); transition:all .2s; position:relative; overflow:hidden; }
 .send-btn:active { transform:scale(.92); }
 .send-btn:disabled { opacity:.35; cursor:not-allowed; }
-.si { transition:opacity .18s; }
-.si.h { opacity:0; }
+.si { transition:opacity .18s; } .si.h { opacity:0; }
 .sp { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .18s; }
 .sp.s { opacity:1; }
 .spr { width:16px; height:16px; border:2px solid rgba(242,239,232,0.25); border-top-color:var(--ink); border-radius:50%; animation:spin .7s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
 
-/* Settings sheet */
+/* Settings / sheets */
 .s-ov { display:none; position:fixed; inset:0; background:rgba(5,7,14,0.6); z-index:100; backdrop-filter:blur(6px); }
 .s-ov.open { display:block; }
-.sheet {
-  position:absolute; bottom:0; left:0; right:0;
-  background:linear-gradient(180deg,#151e30,#0d1525);
-  border-radius:24px 24px 0 0;
-  padding:0 20px calc(env(safe-area-inset-bottom,20px) + 20px);
-  max-width:480px; margin:0 auto;
-  box-shadow:0 -10px 50px rgba(0,0,0,0.2);
-  animation:shUp .28s ease;
-}
+.sheet { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(180deg,#151e30,#0d1525); border-radius:24px 24px 0 0; padding:0 20px calc(env(safe-area-inset-bottom,20px) + 20px); max-width:480px; margin:0 auto; box-shadow:0 -10px 50px rgba(0,0,0,0.2); animation:shUp .28s ease; }
 @keyframes shUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
 .sh-handle { width:36px; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; margin:14px auto 22px; }
 .sh-title { font-family:'Fraunces',serif; font-size:20px; font-weight:500; margin-bottom:20px; }
 .sh-label { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:.5px; text-transform:uppercase; margin-bottom:8px; }
-.opt-row {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:13px 0; border-top:1px solid rgba(255,255,255,0.06); gap:14px;
-}
-.opt-t { font-size:13px; font-weight:600; color:var(--ink); }
-.opt-s { font-size:11px; color:var(--muted); line-height:1.4; margin-top:2px; }
-.mini-tog {
-  min-width:72px; height:32px; border-radius:999px;
-  border:1px solid var(--muted2); background:var(--paper2);
-  color:var(--muted); font-family:'IBM Plex Mono',monospace;
-  font-size:9px; letter-spacing:.4px; text-transform:uppercase; cursor:pointer;
-  transition:all .2s;
-}
+.opt-row { display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-top:1px solid rgba(255,255,255,0.06); gap:14px; }
+.opt-t { font-size:13px; font-weight:600; color:var(--ink); } .opt-s { font-size:11px; color:var(--muted); line-height:1.4; margin-top:2px; }
+.mini-tog { min-width:72px; height:32px; border-radius:999px; border:1px solid var(--muted2); background:var(--paper2); color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.4px; text-transform:uppercase; cursor:pointer; transition:all .2s; }
 .mini-tog.on { background:rgba(90,184,176,0.1); color:var(--teal2); border-color:rgba(90,184,176,0.28); }
-.danger-btn {
-  width:100%; padding:13px; background:transparent;
-  border:1px solid rgba(200,90,90,0.25); border-radius:var(--r);
-  color:var(--rose); font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:14px; font-weight:600; cursor:pointer; margin-top:8px; transition:all .2s;
-}
+.danger-btn { width:100%; padding:13px; background:transparent; border:1px solid rgba(200,90,90,0.25); border-radius:var(--r); color:var(--rose); font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; margin-top:8px; transition:all .2s; }
 .danger-btn:active { background:rgba(200,90,90,0.06); }
-
-/* Lang picker sheet */
 .lang-list { display:flex; flex-direction:column; gap:3px; margin-top:8px; }
-.lang-opt {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 14px; border-radius:14px; cursor:pointer;
-  font-size:14px; font-weight:500; color:var(--ink);
-  transition:background .15s;
-}
+.lang-opt { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:14px; cursor:pointer; font-size:14px; font-weight:500; color:var(--ink); transition:background .15s; }
 .lang-opt:active { background:rgba(255,255,255,0.06); }
 .lang-opt.selected { background:rgba(90,184,176,0.1); color:var(--teal2); }
 .lang-opt.selected::after { content:'✓'; font-size:13px; }
 
-/* Toast */
-.toast {
-  position:fixed; bottom:90px; left:50%;
-  transform:translateX(-50%) translateY(8px);
-  background:var(--ink); color:var(--paper);
-  padding:9px 18px; border-radius:12px;
-  font-size:13px; font-weight:600;
-  opacity:0; transition:all .22s;
-  pointer-events:none; white-space:nowrap; z-index:200;
-}
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-/* Version */
 /* Help modal */
-.help-ov {
-  position:fixed; inset:0; z-index:100;
-  background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
-  display:flex; align-items:flex-end; justify-content:center;
-  opacity:0; pointer-events:none; transition:opacity .25s;
-}
+.help-ov { position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .25s; }
 .help-ov.open { opacity:1; pointer-events:all; }
-.help-sheet {
-  width:100%; max-width:480px;
-  background:linear-gradient(180deg,#1a2035,#111827);
-  border-radius:24px 24px 0 0; border-top:1px solid var(--border2);
-  padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 24px);
-  max-height:88vh; overflow-y:auto;
-  transform:translateY(40px); transition:transform .3s ease;
-}
+.help-sheet { width:100%; max-width:480px; background:linear-gradient(180deg,#1a2035,#111827); border-radius:24px 24px 0 0; border-top:1px solid var(--border2); padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 24px); max-height:88vh; overflow-y:auto; transform:translateY(40px); transition:transform .3s ease; }
 .help-ov.open .help-sheet { transform:translateY(0); }
-.help-title {
-  font-family:'Fraunces',serif; font-size:22px; font-weight:700;
-  color:var(--ink); margin-bottom:4px;
-}
+.help-title { font-family:'Fraunces',serif; font-size:22px; font-weight:700; color:var(--ink); margin-bottom:4px; }
 .help-sub { font-size:13px; color:var(--muted); margin-bottom:20px; }
-.help-card {
-  background:var(--card); border:1px solid var(--border2);
-  border-radius:18px; padding:18px; margin-bottom:20px;
-}
-.help-src-bubble {
-  align-self:flex-end; background:var(--card2);
-  border:1px solid var(--border2); border-radius:18px 18px 4px 18px;
-  padding:10px 14px; font-style:italic; font-size:14px;
-  color:var(--ink2); margin-bottom:12px; display:inline-block;
-  max-width:85%; float:right; clear:both;
-}
-.help-translation {
-  font-family:'Fraunces',serif; font-size:20px; color:var(--ink);
-  margin-bottom:8px; clear:both;
-}
-.help-back { font-size:13px; color:var(--muted); margin-bottom:12px; }
-.help-back-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted2); margin-bottom:3px; }
-.help-pills { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:14px; }
 .help-annotations { display:flex; flex-direction:column; gap:10px; }
-.help-ann {
-  display:flex; gap:10px; align-items:flex-start;
-  padding:10px 12px; border-radius:12px;
-  background:rgba(255,255,255,0.03); border:1px solid var(--border);
-}
+.help-ann { display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border); }
 .help-ann-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
 .help-ann-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:2px; }
 .help-ann-desc { font-size:12px; color:var(--muted); line-height:1.5; }
-.help-close {
-  width:100%; padding:13px; border-radius:14px; margin-top:16px;
-  background:rgba(255,255,255,0.06); border:1px solid var(--border2);
-  color:var(--ink2); font-size:14px; font-weight:600; cursor:pointer;
-}
-
-.ver { position:fixed; bottom:12px; right:14px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:rgba(242,239,232,0.2); letter-spacing:.5px; pointer-events:none; z-index:999; }
-
-/* Paste button */
-/* Demo card */
-.demo-card {
-  margin-top:16px; width:100%; max-width:320px;
-  background:rgba(255,255,255,0.04); border:1px solid var(--border2);
-  border-radius:18px; padding:16px; cursor:pointer;
-  transition:all .2s; text-align:left; pointer-events:all;
-}
-.demo-card:active { background:rgba(255,255,255,0.07); transform:scale(.98); }
-.demo-label { font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:1.5px; color:var(--muted2); margin-bottom:8px; }
-.demo-src { font-size:13px; color:var(--ink2); margin-bottom:6px; font-style:italic; }
-.demo-out { font-family:'Fraunces',serif; font-size:16px; color:var(--ink); margin-bottom:10px; }
-.demo-meta { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px; }
-.demo-pill { font-family:'IBM Plex Mono',monospace; font-size:9px; padding:3px 8px; border-radius:999px; background:rgba(255,255,255,0.06); border:1px solid var(--border2); color:var(--ink2); }
-.demo-pill.tone { color:var(--gold); border-color:rgba(200,168,74,0.3); background:rgba(200,168,74,0.08); }
-.demo-pill.ok { color:var(--teal2); border-color:rgba(90,184,176,0.3); background:rgba(90,184,176,0.08); }
-.demo-hint { font-size:11px; color:var(--muted2); }
-
-.paste-big {
-  display:flex; align-items:center; justify-content:center; gap:10px;
-  margin:20px auto 0;
-  padding:16px 28px; border-radius:16px;
-  background:rgba(255,255,255,0.05); border:1px solid var(--border2);
-  color:var(--ink2); font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:15px; font-weight:600; cursor:pointer;
-  transition:all .2s; max-width:220px;
-}
-.paste-big:active { background:rgba(255,255,255,0.1); transform:scale(.97); }
-.paste-big svg { color:var(--teal2); }
+.help-close { width:100%; padding:13px; border-radius:14px; margin-top:16px; background:rgba(255,255,255,0.06); border:1px solid var(--border2); color:var(--ink2); font-size:14px; font-weight:600; cursor:pointer; }
 
 /* More menu */
 .more-menu-wrap { position:relative; }
-.more-menu {
-  position:absolute; bottom:calc(100% + 6px); right:0;
-  background:linear-gradient(180deg,#1d2840,#151f32);
-  border:1px solid var(--border2); border-radius:14px;
-  padding:6px; min-width:160px; z-index:50;
-  box-shadow:0 8px 30px rgba(0,0,0,0.4);
-  animation:menuIn .15s ease;
-}
+.more-menu { position:absolute; bottom:calc(100% + 6px); right:0; background:linear-gradient(180deg,#1d2840,#151f32); border:1px solid var(--border2); border-radius:14px; padding:6px; min-width:160px; z-index:50; box-shadow:0 8px 30px rgba(0,0,0,0.4); animation:menuIn .15s ease; }
 @keyframes menuIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
-.more-item {
-  display:flex; align-items:center; gap:9px;
-  padding:9px 11px; border-radius:9px; cursor:pointer;
-  font-size:13px; color:var(--ink2); transition:background .12s;
-  white-space:nowrap;
-}
+.more-item { display:flex; align-items:center; gap:9px; padding:9px 11px; border-radius:9px; cursor:pointer; font-size:13px; color:var(--ink2); transition:background .12s; white-space:nowrap; }
 .more-item:active { background:rgba(255,255,255,0.08); }
 .more-item svg { color:var(--teal2); flex-shrink:0; }
+
+/* Paste big */
+.paste-big { display:flex; align-items:center; justify-content:center; gap:10px; margin:20px auto 0; padding:16px 28px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid var(--border2); color:var(--ink2); font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; max-width:220px; }
+.paste-big:active { background:rgba(255,255,255,0.1); transform:scale(.97); }
+.paste-big svg { color:var(--teal2); }
+
+/* Version */
+.ver { position:fixed; bottom:12px; right:14px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:rgba(242,239,232,0.2); letter-spacing:.5px; pointer-events:none; z-index:999; }
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- ── SETUP SCREEN ── -->
+<!-- SETUP -->
 <div id="setupScreen">
   <div>
     <div class="s-logo">çev<em>.</em></div>
@@ -621,10 +198,8 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
   <button class="primary-btn" onclick="saveKey()">Başla →</button>
 </div>
 
-<!-- ── MAIN UI ── -->
+<!-- MAIN -->
 <div id="mainUI" style="display:none; flex:1; flex-direction:column; overflow:hidden;">
-
-  <!-- Header -->
   <div class="hdr">
     <div class="hdr-logo">çev<em>.</em></div>
     <div class="hdr-actions">
@@ -640,34 +215,26 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
     </div>
   </div>
 
-  <!-- Chat -->
   <div class="chat" id="chat">
     <div class="empty-state" id="emptyState">
       <div class="empty-icon">✦</div>
       <div class="empty-t">Hazır</div>
       <div class="empty-s">Bir şeyler yaz, çevirelim.</div>
-      <button class="paste-big" onclick="pasteFromClipboard()">
+      <button class="paste-big" style="pointer-events:all;" onclick="pasteFromClipboard()">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         Yapıştır
       </button>
-
     </div>
   </div>
 
-
-
-  <!-- Input -->
   <div class="input-wrap">
-    <!-- DeepL style lang bar -->
     <div class="lang-bar">
       <button class="lb-btn" id="lbSrc" onclick="openLangPicker('src')">
-        <span id="lbSrcTxt">Türkçe</span>
-        <span style="opacity:.5;font-size:10px">▾</span>
+        <span id="lbSrcTxt">Türkçe</span><span style="opacity:.5;font-size:10px">▾</span>
       </button>
       <div class="lb-swap" onclick="swapLangs()">⇄</div>
       <button class="lb-btn" id="lbTgt" onclick="openLangPicker('tgt')">
-        <span id="lbTgtTxt">İngilizce</span>
-        <span style="opacity:.5;font-size:10px">▾</span>
+        <span id="lbTgtTxt">İngilizce</span><span style="opacity:.5;font-size:10px">▾</span>
       </button>
     </div>
     <div class="inp-box">
@@ -676,7 +243,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
       <div class="inp-bar">
         <button class="paste-icon-btn" id="pasteBtn" onclick="pasteFromClipboard()" title="Yapıştır">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg>
-          <span id="pasteBtnTxt" style="font-size:12px;font-weight:600;margin-left:4px;">Yapıştır</span>
+          <span id="pasteBtnTxt" style="font-size:12px;font-weight:600;">Yapıştır</span>
         </button>
         <button class="send-btn" id="sendBtn" onclick="doTranslate()">
           <span class="si" id="si"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
@@ -685,10 +252,8 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
       </div>
     </div>
   </div>
-
 </div>
 </div>
-<div class="ver">12mar12-30</div>
 
 <!-- Help modal -->
 <div class="help-ov" id="helpOv" onclick="closeHelp()">
@@ -696,24 +261,566 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
     <div class="sh-handle"></div>
     <div class="help-title">Kartı nasıl okursun?</div>
     <div class="help-sub">Örnek bir çeviri üzerinde her alanın ne anlama geldiğini gör.</div>
-
-    <!-- Örnek kart - gerçek kart kopyası -->
-    <div style="background:var(--card); border:1px solid var(--border2); border-radius:18px; padding:16px; margin-bottom:16px;">
-      <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
-        <div style="background:var(--card2); border:1px solid var(--border2); border-radius:18px 18px 4px 18px; padding:9px 14px; font-style:italic; font-size:14px; color:var(--ink2); max-width:85%;">I really need to talk to you.</div>
+    <!-- Örnek kart — gerçek kart ile aynı görünüm -->
+    <div style="background:linear-gradient(160deg,#1b2438,#131a28);border:1px solid rgba(90,184,176,0.2);border-radius:4px 18px 18px 18px;padding:12px 14px 10px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+        <div style="background:#1a2133;border:1px solid rgba(255,255,255,0.12);border-radius:18px 18px 4px 18px;padding:9px 14px;font-style:italic;font-size:14px;color:rgba(242,239,232,0.6);max-width:85%;">I really need to talk to you.</div>
       </div>
-      <div style="font-family:'Fraunces',serif; font-size:20px; color:var(--ink); margin-bottom:10px; line-height:1.35;">Seninle gerçekten konuşmam lazım.</div>
-      <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted2); margin-bottom:3px;">GERİ ÇEVİRİ</div>
-      <div style="font-size:13px; color:var(--muted); margin-bottom:12px;">I really need to talk to you.</div>
-      <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px;">
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:300;color:#f2efe8;margin-bottom:10px;line-height:1.4;">Seninle gerçekten konuşmam lazım.</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;color:rgba(242,239,232,0.28);margin-bottom:3px;">GERİ ÇEVİRİ</div>
+      <div style="font-size:12px;color:rgba(242,239,232,0.5);margin-bottom:12px;">I really need to talk to you.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;">
         <span class="status-pill sp-lang">→ Türkçe</span>
         <span class="status-pill sp-tone">Samimi, doğrudan ve acil bir ton</span>
         <span class="status-pill sp-ok">✓ Doğrulandı</span>
       </div>
-      <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        <button class="act-btn" style="pointer-events:none; opacity:.7;"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Kopyala</button>
-        <button class="act-btn" style="pointer-events:none; opacity:.7;">··· Daha fazla</button>
+      <div style="display:flex;gap:6px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);">
+        <span class="act-btn" style="opacity:.6;">Kopyala</span>
+        <span class="act-btn" style="opacity:.6;">··· Daha fazla</span>
       </div>
     </div>
+    <div class="help-annotations">
+      <div class="help-ann">
+        <span class="status-pill sp-lang" style="flex-shrink:0;">→ Dil</span>
+        <div><div class="help-ann-title">Hedef Dil</div><div class="help-ann-desc">Metnin hangi dile çevrildiğini gösterir.</div></div>
+      </div>
+      <div class="help-ann">
+        <span class="status-pill sp-tone" style="flex-shrink:0;">Ton</span>
+        <div><div class="help-ann-title">Ton Etiketi</div><div class="help-ann-desc">Metnin duygusal tonu — samimi mi, resmi mi, acil mi? Doğru tonu yakaladığını buradan anlarsın.</div></div>
+      </div>
+      <div class="help-ann">
+        <span class="status-pill sp-ok" style="flex-shrink:0;">✓</span>
+        <div><div class="help-ann-title">Doğrulandı / İncelenmeli</div><div class="help-ann-desc">"Doğrulandı" — anlam kaybı yok. "İncelenmeli" — zamir, zaman veya anlam kayması tespit edildi, İyileştir butonu çıkar.</div></div>
+      </div>
+      <div class="help-ann">
+        <div class="help-ann-icon">↩️</div>
+        <div><div class="help-ann-title">Geri Çeviri</div><div class="help-ann-desc">Çeviri tekrar kaynak dile çevrilir. Orijinale yakınsa anlam korunmuş demektir.</div></div>
+      </div>
+      <div class="help-ann">
+        <div class="help-ann-icon">🔄</div>
+        <div><div class="help-ann-title">İyileştir</div><div class="help-ann-desc">Hata varsa hatayı geri bildirim olarak modele iletir ve çeviriyi yeniden yapar.</div></div>
+      </div>
+    </div>
+    <button class="help-close" onclick="closeHelp()">Anladım</button>
+  </div>
+</div>
 
-      <div class="help
+<!-- Settings -->
+<div class="s-ov" id="sOv" onclick="closeSettings()">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sh-handle"></div>
+    <div class="sh-title">Ayarlar</div>
+    <div class="sh-label">API Anahtarı</div>
+    <input type="password" class="field" id="newKey" placeholder="Yeni anahtar…" style="margin-bottom:10px">
+    <button class="primary-btn" onclick="updateKey()" style="margin-bottom:6px">Güncelle</button>
+    <button class="danger-btn" onclick="deleteKey()">Anahtarı Sil &amp; Sıfırla</button>
+    <button class="danger-btn" onclick="clearCache()" style="margin-top:6px;background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);color:rgba(242,239,232,0.5)">Dil &amp; Ayar Önbelleğini Temizle</button>
+    <div class="opt-row">
+      <div><div class="opt-t">Geri Çeviri</div><div class="opt-s">Çeviriyi tekrar kaynak dile çevirir. Anlam kayması varsa burada fark edilir.</div></div>
+      <button class="mini-tog" id="btTog" onclick="toggleOpt('bt')">Açık</button>
+    </div>
+    <div class="opt-row">
+      <div><div class="opt-t">Doğrulayıcı</div><div class="opt-s">Anlam ekleme, eksiltme veya çarpıtma varsa uyarır. Hata bulunursa "İyileştir" çıkar.</div></div>
+      <button class="mini-tog" id="valTog" onclick="toggleOpt('val')">Açık</button>
+    </div>
+    <div class="opt-row">
+      <div><div class="opt-t">Ton Etiketi</div><div class="opt-s">Her çeviride metnin tonunu gösterir.</div></div>
+      <button class="mini-tog" id="toneTog" onclick="toggleOpt('tone')">Açık</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lang picker -->
+<div class="s-ov" id="lpOv" onclick="closeLangPicker()">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sh-handle"></div>
+    <div class="sh-title" id="lpTitle">Kaynak Dil</div>
+    <div class="lang-list" id="langList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="ver">12mar12-40</div>
+
+<script>
+let apiKey='', srcLang='tr', tgtLang='en';
+let busy=false, showTone=true;
+let convHistory=[], bubbles={};
+let showBack=true, useValidator=true;
+let langPickerMode='tgt', inputFocused=false;
+
+const LANGS={
+  tr:{name:'Türkçe',short:'TR',full:'Turkish'},
+  en:{name:'İngilizce',short:'EN',full:'English'},
+  ru:{name:'Rusça',short:'RU',full:'Russian'},
+  ua:{name:'Ukraynaca',short:'UA',full:'Ukrainian'},
+  de:{name:'Almanca',short:'DE',full:'German'}
+};
+
+function syncAppHeight(){
+  if(inputFocused)return;
+  const h=window.visualViewport?window.visualViewport.height:window.innerHeight;
+  document.documentElement.style.setProperty('--app-h',h+'px');
+}
+syncAppHeight();
+window.addEventListener('resize',syncAppHeight);
+window.visualViewport?.addEventListener('resize',syncAppHeight);
+
+function stickToBottom(){
+  const c=document.getElementById('chat');
+  if(c)requestAnimationFrame(()=>{c.scrollTop=c.scrollHeight;});
+}
+
+function init(){
+  apiKey=localStorage.getItem('cv_k')||'';
+  srcLang=localStorage.getItem('cv_src')||'tr';
+  tgtLang=localStorage.getItem('cv_tgt')||'en';
+  showBack=localStorage.getItem('cv_bt')!=='0';
+  useValidator=localStorage.getItem('cv_val')!=='0';
+  showTone=localStorage.getItem('cv_tone')!=='0';
+  const inp=document.getElementById('inputText');
+  if(inp){
+    inp.addEventListener('focus',()=>{inputFocused=true;stickToBottom();});
+    inp.addEventListener('blur',()=>{inputFocused=false;setTimeout(syncAppHeight,100);});
+  }
+  if(apiKey)showMain();
+}
+
+function showMain(){
+  document.getElementById('setupScreen').style.display='none';
+  const m=document.getElementById('mainUI');
+  m.style.display='flex'; m.style.flexDirection='column';
+  m.style.overflow='hidden'; m.style.flex='1';
+  updateLangUI(); renderToggles();
+}
+
+function updateLangUI(){
+  const sl=LANGS[srcLang]?.name||srcLang.toUpperCase();
+  const tl=LANGS[tgtLang]?.name||tgtLang.toUpperCase();
+  const es=document.getElementById('lbSrcTxt');
+  const et=document.getElementById('lbTgtTxt');
+  if(es)es.textContent=sl; if(et)et.textContent=tl;
+}
+
+function saveKey(){
+  const k=document.getElementById('apiKeyInput').value.trim();
+  if(!k){toast('API anahtarı gir');return;}
+  apiKey=k; localStorage.setItem('cv_k',k); showMain();
+}
+
+function swapLangs(){
+  [srcLang,tgtLang]=[tgtLang,srcLang];
+  localStorage.setItem('cv_src',srcLang); localStorage.setItem('cv_tgt',tgtLang);
+  updateLangUI(); toast(LANGS[srcLang].short+' ⇄ '+LANGS[tgtLang].short);
+}
+
+function openLangPicker(mode){
+  langPickerMode=mode;
+  document.getElementById('lpTitle').textContent=mode==='src'?'Kaynak Dil':'Hedef Dil';
+  const cur=mode==='src'?srcLang:tgtLang;
+  document.getElementById('langList').innerHTML=Object.entries(LANGS).map(([k,v])=>
+    `<div class="lang-opt ${k===cur?'selected':''}" onclick="selectLang('${k}')">${v.name}</div>`
+  ).join('');
+  document.getElementById('lpOv').classList.add('open');
+}
+function selectLang(k){
+  if(langPickerMode==='src'){srcLang=k;localStorage.setItem('cv_src',k);}
+  else{tgtLang=k;localStorage.setItem('cv_tgt',k);}
+  updateLangUI(); closeLangPicker();
+}
+function closeLangPicker(){document.getElementById('lpOv').classList.remove('open');}
+
+function openHelp(){document.getElementById('helpOv').classList.add('open');}
+function closeHelp(){document.getElementById('helpOv').classList.remove('open');}
+function openSettings(){document.getElementById('sOv').classList.add('open');}
+function closeSettings(){document.getElementById('sOv').classList.remove('open');}
+
+function updateKey(){
+  const k=document.getElementById('newKey').value.trim();
+  if(!k){toast('Boş olamaz');return;}
+  apiKey=k; localStorage.setItem('cv_k',k); closeSettings(); toast('Güncellendi ✓');
+}
+function clearCache(){
+  ['cv_src','cv_tgt','cv_bt','cv_val','cv_tone'].forEach(k=>localStorage.removeItem(k));
+  srcLang='tr'; tgtLang='en'; showBack=true; useValidator=true; showTone=true;
+  updateLangUI(); renderToggles(); closeSettings(); toast('Önbellek temizlendi ✓');
+}
+function deleteKey(){
+  ['cv_k','cv_src','cv_tgt','cv_bt','cv_val','cv_tone'].forEach(k=>localStorage.removeItem(k));
+  location.reload();
+}
+function toggleOpt(key){
+  if(key==='bt'){showBack=!showBack;localStorage.setItem('cv_bt',showBack?'1':'0');}
+  else if(key==='val'){useValidator=!useValidator;localStorage.setItem('cv_val',useValidator?'1':'0');}
+  else if(key==='tone'){showTone=!showTone;localStorage.setItem('cv_tone',showTone?'1':'0');}
+  renderToggles();
+}
+function renderToggles(){
+  const bt=document.getElementById('btTog');
+  const vl=document.getElementById('valTog');
+  const tn=document.getElementById('toneTog');
+  if(bt){bt.textContent=showBack?'Açık':'Kapalı';bt.classList.toggle('on',showBack);}
+  if(vl){vl.textContent=useValidator?'Açık':'Kapalı';vl.classList.toggle('on',useValidator);}
+  if(tn){tn.textContent=showTone?'Açık':'Kapalı';tn.classList.toggle('on',showTone);}
+}
+
+function clearChat(){
+  if(!confirm('Tüm geçmiş silinecek. Emin misin?'))return;
+  document.getElementById('chat').innerHTML=`<div class="empty-state" id="emptyState"><div class="empty-icon">✦</div><div class="empty-t">Hazır</div><div class="empty-s">Bir şeyler yaz, çevirelim.</div></div>`;
+  convHistory=[]; bubbles={}; toast('Geçmiş silindi');
+}
+
+function autoResize(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,130)+'px';
+}
+
+function handleKey(e){
+  if(e.key==='Enter'&&e.shiftKey){e.preventDefault();doTranslate();}
+}
+
+async function doTranslate(){
+  if(busy)return;
+  let raw=document.getElementById('inputText').value.trim();
+  if(!raw)return;
+
+  if(raw.toLowerCase()==='diatestmode'){
+    const es=document.getElementById('emptyState');if(es)es.remove();
+    const lid='msg_'+Date.now();
+    bubbles[lid]={out:'This is very wonderful and you are truly a magnificent person.',back:'Bu çok harika ve sen gerçekten muhteşem bir insansın.',src:'Türkçe',tone:'Nötr ve sade bir ifade',warning:'Kaynak metinde olmayan içerik eklendi',warningShort:'Kaynak metinde olmayan içerik eklendi',warningDetail:'Kaynak metinde olmayan içerik eklendi — "magnificent" ve "wonderful" kelimeleri kaynakta yoktu',srcLang,tgtLang,validated:false,validatorEnabled:true,backEnabled:true,statusLine:'',translationPending:false,backPending:false,retrying:false};
+    document.getElementById('inputText').value='';document.getElementById('inputText').style.height='auto';
+    appendRow('[TEST] Bu çok iyi.',lid);toast('🧪 Test modu aktif');return;
+  }
+
+  let reqSrc=srcLang,reqTgt=tgtLang;
+  const pm=raw.match(/^\/([a-z]{2})\s+(.+)/is);
+  if(pm){const lc=pm[1].toLowerCase();if(['en','ru','ua','tr','de'].includes(lc)){reqTgt=lc;raw=pm[2].trim();}}
+  if(reqSrc===reqTgt){toast('Kaynak ve hedef dil aynı');return;}
+
+  const el=document.getElementById('inputText');
+  el.value='';el.style.height='auto';
+  setLoading(true);
+  const es=document.getElementById('emptyState');if(es)es.remove();
+
+  const lid='msg_'+Date.now();
+  const sl=LANGS[reqSrc]||{name:reqSrc,short:reqSrc.toUpperCase(),full:reqSrc};
+  const tl=LANGS[reqTgt]||{name:reqTgt,short:reqTgt.toUpperCase(),full:reqTgt};
+
+  bubbles[lid]={out:'',back:null,src:'?',tone:'',warning:null,warningShort:null,warningDetail:null,srcLang:reqSrc,tgtLang:reqTgt,validated:useValidator?'pending':null,validatorEnabled:useValidator,backEnabled:showBack,statusLine:'Çeviri akıyor…',translationPending:true,backPending:false,retrying:false};
+  appendRow(raw,lid);
+
+  const ctxLines=convHistory.slice(-3).map(h=>`[Kaynak]: ${h.src}\n[Çeviri]: ${h.tgt}`).join('\n');
+  const contextBlock=ctxLines?`\nSOHBET BAĞLAMI (sadece referans):\n${ctxLines}\n`:'';
+
+  const mainPrompt=`Sen yüksek sadakatli bir çeviri motorusun.
+
+GÖREV: Verilen metni ${tl.full} diline doğal ve akıcı şekilde çevir.${contextBlock}
+BAĞLAM KURALI: Bağlam varsa ton ve kelime seçimini iyileştirmek için kullan, çeviriye yansıtma.
+
+ZORUNLU KURALLAR:
+1. Kaynak metindeki anlamı koru.
+2. Kaynakta olmayan bilgi, övgü, duygu, özne veya yorum ekleme.
+3. Yazım hatalarını düzelt ama anlamı değiştirme.
+4. Kelime kelime çeviri yapma; hedef dilde doğal yaz.
+5. Belirsizliği koru, açıklamaya çalışma.
+6. Özne açık değilse uydurma.
+7. Tonu koru, güçlendirme veya abartma.
+8. Bağlama en uygun doğal karşılığı seç.
+9. ZAMİR KURALI: "sen/siz/bize/sana/bana" gibi zamirler kaybolmamalı.
+10. Almanca için: resmi ise "Sie", samimi ise "du" kullan.
+
+Format (sadece bu):
+<translation>çeviri</translation>
+<src>kaynak dil Türkçe olarak</src>
+<tone>tonun tam Türkçe açıklaması</tone>
+
+Kullanıcı metni: ${raw}`;
+
+  const backPrompt=(txt)=>`Aşağıdaki ${tl.full} metnini ${sl.full} diline çevir.
+KURALLAR: Sadece bu metni çevir. Kaynak metnin ne olduğunu bilmiyorsun. Doğal çevir. Tek satır, sadece çeviri.
+Metin: ${txt}`;
+
+  const validatorPrompt=(src,tr,bk)=>`Sen dengeli ama titiz bir çeviri doğrulayıcısısın.
+GÖREV: Kaynak ile çeviri arasında gerçek anlam kaybı veya ekleme var mı kontrol et.
+
+FAIL ver (pass=false) — sadece bunlar:
+- Kaynakta açık olan ZAMİR kayboldu: "bize","sana","sen","siz","bana" gibi hitap bilgisi silindiyse
+- Kaynakta olmayan ZAMAN eklendi veya var olan zaman silindi: "bugün","yarın","hemen" gibi
+- Kaynakta olmayan YER/YÖN eklendi veya silindi: "buraya","bize","eve" gibi
+- OLUMSUZLUK kayboldu: "değil","yok","istemiyorum" gibi
+- Kaynakta olmayan anlam/bilgi eklendi (ADDED_CONTENT)
+- Önemli içerik tamamen çıkarıldı (OMITTED_CONTENT)
+- Anlam tersine döndü (MEANING_DISTORTION)
+
+PASS ver — bunlar hata değil:
+- Doğal dil dönüşümleri: "dinleyin" → "listen to these"
+- Hedef dilin doğal güçlendirmeleri: "planım yok" → "hiçbir planım yok"
+- Almanca "nichts","kein" yapılarının "hiçbir/hiç" ile karşılanması
+- Ton farkı, üslup değişikliği, dilbilgisi normalizasyonu
+- Geri çeviri birebir değil ama genel anlam aynıysa
+
+Kaynak: ${src}
+Çeviri (${tl.full}): ${tr}
+Geri çeviri (${sl.full}): ${bk||'YOK'}
+
+Sadece JSON döndür. Hata varsa "notes" alanına kısa Türkçe açıklama yaz.
+{"pass":true,"errors":[],"severity":"none","notes":""}`;
+
+  try{
+    const txt=await streamChat(mainPrompt,(partial)=>{
+      const p=extractTag(partial,'translation');
+      if(p)updateBubble(lid,raw,{out:p,statusLine:'Çeviri akıyor…',translationPending:true});
+    });
+    let parsed=parseTags(txt); parsed.back=null;
+    updateBubble(lid,raw,{out:parsed.out,src:parsed.src,tone:parsed.tone,translationPending:false,statusLine:showBack?'Geri çeviri hazırlanıyor…':(useValidator?'Doğrulanıyor…':'')});
+
+    if(showBack&&parsed.out){
+      updateBubble(lid,raw,{backPending:true});
+      try{const bt=await plainChat(backPrompt(parsed.out),500);parsed.back=bt.trim()||null;}catch(e){parsed.back=null;}
+      updateBubble(lid,raw,{back:parsed.back,backPending:false,statusLine:useValidator?'Doğrulanıyor…':''});
+    }
+
+    let validationWarning=null,warningShort=null,warningDetail=null,validatorRan=false;
+    if(useValidator){
+      try{
+        const vt=await plainChat(validatorPrompt(raw,parsed.out,parsed.back),300);
+        validatorRan=true;
+        const vm=vt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
+        if(vm){
+          const vr=JSON.parse(vm[0]);
+          if(!vr.pass&&vr.errors?.length){
+            const labels={'ADDED_CONTENT':'Kaynak metinde olmayan içerik eklendi','OMITTED_CONTENT':'Kaynak metinden anlam eksiltildi','MEANING_DISTORTION':'Anlam kaydırıldı veya çarpıtıldı','SUBJECT_INSERTED':'Kaynakta olmayan özne eklendi'};
+            const hard=vr.errors.filter(e=>!['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e));
+            if(hard.length){
+              warningShort=labels[hard[0]]||hard[0];
+              const parts=hard.map(e=>labels[e]||e);
+              if(vr.notes)parts.push(vr.notes);
+              warningDetail=parts.join(' — ');
+              validationWarning=warningDetail;
+            }
+          }
+        }
+      }catch(e){}
+    }
+
+    convHistory.push({src:raw,tgt:parsed.out});
+    if(convHistory.length>10)convHistory.shift();
+    Object.assign(bubbles[lid],{out:parsed.out,src:parsed.src,tone:parsed.tone,back:parsed.back,warning:validationWarning,warningShort,warningDetail,validated:useValidator?(validatorRan?(validationWarning===null):null):null,statusLine:'',translationPending:false,backPending:false});
+    renderBubble(lid,raw);
+  }catch(e){
+    const row=document.getElementById(lid);
+    if(row)row.querySelector('.msg-out').innerHTML=`<div style="color:var(--rose);font-size:13px;">Hata: ${esc(e.message)}</div>`;
+    toast('Hata: '+e.message);
+  }finally{setLoading(false);}
+}
+
+async function improveTranslation(lid,rawText){
+  const cur=bubbles[lid]; if(!cur||cur.retrying)return;
+  const tl=LANGS[cur.tgtLang],sl=LANGS[cur.srcLang];
+  const feedback=cur.warningDetail||cur.warning||'Anlamı daha dikkatli koru.';
+  Object.assign(bubbles[lid],{retrying:true,statusLine:'İyileştiriliyor…',validated:'pending',warning:null,warningShort:null,warningDetail:null});
+  renderBubble(lid,rawText);
+
+  const retryPrompt=`Sen yüksek sadakatli bir çeviri motorusun.
+GÖREV: Verilen metni ${tl.full} diline yeniden çevir. Bu ikinci denemedir.
+Önceki denemede şu sorun tespit edildi: ${feedback}
+FORMAT: <translation>çeviri</translation><src>kaynak dil Türkçe</src><tone>ton Türkçe</tone>
+Kullanıcı metni: ${rawText}`;
+
+  const backP=(txt)=>`Aşağıdaki ${tl.full} metnini ${sl.full} diline çevir. Sadece bu metni çevir. Doğal çevir. Tek satır.\nMetin: ${txt}`;
+  const valP=(src,tr,bk)=>`Sen dengeli bir çeviri doğrulayıcısısın.
+KRİTİK ANLAM BİRİMLERİ — biri değişirse FAIL: zamir(sen/siz/bize/sana), zaman(bugün/yarın), yer(buraya/bize), olumsuzluk.
+AĞIR HATALAR (pass=false): ADDED_CONTENT, OMITTED_CONTENT, MEANING_DISTORTION, SUBJECT_INSERTED.
+NOT OLARAK GEÇ: TONE_SHIFT, AWKWARD_WORDING, doğal güçlendirmeler.
+Kaynak: ${src}\nÇeviri (${tl.full}): ${tr}\nGeri çeviri (${sl.full}): ${bk||'YOK'}
+Sadece JSON: {"pass":true,"errors":[],"severity":"none","notes":""}`;
+
+  try{
+    const txt=await streamChat(retryPrompt,(p)=>{
+      const part=extractTag(p,'translation');
+      if(part)updateBubble(lid,rawText,{out:part,translationPending:true,statusLine:'İyileştirme akıyor…'});
+    });
+    let parsed=parseTags(txt); parsed.back=null;
+    updateBubble(lid,rawText,{out:parsed.out,src:parsed.src,tone:parsed.tone,translationPending:false,statusLine:cur.backEnabled?'Geri çeviri hazırlanıyor…':(cur.validatorEnabled?'Doğrulanıyor…':'')});
+    if(cur.backEnabled&&parsed.out){
+      try{parsed.back=(await plainChat(backP(parsed.out),500)).trim()||null;}catch(e){parsed.back=null;}
+      updateBubble(lid,rawText,{back:parsed.back,statusLine:cur.validatorEnabled?'Doğrulanıyor…':''});
+    }
+    let validationWarning=null,warningShort=null,warningDetail=null,validatorRan=false;
+    if(cur.validatorEnabled){
+      try{
+        const vt=await plainChat(valP(rawText,parsed.out,parsed.back),300);
+        validatorRan=true;
+        const vm=vt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
+        if(vm){
+          const vr=JSON.parse(vm[0]);
+          if(!vr.pass&&vr.errors?.length){
+            const labels={'ADDED_CONTENT':'Kaynak metinde olmayan içerik eklendi','OMITTED_CONTENT':'Kaynak metinden anlam eksiltildi','MEANING_DISTORTION':'Anlam kaydırıldı veya çarpıtıldı','SUBJECT_INSERTED':'Kaynakta olmayan özne eklendi'};
+            const hard=vr.errors.filter(e=>!['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e));
+            if(hard.length){warningShort=labels[hard[0]]||hard[0];warningDetail=hard.map(e=>labels[e]||e).join(' — ');if(vr.notes)warningDetail+=' — '+vr.notes;validationWarning=warningDetail;}
+          }
+        }
+      }catch(e){}
+    }
+    Object.assign(bubbles[lid],{out:parsed.out,src:parsed.src,tone:parsed.tone,back:parsed.back,warning:validationWarning,warningShort,warningDetail,validated:cur.validatorEnabled?(validatorRan?(validationWarning===null):null):null,statusLine:'',translationPending:false,backPending:false,retrying:false});
+    renderBubble(lid,rawText);
+  }catch(e){
+    Object.assign(bubbles[lid],{retrying:false,statusLine:''});
+    renderBubble(lid,rawText);
+    toast('İyileştirme hatası: '+e.message);
+  }
+}
+
+function appendRow(rawText,lid){
+  const chat=document.getElementById('chat');
+  const row=document.createElement('div');
+  row.className='msg-row'; row.id=lid;
+  chat.appendChild(row);
+  renderBubble(lid,rawText);
+  chat.scrollTop=chat.scrollHeight;
+  const pt=document.getElementById('pasteBtnTxt');
+  if(pt)pt.style.display='none';
+}
+
+function updateBubble(lid,rawText,patch){
+  bubbles[lid]={...(bubbles[lid]||{}),...patch};
+  renderBubble(lid,rawText);
+}
+
+function renderBubble(lid,rawText){
+  const row=document.getElementById(lid); if(!row)return;
+  const p=bubbles[lid]||{};
+  const tl=LANGS[p.tgtLang]||LANGS[tgtLang];
+  const mainText=p.out||'';
+
+  let validPill='';
+  if(p.validatorEnabled!==false){
+    if(p.validated===true)validPill=`<span class="status-pill sp-ok">✓ Doğrulandı</span>`;
+    else if(p.validated===false)validPill=`<span class="status-pill sp-warn">⚠ İncelenmeli</span>`;
+    else if(p.validated==='pending')validPill=`<span class="status-pill sp-pending">… doğrulanıyor</span>`;
+  }
+
+  let backHtml='';
+  if(p.backEnabled!==false&&(p.back||p.backPending)){
+    backHtml=`<div class="msg-back"><div class="back-label">Geri çeviri</div>${esc(p.backPending?'Hazırlanıyor…':(p.back||''))}</div>`;
+  }
+
+  let warnHtml='';
+  if(p.warning){
+    warnHtml=`<details class="validator-block"><summary class="validator-summary"><span class="val-left">⚠️ <span>${esc(p.warningShort||'İncelenmesi iyi olur')}</span></span><span class="val-arrow">▾</span></summary>${p.warningDetail?`<div class="validator-body">${esc(p.warningDetail)}</div>`:''}</details>`;
+  }
+
+  const copyId='cp_'+lid;
+  const improveBtn=(p.validated===false&&!p.retrying)?`<button class="act-btn primary-act" onclick="improveTranslation('${lid}','${ea(rawText)}')"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> İyileştir</button>`:'';
+  const retryBadge=p.retrying?`<span class="status-pill sp-pending">… iyileştiriliyor</span>`:'';
+  const moreId='more_'+lid;
+
+  const actBar=mainText?`<div class="action-bar">${improveBtn}<button class="act-btn" id="${copyId}" onclick="copyText('${ea(mainText)}','${copyId}')"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Kopyala</button><div class="more-menu-wrap"><button class="act-btn" onclick="toggleMore('${moreId}')">··· Daha fazla</button><div class="more-menu" id="${moreId}" style="display:none"><div class="more-item" onclick="shareText('${ea(mainText)}');closeMore('${moreId}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Paylaş</div><div class="more-item" onclick="retranslate('${lid}','${ea(rawText)}');closeMore('${moreId}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Yeniden çevir</div></div></div></div>`:'';
+
+  const stageLine=p.statusLine?`<div class="stage-line">${esc(p.statusLine)}</div>`:'';
+
+  row.innerHTML=`<div class="msg-src">${esc(rawText)}</div><div class="msg-out"><div class="msg-text ${p.translationPending?'streaming':''}">${esc(mainText||'…')}</div>${stageLine}${backHtml}${warnHtml}<div class="msg-status"><span class="status-pill sp-lang">→ ${esc(tl.name)}</span>${(p.tone&&showTone)?`<span class="status-pill sp-tone">${esc(p.tone)}</span>`:''}${validPill}${retryBadge}</div>${actBar}</div>`;
+
+  const chat=document.getElementById('chat');
+  chat.scrollTop=chat.scrollHeight;
+}
+
+async function streamChat(prompt,onPartial){
+  const res=await fetch('https://api.deepseek.com/v1/chat/completions',{
+    method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
+    body:JSON.stringify({model:'deepseek-chat',messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:2000,stream:true})
+  });
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'API hatası');}
+  if(!res.body)return plainChat(prompt,2000);
+  const reader=res.body.getReader(),decoder=new TextDecoder();
+  let buf='',full='';
+  while(true){
+    const{value,done}=await reader.read();if(done)break;
+    buf+=decoder.decode(value,{stream:true});
+    const lines=buf.split('\n');buf=lines.pop()||'';
+    for(const line of lines){
+      const t=line.trim();if(!t.startsWith('data:'))continue;
+      const d=t.slice(5).trim();if(!d||d==='[DONE]')continue;
+      try{const o=JSON.parse(d);const delta=o.choices?.[0]?.delta?.content||'';if(delta){full+=delta;if(onPartial)onPartial(full);}}catch(_){}
+    }
+  }
+  return full;
+}
+
+async function plainChat(prompt,maxTokens=500){
+  const res=await fetch('https://api.deepseek.com/v1/chat/completions',{
+    method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
+    body:JSON.stringify({model:'deepseek-chat',messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:maxTokens})
+  });
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'API hatası');}
+  const data=await res.json();
+  return data.choices?.[0]?.message?.content||'';
+}
+
+function extractTag(text,tag){
+  const i=text.toLowerCase().indexOf(`<${tag}>`);if(i===-1)return'';
+  const rest=text.slice(i+tag.length+2);
+  const end=rest.toLowerCase().indexOf(`</${tag}>`);
+  return(end===-1?rest:rest.slice(0,end)).trimStart();
+}
+
+function parseTags(text){
+  const pick=(tag)=>{const m=text.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`,'i'));return m?m[1].trim():'';};
+  const t=pick('translation');
+  return{out:t||text.trim(),src:pick('src')||'?',tone:pick('tone')||''};
+}
+
+async function pasteFromClipboard(){
+  const inp=document.getElementById('inputText');inp.focus();
+  try{
+    if(navigator.clipboard?.readText){
+      const txt=await navigator.clipboard.readText();
+      if(txt?.trim()){inp.value=txt;autoResize(inp);toast('Yapıştırıldı ✓');return;}
+    }
+  }catch(e){}
+  inp.select();
+  try{const ok=document.execCommand('paste');if(ok&&inp.value.trim()){autoResize(inp);toast('Yapıştırıldı ✓');return;}}catch(e){}
+  toast('Alana uzun bas → Yapıştır');
+}
+
+function toggleMore(id){
+  const el=document.getElementById(id);if(!el)return;
+  const isOpen=el.style.display!=='none';
+  document.querySelectorAll('.more-menu').forEach(m=>m.style.display='none');
+  el.style.display=isOpen?'none':'block';
+  if(!isOpen){setTimeout(()=>document.addEventListener('click',function h(e){if(!el.contains(e.target)){el.style.display='none';document.removeEventListener('click',h);}}),50);}
+}
+function closeMore(id){const el=document.getElementById(id);if(el)el.style.display='none';}
+
+async function shareText(txt){
+  if(navigator.share){try{await navigator.share({text:txt});}catch(e){}}
+  else{await copyText(txt,null);toast('Panoya kopyalandı');}
+}
+function retranslate(lid,rawText){improveTranslation(lid,rawText);}
+
+async function copyText(txt,btnId){
+  try{await navigator.clipboard.writeText(txt);toast('Kopyalandı ✓');}catch{toast('Kopyalanamadı');}
+  const b=document.getElementById(btnId);
+  if(b){b.classList.add('act-copy-ok');b.textContent='✓ Kopyalandı';setTimeout(()=>{b.classList.remove('act-copy-ok');b.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Kopyala';},2000);}
+}
+
+function setLoading(v){
+  busy=v;
+  document.getElementById('sendBtn').disabled=v;
+  document.getElementById('si').classList.toggle('h',v);
+  document.getElementById('sp').classList.toggle('s',v);
+}
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function ea(s){return String(s||'').replace(/'/g,"\\'").replace(/\n/g,' ');}
+
+init();
+</script>
+</body>
+</html>
