@@ -654,7 +654,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar11-50</div>
+<div class="ver">12mar11-60</div>
 
 <script>
 // ── STATE ──
@@ -674,7 +674,10 @@ const LANGS = {
 };
 
 // ── INIT ──
+let inputFocused = false;
+
 function syncAppHeight() {
+  if (inputFocused) return; // klavye açıkken yüksekliği değiştirme
   const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
   document.documentElement.style.setProperty('--app-h', h + 'px');
 }
@@ -696,12 +699,14 @@ function init() {
   useValidator = localStorage.getItem('cv_val') !== '0';
   showTone = localStorage.getItem('cv_tone') !== '0';
 
-  // Stick to bottom on keyboard open
   const inp = document.getElementById('inputText');
   if (inp) {
-    inp.addEventListener('focus', stickToBottom);
+    inp.addEventListener('focus', () => { inputFocused = true; stickToBottom(); });
+    inp.addEventListener('blur', () => { 
+      inputFocused = false; 
+      setTimeout(syncAppHeight, 100);
+    });
   }
-  window.visualViewport?.addEventListener('resize', stickToBottom);
 
   if (apiKey) showMain();
 }
