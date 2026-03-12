@@ -609,6 +609,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
     <input type="password" class="field" id="newKey" placeholder="Yeni anahtar…" style="margin-bottom:10px">
     <button class="primary-btn" onclick="updateKey()" style="margin-bottom:6px">Güncelle</button>
     <button class="danger-btn" onclick="deleteKey()">Anahtarı Sil &amp; Sıfırla</button>
+    <button class="danger-btn" onclick="clearCache()" style="margin-top:6px;background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);color:rgba(242,239,232,0.5)">Dil &amp; Ayar Önbelleğini Temizle</button>
     <div class="opt-row">
       <div>
         <div class="opt-t">Geri Çeviri</div>
@@ -643,7 +644,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar10-30</div>
+<div class="ver">12mar10-40</div>
 
 <script>
 // ── STATE ──
@@ -747,6 +748,20 @@ function updateKey() {
   apiKey = k; localStorage.setItem('cv_k', k); closeSettings(); toast('Güncellendi ✓');
 }
 
+function clearCache() {
+  localStorage.removeItem('cv_src');
+  localStorage.removeItem('cv_tgt');
+  localStorage.removeItem('cv_bt');
+  localStorage.removeItem('cv_val');
+  localStorage.removeItem('cv_tone');
+  srcLang = 'tr'; tgtLang = 'en';
+  showBack = true; useValidator = true; showTone = true;
+  updateLangUI();
+  renderToggles();
+  closeSettings();
+  toast('Önbellek temizlendi ✓');
+}
+
 function deleteKey() {
   ['cv_k','cv_src','cv_tgt','cv_f','cv_bt','cv_val'].forEach(k => localStorage.removeItem(k));
   location.reload();
@@ -840,7 +855,11 @@ async function doTranslate() {
   if (es) es.remove();
 
   const lid = 'msg_' + Date.now();
-  const sl = LANGS[srcLang], tl = LANGS[tgtLang];
+  // Re-read from localStorage to ensure consistency
+  srcLang = localStorage.getItem('cv_src') || srcLang;
+  tgtLang = localStorage.getItem('cv_tgt') || tgtLang;
+  const sl = LANGS[srcLang] || { name: srcLang, short: srcLang.toUpperCase(), full: srcLang };
+  const tl = LANGS[tgtLang] || { name: tgtLang, short: tgtLang.toUpperCase(), full: tgtLang };
   const curSrc = srcLang, curTgt = tgtLang;
 
   bubbles[lid] = {
