@@ -340,7 +340,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar12-40</div>
+<div class="ver">12mar12-50</div>
 
 <script>
 let apiKey='', srcLang='tr', tgtLang='en';
@@ -512,7 +512,7 @@ async function doTranslate(){
   const ctxLines=convHistory.slice(-3).map(h=>`[Kaynak]: ${h.src}\n[Çeviri]: ${h.tgt}`).join('\n');
   const contextBlock=ctxLines?`\nSOHBET BAĞLAMI (sadece referans):\n${ctxLines}\n`:'';
 
-  const mainPrompt=`Sen yüksek sadakatli bir çeviri motorusun.
+  const mainPrompt=`Sen yüksek sadakatli ve doğal bir çeviri motorusun.
 
 GÖREV: Verilen metni ${tl.full} diline doğal ve akıcı şekilde çevir.${contextBlock}
 BAĞLAM KURALI: Bağlam varsa ton ve kelime seçimini iyileştirmek için kullan, çeviriye yansıtma.
@@ -521,11 +521,11 @@ ZORUNLU KURALLAR:
 1. Kaynak metindeki anlamı koru.
 2. Kaynakta olmayan bilgi, övgü, duygu, özne veya yorum ekleme.
 3. Yazım hatalarını düzelt ama anlamı değiştirme.
-4. Kelime kelime çeviri yapma; hedef dilde doğal yaz.
+4. Kelime kelime çeviri YAPMA; hedef dilde native speaker gibi yaz.
 5. Belirsizliği koru, açıklamaya çalışma.
 6. Özne açık değilse uydurma.
 7. Tonu koru, güçlendirme veya abartma.
-8. Bağlama en uygun doğal karşılığı seç.
+8. IDIOM KURALI: Kaynak dilde deyim, kalıp veya günlük ifade varsa hedef dilde de en yaygın doğal karşılığını kullan. Sözlük çevirisi yapma. Birden fazla seçenek varsa native speaker'ın en çok tercih ettiğini seç.
 9. ZAMİR KURALI: "sen/siz/bize/sana/bana" gibi zamirler kaybolmamalı.
 10. Almanca için: resmi ise "Sie", samimi ise "du" kullan.
 
@@ -541,7 +541,7 @@ KURALLAR: Sadece bu metni çevir. Kaynak metnin ne olduğunu bilmiyorsun. Doğal
 Metin: ${txt}`;
 
   const validatorPrompt=(src,tr,bk)=>`Sen dengeli ama titiz bir çeviri doğrulayıcısısın.
-GÖREV: Kaynak ile çeviri arasında gerçek anlam kaybı veya ekleme var mı kontrol et.
+GÖREV: Kaynak ile çeviri arasında anlam kaybı, ekleme veya doğallık sorunu var mı kontrol et.
 
 FAIL ver (pass=false) — sadece bunlar:
 - Kaynakta açık olan ZAMİR kayboldu: "bize","sana","sen","siz","bana" gibi hitap bilgisi silindiyse
@@ -551,6 +551,7 @@ FAIL ver (pass=false) — sadece bunlar:
 - Kaynakta olmayan anlam/bilgi eklendi (ADDED_CONTENT)
 - Önemli içerik tamamen çıkarıldı (OMITTED_CONTENT)
 - Anlam tersine döndü (MEANING_DISTORTION)
+- Hedef dilde native speaker'ın kullanmayacağı garip/robotik ifade seçildi — daha doğal karşılığı varsa (NOT_IDIOMATIC)
 
 PASS ver — bunlar hata değil:
 - Doğal dil dönüşümleri: "dinleyin" → "listen to these"
@@ -559,11 +560,16 @@ PASS ver — bunlar hata değil:
 - Ton farkı, üslup değişikliği, dilbilgisi normalizasyonu
 - Geri çeviri birebir değil ama genel anlam aynıysa
 
+NOT_IDIOMATIC için örnekler:
+- "işimize gelmek" → "convenient for us" ✗ — "suits us" ✓
+- "lafı dolandırmak" → "circling the speech" ✗ — "beat around the bush" ✓
+- "göz atmak" → "throw an eye" ✗ — "take a look" ✓
+
 Kaynak: ${src}
 Çeviri (${tl.full}): ${tr}
 Geri çeviri (${sl.full}): ${bk||'YOK'}
 
-Sadece JSON döndür. Hata varsa "notes" alanına kısa Türkçe açıklama yaz.
+Sadece JSON döndür. Hata varsa "notes" alanına kısa Türkçe açıklama yaz — hangi ifade doğal değil ve daha iyi karşılığı ne.
 {"pass":true,"errors":[],"severity":"none","notes":""}`;
 
   try{
@@ -589,14 +595,13 @@ Sadece JSON döndür. Hata varsa "notes" alanına kısa Türkçe açıklama yaz.
         if(vm){
           const vr=JSON.parse(vm[0]);
           if(!vr.pass&&vr.errors?.length){
-            const labels={'ADDED_CONTENT':'Kaynak metinde olmayan içerik eklendi','OMITTED_CONTENT':'Kaynak metinden anlam eksiltildi','MEANING_DISTORTION':'Anlam kaydırıldı veya çarpıtıldı','SUBJECT_INSERTED':'Kaynakta olmayan özne eklendi'};
+            const labels={'ADDED_CONTENT':'Kaynak metinde olmayan içerik eklendi','OMITTED_CONTENT':'Kaynak metinden anlam eksiltildi','MEANING_DISTORTION':'Anlam kaydırıldı veya çarpıtıldı','SUBJECT_INSERTED':'Kaynakta olmayan özne eklendi','NOT_IDIOMATIC':'Doğal olmayan ifade — daha yaygın karşılığı var'};
             const hard=vr.errors.filter(e=>!['GRAMMAR_ONLY_NORMALIZATION','TONE_SHIFT','AWKWARD_WORDING'].includes(e));
             if(hard.length){
               warningShort=labels[hard[0]]||hard[0];
               const parts=hard.map(e=>labels[e]||e);
               if(vr.notes)parts.push(vr.notes);
               warningDetail=parts.join(' — ');
-              validationWarning=warningDetail;
             }
           }
         }
@@ -631,9 +636,10 @@ Kullanıcı metni: ${rawText}`;
   const valP=(src,tr,bk)=>`Sen dengeli bir çeviri doğrulayıcısısın.
 KRİTİK ANLAM BİRİMLERİ — biri değişirse FAIL: zamir(sen/siz/bize/sana), zaman(bugün/yarın), yer(buraya/bize), olumsuzluk.
 AĞIR HATALAR (pass=false): ADDED_CONTENT, OMITTED_CONTENT, MEANING_DISTORTION, SUBJECT_INSERTED.
+DOĞALLIK (pass=false): NOT_IDIOMATIC — native speaker kullanmayacağı robotik ifade, daha doğal karşılığı varsa.
 NOT OLARAK GEÇ: TONE_SHIFT, AWKWARD_WORDING, doğal güçlendirmeler.
 Kaynak: ${src}\nÇeviri (${tl.full}): ${tr}\nGeri çeviri (${sl.full}): ${bk||'YOK'}
-Sadece JSON: {"pass":true,"errors":[],"severity":"none","notes":""}`;
+Sadece JSON, hata varsa notes'a Türkçe açıklama ve önerilen doğal karşılık yaz: {"pass":true,"errors":[],"severity":"none","notes":""}`;
 
   try{
     const txt=await streamChat(retryPrompt,(p)=>{
