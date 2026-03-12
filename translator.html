@@ -544,10 +544,10 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
   <div class="hdr">
     <div class="hdr-logo">çev<em>.</em></div>
     <div class="hdr-actions">
-      <button class="hdr-btn" onclick="clearChat()" title="Sohbeti temizle">
+      <button class="icon-btn" onclick="clearChat()" title="Sohbeti temizle">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
       </button>
-      <button class="hdr-btn" onclick="openSettings()" title="Ayarlar">
+      <button class="icon-btn" onclick="openSettings()" title="Ayarlar">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
@@ -643,7 +643,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar10-10</div>
+<div class="ver">12mar10-30</div>
 
 <script>
 // ── STATE ──
@@ -687,12 +687,17 @@ function showMain() {
 }
 
 function updateLangUI() {
-  const sl = LANGS[srcLang]?.name || srcLang.toUpperCase();
-  const tl = LANGS[tgtLang]?.name || tgtLang.toUpperCase();
-  const lbSrc = document.getElementById('lbSrcTxt');
-  const lbTgt = document.getElementById('lbTgtTxt');
-  if (lbSrc) lbSrc.textContent = sl;
-  if (lbTgt) lbTgt.textContent = tl;
+  const sl = (LANGS[srcLang]?.name) || srcLang.toUpperCase();
+  const tl = (LANGS[tgtLang]?.name) || tgtLang.toUpperCase();
+  const elSrc = document.getElementById('lbSrcTxt');
+  const elTgt = document.getElementById('lbTgtTxt');
+  if (elSrc) elSrc.textContent = sl;
+  if (elTgt) elTgt.textContent = tl;
+  // Also update header src/tgt buttons if they exist (legacy)
+  const sb = document.getElementById('srcBtn');
+  const tb = document.getElementById('tgtBtn');
+  if (sb) sb.textContent = LANGS[srcLang]?.short || srcLang.toUpperCase();
+  if (tb) tb.textContent = LANGS[tgtLang]?.short || tgtLang.toUpperCase();
 }
 
 function saveKey() {
@@ -819,6 +824,12 @@ async function doTranslate() {
       localStorage.setItem('cv_tgt', tgtLang);
       updateLangUI();
     }
+  }
+
+  // Sanity check: src ve tgt aynıysa uyar
+  if (srcLang === tgtLang) {
+    toast('Kaynak ve hedef dil aynı — lütfen farklı bir dil seç');
+    return;
   }
 
   const el = document.getElementById('inputText');
