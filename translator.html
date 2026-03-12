@@ -615,7 +615,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">10mar11-10</div>
+<div class="ver">12mar09-00</div>
 
 <script>
 // ── STATE ──
@@ -780,13 +780,16 @@ async function doTranslate() {
     return;
   }
 
-  // Prefix dil değiştirme: "en merhaba" -> hedef EN, metin "merhaba"
-  const prefixMatch = raw.match(/^(en|ru|ua|tr)\s+(.+)/is);
+  // Slash prefix dil değiştirme: "/en merhaba" -> hedef EN, metin "merhaba"
+  const prefixMatch = raw.match(/^\/([a-z]{2})\s+(.+)/is);
   if (prefixMatch) {
-    tgtLang = prefixMatch[1].toLowerCase();
-    raw = prefixMatch[2].trim();
-    localStorage.setItem('cv_tgt', tgtLang);
-    updateLangUI();
+    const langCode = prefixMatch[1].toLowerCase();
+    if (['en','ru','ua','tr','de'].includes(langCode)) {
+      tgtLang = langCode;
+      raw = prefixMatch[2].trim();
+      localStorage.setItem('cv_tgt', tgtLang);
+      updateLangUI();
+    }
   }
 
   const el = document.getElementById('inputText');
@@ -1080,11 +1083,7 @@ function renderBubble(lid, rawText) {
     <div class="more-menu-wrap">
       <button class="act-btn" onclick="toggleMore('${moreId}')">··· Daha fazla</button>
       <div class="more-menu" id="${moreId}" style="display:none">
-        <div class="more-item" onclick="copyText('${ea(mainText)}','${copyId}');closeMore('${moreId}')">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Kopyala
-        </div>
-        <div class="more-item" onclick="shareText('${ea(mainText)}');closeMore('${moreId}')">
+                <div class="more-item" onclick="shareText('${ea(mainText)}');closeMore('${moreId}')">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
           Paylaş
         </div>
