@@ -351,7 +351,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar12-60</div>
+<div class="ver">14mar13-00</div>
 
 <script>
 let apiKey='', srcLang='tr', tgtLang='en';
@@ -463,7 +463,7 @@ function showMain(){
   const m=document.getElementById('mainUI');
   m.style.display='flex'; m.style.flexDirection='column';
   m.style.overflow='hidden'; m.style.flex='1';
-  updateLangUI(); renderToggles();
+  updateLangUI(); renderToggles(); applyUILang();
 }
 
 function updateLangUI(){
@@ -497,7 +497,7 @@ function applyUILang(){
   renderToggles();
 }
 
-async function pasteApiKey(){
+async async function pasteApiKey(){
   const inp=document.getElementById('apiKeyInput'); inp.focus();
   try{
     if(navigator.clipboard?.readText){
