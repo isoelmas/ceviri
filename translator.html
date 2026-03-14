@@ -29,7 +29,11 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:#0a0c12; color:var
 .app { max-width:480px; margin:0 auto; height:var(--app-h,100dvh); display:flex; flex-direction:column; position:relative; overflow:hidden; }
 
 /* SETUP */
-#setupScreen { flex:1; display:flex; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:28px 22px 60px; gap:20px; }
+#setupScreen { flex:1; display:flex; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:28px 22px 40px; gap:20px; overscroll-behavior:contain; }
+.api-input-wrap { display:flex; gap:8px; align-items:stretch; }
+.api-input-wrap .field { flex:1; }
+.api-paste-btn { flex-shrink:0; width:48px; border-radius:var(--r); background:rgba(255,255,255,0.05); border:1px solid var(--border2); color:var(--teal2); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
+.api-paste-btn:active { background:rgba(255,255,255,0.1); transform:scale(.95); }
 .s-logo { font-family:'Fraunces',serif; font-size:36px; font-weight:700; color:var(--ink); }
 .s-logo em { color:var(--gold); font-style:normal; }
 .s-eyebrow { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); }
@@ -193,9 +197,14 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
     <div class="s-step"><div class="s-num">2</div><div class="s-step-txt">Anahtarı kopyala</div></div>
     <div class="s-step"><div class="s-num">3</div><div class="s-step-txt">Aşağıya yapıştır ve başla</div></div>
   </div>
-  <input type="password" class="field" id="apiKeyInput" placeholder="sk-..." autocomplete="off" autocorrect="off" spellcheck="false">
-  <div class="setup-note">Bu ekranı yalnızca bir kez görürsün.</div>
-  <button class="primary-btn" onclick="saveKey()">Başla →</button>
+  <div class="api-input-wrap">
+    <input type="password" class="field" id="apiKeyInput" placeholder="sk-..." autocomplete="off" autocorrect="off" spellcheck="false">
+    <button class="api-paste-btn" onclick="pasteApiKey()" title="Yapıştır">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/></svg>
+    </button>
+  </div>
+  <div class="setup-note" id="setupNote">Bu ekranı yalnızca bir kez görürsün.</div>
+  <button class="primary-btn" id="startBtn" onclick="saveKey()">Başla →</button>
 </div>
 
 <!-- MAIN -->
@@ -327,8 +336,10 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
       <div><div class="opt-t">Ton Etiketi</div><div class="opt-s">Her çeviride metnin tonunu gösterir.</div></div>
       <button class="mini-tog" id="toneTog" onclick="toggleOpt('tone')">Açık</button>
     </div>
-  </div>
-</div>
+    <div class="opt-row">
+      <div><div class="opt-t" id="uiLangLabel">Arayüz Dili</div><div class="opt-s" id="uiLangDesc">Uygulama dilini değiştir.</div></div>
+      <button class="mini-tog" id="uiLangTog" onclick="toggleOpt('uilang')">TR</button>
+    </div>
 
 <!-- Lang picker -->
 <div class="s-ov" id="lpOv" onclick="closeLangPicker()">
@@ -340,7 +351,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">12mar12-50</div>
+<div class="ver">12mar12-60</div>
 
 <script>
 let apiKey='', srcLang='tr', tgtLang='en';
@@ -348,6 +359,56 @@ let busy=false, showTone=true;
 let convHistory=[], bubbles={};
 let showBack=true, useValidator=true;
 let langPickerMode='tgt', inputFocused=false;
+let uiLang='tr'; // 'tr' or 'en'
+
+const UI={
+  tr:{
+    ready:'Hazır', readySub:'Bir şeyler yaz, çevirelim.',
+    paste:'Yapıştır', translate:'Çevirmek istediğini yaz…',
+    backLabel:'Geri çeviri', validated:'✓ Doğrulandı', warn:'⚠ İncelenmeli',
+    validating:'… doğrulanıyor', improving:'… iyileştiriliyor',
+    copy:'Kopyala', copied:'✓ Kopyalandı', more:'··· Daha fazla',
+    improve:'İyileştir', share:'Paylaş', retranslate:'Yeniden çevir',
+    stage1:'Çeviri akıyor…', stage2:'Geri çeviri hazırlanıyor…', stage3:'Doğrulanıyor…',
+    stageImprove:'İyileştirme akıyor…', stageImproving:'İyileştiriliyor…',
+    preparing:'Hazırlanıyor…', srcLang:'Kaynak Dil', tgtLang:'Hedef Dil',
+    settings:'Ayarlar', apiKey:'API Anahtarı', update:'Güncelle',
+    deleteKey:'Anahtarı Sil & Sıfırla', clearCache:'Dil & Ayar Önbelleğini Temizle',
+    backTrans:'Geri Çeviri', validator:'Doğrulayıcı', toneLabel:'Ton Etiketi',
+    uiLangLabel:'Arayüz Dili', uiLangDesc:'Uygulama dilini değiştir.',
+    howTitle:'Kartı nasıl okursun?', howSub:'Örnek bir çeviri üzerinde her alanın ne anlama geldiğini gör.',
+    understand:'Anladım', clearConfirm:'Tüm geçmiş silinecek. Emin misin?',
+    cleared:'Geçmiş silindi', updated:'Güncellendi ✓', cacheCleared:'Önbellek temizlendi ✓',
+    emptyField:'Boş olamaz', enterKey:'API anahtarı gir', pastedOk:'Yapıştırıldı ✓',
+    pasteFallback:'Alana uzun bas → Yapıştır', copyOk:'Kopyalandı ✓', copyFail:'Kopyalanamadı',
+    setupNote:'Bu ekranı yalnızca bir kez görürsün.', startBtn:'Başla →',
+    open:'Açık', closed:'Kapalı',
+  },
+  en:{
+    ready:'Ready', readySub:'Type something to translate.',
+    paste:'Paste', translate:'Type something to translate…',
+    backLabel:'Back translation', validated:'✓ Validated', warn:'⚠ Review',
+    validating:'… validating', improving:'… improving',
+    copy:'Copy', copied:'✓ Copied', more:'··· More',
+    improve:'Improve', share:'Share', retranslate:'Retranslate',
+    stage1:'Translating…', stage2:'Back translating…', stage3:'Validating…',
+    stageImprove:'Improving…', stageImproving:'Improving…',
+    preparing:'Preparing…', srcLang:'Source Language', tgtLang:'Target Language',
+    settings:'Settings', apiKey:'API Key', update:'Update',
+    deleteKey:'Delete Key & Reset', clearCache:'Clear Language & Settings Cache',
+    backTrans:'Back Translation', validator:'Validator', toneLabel:'Tone Label',
+    uiLangLabel:'Interface Language', uiLangDesc:'Change app language.',
+    howTitle:'How to read a card?', howSub:'See what each field means on an example translation.',
+    understand:'Got it', clearConfirm:'All history will be deleted. Are you sure?',
+    cleared:'History cleared', updated:'Updated ✓', cacheCleared:'Cache cleared ✓',
+    emptyField:'Cannot be empty', enterKey:'Enter API key', pastedOk:'Pasted ✓',
+    pasteFallback:'Long press the field → Paste', copyOk:'Copied ✓', copyFail:'Could not copy',
+    setupNote:'You will only see this screen once.', startBtn:'Start →',
+    open:'On', closed:'Off',
+  }
+};
+
+function t(key){ return UI[uiLang]?.[key] || UI.tr[key] || key; }
 
 const LANGS={
   tr:{name:'Türkçe',short:'TR',full:'Turkish'},
@@ -378,11 +439,22 @@ function init(){
   showBack=localStorage.getItem('cv_bt')!=='0';
   useValidator=localStorage.getItem('cv_val')!=='0';
   showTone=localStorage.getItem('cv_tone')!=='0';
+  uiLang=localStorage.getItem('cv_uilang')||'tr';
+
+  // Setup screen — klavye açılınca scroll et, input kaybolmasın
+  const apiInp=document.getElementById('apiKeyInput');
+  if(apiInp){
+    apiInp.addEventListener('focus',()=>{
+      setTimeout(()=>apiInp.scrollIntoView({behavior:'smooth',block:'center'}),300);
+    });
+  }
+
   const inp=document.getElementById('inputText');
   if(inp){
     inp.addEventListener('focus',()=>{inputFocused=true;stickToBottom();});
     inp.addEventListener('blur',()=>{inputFocused=false;setTimeout(syncAppHeight,100);});
   }
+  applyUILang();
   if(apiKey)showMain();
 }
 
@@ -402,9 +474,45 @@ function updateLangUI(){
   if(es)es.textContent=sl; if(et)et.textContent=tl;
 }
 
+function applyUILang(){
+  const sn=document.getElementById('setupNote');
+  const sb=document.getElementById('startBtn');
+  if(sn)sn.textContent=t('setupNote');
+  if(sb)sb.textContent=t('startBtn');
+  const inp=document.getElementById('inputText');
+  if(inp)inp.placeholder=t('translate');
+  const pt=document.getElementById('pasteBtnTxt');
+  if(pt&&pt.style.display!=='none')pt.textContent=t('paste');
+  const es=document.getElementById('emptyState');
+  if(es){
+    const et=es.querySelector('.empty-t');
+    const esub=es.querySelector('.empty-s');
+    if(et)et.textContent=t('ready');
+    if(esub)esub.textContent=t('readySub');
+  }
+  const ul=document.getElementById('uiLangLabel');
+  const ud=document.getElementById('uiLangDesc');
+  if(ul)ul.textContent=t('uiLangLabel');
+  if(ud)ud.textContent=t('uiLangDesc');
+  renderToggles();
+}
+
+async function pasteApiKey(){
+  const inp=document.getElementById('apiKeyInput'); inp.focus();
+  try{
+    if(navigator.clipboard?.readText){
+      const txt=await navigator.clipboard.readText();
+      if(txt?.trim()){inp.value=txt;toast(t('pastedOk'));return;}
+    }
+  }catch(e){}
+  inp.select();
+  try{const ok=document.execCommand('paste');if(ok&&inp.value.trim()){toast(t('pastedOk'));return;}}catch(e){}
+  toast(t('pasteFallback'));
+}
+
 function saveKey(){
   const k=document.getElementById('apiKeyInput').value.trim();
-  if(!k){toast('API anahtarı gir');return;}
+  if(!k){toast(t('enterKey'));return;}
   apiKey=k; localStorage.setItem('cv_k',k); showMain();
 }
 
@@ -437,13 +545,13 @@ function closeSettings(){document.getElementById('sOv').classList.remove('open')
 
 function updateKey(){
   const k=document.getElementById('newKey').value.trim();
-  if(!k){toast('Boş olamaz');return;}
-  apiKey=k; localStorage.setItem('cv_k',k); closeSettings(); toast('Güncellendi ✓');
+  if(!k){toast(t('emptyField'));return;}
+  apiKey=k; localStorage.setItem('cv_k',k); closeSettings(); toast(t('updated'));
 }
 function clearCache(){
   ['cv_src','cv_tgt','cv_bt','cv_val','cv_tone'].forEach(k=>localStorage.removeItem(k));
   srcLang='tr'; tgtLang='en'; showBack=true; useValidator=true; showTone=true;
-  updateLangUI(); renderToggles(); closeSettings(); toast('Önbellek temizlendi ✓');
+  updateLangUI(); renderToggles(); closeSettings(); toast(t('cacheCleared'));
 }
 function deleteKey(){
   ['cv_k','cv_src','cv_tgt','cv_bt','cv_val','cv_tone'].forEach(k=>localStorage.removeItem(k));
@@ -453,21 +561,24 @@ function toggleOpt(key){
   if(key==='bt'){showBack=!showBack;localStorage.setItem('cv_bt',showBack?'1':'0');}
   else if(key==='val'){useValidator=!useValidator;localStorage.setItem('cv_val',useValidator?'1':'0');}
   else if(key==='tone'){showTone=!showTone;localStorage.setItem('cv_tone',showTone?'1':'0');}
+  else if(key==='uilang'){uiLang=uiLang==='tr'?'en':'tr';localStorage.setItem('cv_uilang',uiLang);applyUILang();}
   renderToggles();
 }
 function renderToggles(){
   const bt=document.getElementById('btTog');
   const vl=document.getElementById('valTog');
   const tn=document.getElementById('toneTog');
-  if(bt){bt.textContent=showBack?'Açık':'Kapalı';bt.classList.toggle('on',showBack);}
-  if(vl){vl.textContent=useValidator?'Açık':'Kapalı';vl.classList.toggle('on',useValidator);}
-  if(tn){tn.textContent=showTone?'Açık':'Kapalı';tn.classList.toggle('on',showTone);}
+  const ul=document.getElementById('uiLangTog');
+  if(bt){bt.textContent=showBack?t('open'):t('closed');bt.classList.toggle('on',showBack);}
+  if(vl){vl.textContent=useValidator?t('open'):t('closed');vl.classList.toggle('on',useValidator);}
+  if(tn){tn.textContent=showTone?t('open'):t('closed');tn.classList.toggle('on',showTone);}
+  if(ul){ul.textContent=uiLang.toUpperCase();ul.classList.toggle('on',uiLang==='en');}
 }
 
 function clearChat(){
-  if(!confirm('Tüm geçmiş silinecek. Emin misin?'))return;
-  document.getElementById('chat').innerHTML=`<div class="empty-state" id="emptyState"><div class="empty-icon">✦</div><div class="empty-t">Hazır</div><div class="empty-s">Bir şeyler yaz, çevirelim.</div></div>`;
-  convHistory=[]; bubbles={}; toast('Geçmiş silindi');
+  if(!confirm(t('clearConfirm')))return;
+  document.getElementById('chat').innerHTML=`<div class="empty-state" id="emptyState"><div class="empty-icon">✦</div><div class="empty-t">${t('ready')}</div><div class="empty-s">${t('readySub')}</div></div>`;
+  convHistory=[]; bubbles={}; toast(t('cleared'));
 }
 
 function autoResize(el){
@@ -701,27 +812,27 @@ function renderBubble(lid,rawText){
 
   let validPill='';
   if(p.validatorEnabled!==false){
-    if(p.validated===true)validPill=`<span class="status-pill sp-ok">✓ Doğrulandı</span>`;
-    else if(p.validated===false)validPill=`<span class="status-pill sp-warn">⚠ İncelenmeli</span>`;
-    else if(p.validated==='pending')validPill=`<span class="status-pill sp-pending">… doğrulanıyor</span>`;
+    if(p.validated===true)validPill=`<span class="status-pill sp-ok">${t('validated')}</span>`;
+    else if(p.validated===false)validPill=`<span class="status-pill sp-warn">${t('warn')}</span>`;
+    else if(p.validated==='pending')validPill=`<span class="status-pill sp-pending">${t('validating')}</span>`;
   }
 
   let backHtml='';
   if(p.backEnabled!==false&&(p.back||p.backPending)){
-    backHtml=`<div class="msg-back"><div class="back-label">Geri çeviri</div>${esc(p.backPending?'Hazırlanıyor…':(p.back||''))}</div>`;
+    backHtml=`<div class="msg-back"><div class="back-label">${t('backLabel')}</div>${esc(p.backPending?t('preparing'):(p.back||''))}</div>`;
   }
 
   let warnHtml='';
   if(p.warning){
-    warnHtml=`<details class="validator-block"><summary class="validator-summary"><span class="val-left">⚠️ <span>${esc(p.warningShort||'İncelenmesi iyi olur')}</span></span><span class="val-arrow">▾</span></summary>${p.warningDetail?`<div class="validator-body">${esc(p.warningDetail)}</div>`:''}</details>`;
+    warnHtml=`<details class="validator-block"><summary class="validator-summary"><span class="val-left">⚠️ <span>${esc(p.warningShort||t('warn'))}</span></span><span class="val-arrow">▾</span></summary>${p.warningDetail?`<div class="validator-body">${esc(p.warningDetail)}</div>`:''}</details>`;
   }
 
   const copyId='cp_'+lid;
-  const improveBtn=(p.validated===false&&!p.retrying)?`<button class="act-btn primary-act" onclick="improveTranslation('${lid}','${ea(rawText)}')"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> İyileştir</button>`:'';
+  const improveBtn=(p.validated===false&&!p.retrying)?`<button class="act-btn primary-act" onclick="improveTranslation('${lid}','${ea(rawText)}')"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> ${t('improve')}</button>`:'';
   const retryBadge=p.retrying?`<span class="status-pill sp-pending">… iyileştiriliyor</span>`:'';
   const moreId='more_'+lid;
 
-  const actBar=mainText?`<div class="action-bar">${improveBtn}<button class="act-btn" id="${copyId}" onclick="copyText('${ea(mainText)}','${copyId}')"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Kopyala</button><div class="more-menu-wrap"><button class="act-btn" onclick="toggleMore('${moreId}')">··· Daha fazla</button><div class="more-menu" id="${moreId}" style="display:none"><div class="more-item" onclick="shareText('${ea(mainText)}');closeMore('${moreId}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Paylaş</div><div class="more-item" onclick="retranslate('${lid}','${ea(rawText)}');closeMore('${moreId}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Yeniden çevir</div></div></div></div>`:'';
+  const actBar=mainText?`<div class="action-bar">${improveBtn}<button class="act-btn" id="${copyId}" onclick="copyText('${ea(mainText)}','${copyId}')"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> ${t('copy')}</button><div class="more-menu-wrap"><button class="act-btn" onclick="toggleMore('${moreId}')">${t('more')}</button><div class="more-menu" id="${moreId}" style="display:none"><div class="more-item" onclick="shareText('${ea(mainText)}');closeMore('${moreId}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> ${t('share')}</div><div class="more-item" onclick="retranslate('${lid}','${ea(rawText)}');closeMore('${moreId}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> ${t('retranslate')}</div></div></div></div>`:'`;1 0 .49-3.5"/></svg> Yeniden çevir</div></div></div></div>`:'';
 
   const stageLine=p.statusLine?`<div class="stage-line">${esc(p.statusLine)}</div>`:'';
 
@@ -781,12 +892,12 @@ async function pasteFromClipboard(){
   try{
     if(navigator.clipboard?.readText){
       const txt=await navigator.clipboard.readText();
-      if(txt?.trim()){inp.value=txt;autoResize(inp);toast('Yapıştırıldı ✓');return;}
+      if(txt?.trim()){inp.value=txt;autoResize(inp);toast(t('pastedOk'));return;}
     }
   }catch(e){}
   inp.select();
-  try{const ok=document.execCommand('paste');if(ok&&inp.value.trim()){autoResize(inp);toast('Yapıştırıldı ✓');return;}}catch(e){}
-  toast('Alana uzun bas → Yapıştır');
+  try{const ok=document.execCommand('paste');if(ok&&inp.value.trim()){autoResize(inp);toast(t('pastedOk'));return;}}catch(e){}
+  toast(t('pasteFallback'));
 }
 
 function toggleMore(id){
@@ -805,9 +916,9 @@ async function shareText(txt){
 function retranslate(lid,rawText){improveTranslation(lid,rawText);}
 
 async function copyText(txt,btnId){
-  try{await navigator.clipboard.writeText(txt);toast('Kopyalandı ✓');}catch{toast('Kopyalanamadı');}
+  try{await navigator.clipboard.writeText(txt);toast(t('copyOk'));}catch{toast(t('copyFail'));}
   const b=document.getElementById(btnId);
-  if(b){b.classList.add('act-copy-ok');b.textContent='✓ Kopyalandı';setTimeout(()=>{b.classList.remove('act-copy-ok');b.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Kopyala';},2000);}
+  if(b){b.classList.add('act-copy-ok');b.textContent=t('copied');setTimeout(()=>{b.classList.remove('act-copy-ok');b.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> '+t('copy');},2000);}
 }
 
 function setLoading(v){
