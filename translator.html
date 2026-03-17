@@ -67,7 +67,8 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:#0a0c12; color:var
 /* Chat */
 .chat { flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding:16px 14px 8px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch; }
 .chat::-webkit-scrollbar { display:none; }
-.empty-state { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; opacity:.3; text-align:center; padding:40px 24px; pointer-events:none; }
+.empty-state { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; opacity:.3; text-align:center; padding:40px 24px; }
+.empty-state .empty-icon, .empty-state .empty-t, .empty-state .empty-s { pointer-events:none; }
 .empty-icon { font-size:32px; } .empty-t { font-family:'Fraunces',serif; font-size:18px; font-weight:500; } .empty-s { font-size:12px; color:var(--muted); line-height:1.7; }
 .msg-row { display:flex; flex-direction:column; gap:4px; animation:msgIn .25s ease; }
 @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
@@ -354,7 +355,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">17mar13-30</div>
+<div class="ver">17mar13-40</div>
 
 <script>
 let apiKey='', srcLang='tr', tgtLang='en';
@@ -452,11 +453,11 @@ const UI={
 function t(key){ return UI[uiLang]?.[key] || UI.tr[key] || key; }
 
 const LANGS={
-  tr:{name:'Türkçe',short:'TR',full:'Turkish'},
-  en:{name:'İngilizce',short:'EN',full:'English'},
-  ru:{name:'Rusça',short:'RU',full:'Russian'},
-  ua:{name:'Ukraynaca',short:'UA',full:'Ukrainian'},
-  de:{name:'Almanca',short:'DE',full:'German'}
+  tr:{name:'Türkçe',  nameEN:'Turkish',    short:'TR', full:'Turkish'},
+  en:{name:'İngilizce',nameEN:'English',   short:'EN', full:'English'},
+  ru:{name:'Rusça',   nameEN:'Russian',    short:'RU', full:'Russian'},
+  ua:{name:'Ukraynaca',nameEN:'Ukrainian', short:'UA', full:'Ukrainian'},
+  de:{name:'Almanca', nameEN:'German',     short:'DE', full:'German'}
 };
 
 function syncAppHeight(){
@@ -508,8 +509,8 @@ function showMain(){
 }
 
 function updateLangUI(){
-  const sl=LANGS[srcLang]?.name||srcLang.toUpperCase();
-  const tl=LANGS[tgtLang]?.name||tgtLang.toUpperCase();
+  const sl=uiLang==='en'?(LANGS[srcLang]?.nameEN||srcLang.toUpperCase()):(LANGS[srcLang]?.name||srcLang.toUpperCase());
+  const tl=uiLang==='en'?(LANGS[tgtLang]?.nameEN||tgtLang.toUpperCase()):(LANGS[tgtLang]?.name||tgtLang.toUpperCase());
   const es=document.getElementById('lbSrcTxt');
   const et=document.getElementById('lbTgtTxt');
   if(es)es.textContent=sl; if(et)et.textContent=tl;
@@ -597,11 +598,12 @@ function swapLangs(){
 
 function openLangPicker(mode){
   langPickerMode=mode;
-  document.getElementById('lpTitle').textContent=mode==='src'?'Kaynak Dil':'Hedef Dil';
+  document.getElementById('lpTitle').textContent=mode==='src'?t('srcLang'):t('tgtLang');
   const cur=mode==='src'?srcLang:tgtLang;
-  document.getElementById('langList').innerHTML=Object.entries(LANGS).map(([k,v])=>
-    `<div class="lang-opt ${k===cur?'selected':''}" onclick="selectLang('${k}')">${v.name}</div>`
-  ).join('');
+  document.getElementById('langList').innerHTML=Object.entries(LANGS).map(([k,v])=>{
+    const displayName=uiLang==='en'?v.nameEN:v.name;
+    return `<div class="lang-opt ${k===cur?'selected':''}" onclick="selectLang('${k}')">${displayName}</div>`;
+  }).join('');
   document.getElementById('lpOv').classList.add('open');
 }
 function selectLang(k){
