@@ -177,25 +177,27 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 
 <!-- SETUP -->
 <div id="setupScreen">
-  <div>
+  <div style="display:flex;align-items:center;justify-content:space-between;">
     <div class="s-logo">çev<em>.</em></div>
+    <button onclick="toggleOpt('uilang')" id="setupLangBtn" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1px;padding:6px 12px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:rgba(242,239,232,0.6);cursor:pointer;">TR</button>
+  </div>
     <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(242,239,232,0.3);margin-top:4px;">AI TRANSLATION LAB</div>
   </div>
   <div>
-    <div class="s-eyebrow" style="margin-bottom:8px;">Kişisel Çeviri Asistanı</div>
-    <div class="s-headline">Kelime değil,<br><em>niyet</em> çevirir.</div>
+    <div class="s-eyebrow" id="sEyebrow" style="margin-bottom:8px;"></div>
+    <div class="s-headline"><span id="sHead1"></span><br><em id="sHead2"></em><span id="sHead3"></span></div>
   </div>
-  <div class="s-body">Çev yalnızca çeviri yapmaz — geri çeviri üretir, anlam kaymasını tespit eder ve gerektiğinde düzeltilmiş sonuç sunar.</div>
+  <div class="s-body" id="sBody"></div>
   <div class="feat-grid">
-    <div class="feat-item"><div class="feat-icon">⇄</div><div class="feat-t">Geri Çeviri</div><div class="feat-s">Sistemin ne anladığını gösterir.</div></div>
-    <div class="feat-item"><div class="feat-icon">✓</div><div class="feat-t">Doğrulayıcı</div><div class="feat-s">Anlam kaymasını yakalar.</div></div>
-    <div class="feat-item"><div class="feat-icon">↻</div><div class="feat-t">İyileştir</div><div class="feat-s">Hata varsa geri bildirimle yeniden dener.</div></div>
-    <div class="feat-item"><div class="feat-icon">⚡</div><div class="feat-t">Hızlı Kopyala</div><div class="feat-s">Tek dokunuşla panoya alır.</div></div>
+    <div class="feat-item"><div class="feat-icon">⇄</div><div class="feat-t" id="f1t"></div><div class="feat-s" id="f1s"></div></div>
+    <div class="feat-item"><div class="feat-icon">✓</div><div class="feat-t" id="f2t"></div><div class="feat-s" id="f2s"></div></div>
+    <div class="feat-item"><div class="feat-icon">↻</div><div class="feat-t" id="f3t"></div><div class="feat-s" id="f3s"></div></div>
+    <div class="feat-item"><div class="feat-icon">⚡</div><div class="feat-t" id="f4t"></div><div class="feat-s" id="f4s"></div></div>
   </div>
   <div class="s-card">
-    <div class="s-step"><div class="s-num">1</div><div class="s-step-txt"><a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com</a> → API anahtarı oluştur</div></div>
-    <div class="s-step"><div class="s-num">2</div><div class="s-step-txt">Anahtarı kopyala</div></div>
-    <div class="s-step"><div class="s-num">3</div><div class="s-step-txt">Aşağıya yapıştır ve başla</div></div>
+    <div class="s-step"><div class="s-num">1</div><div class="s-step-txt"><a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com</a> → <span id="sStep1"></span></div></div>
+    <div class="s-step"><div class="s-num">2</div><div class="s-step-txt" id="sStep2"></div></div>
+    <div class="s-step"><div class="s-num">3</div><div class="s-step-txt" id="sStep3"></div></div>
   </div>
   <div class="api-input-wrap">
     <input type="password" class="field" id="apiKeyInput" placeholder="sk-..." autocomplete="off" autocorrect="off" spellcheck="false">
@@ -227,11 +229,11 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
   <div class="chat" id="chat">
     <div class="empty-state" id="emptyState">
       <div class="empty-icon">✦</div>
-      <div class="empty-t">Hazır</div>
-      <div class="empty-s">Bir şeyler yaz, çevirelim.</div>
+      <div class="empty-t" id="emptyT"></div>
+      <div class="empty-s" id="emptyS"></div>
       <button class="paste-big" style="pointer-events:all;" onclick="pasteFromClipboard()">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Yapıştır
+        <span id="pasteBigTxt"></span>
       </button>
     </div>
   </div>
@@ -268,8 +270,8 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 <div class="help-ov" id="helpOv" onclick="closeHelp()">
   <div class="help-sheet" onclick="event.stopPropagation()">
     <div class="sh-handle"></div>
-    <div class="help-title">Kartı nasıl okursun?</div>
-    <div class="help-sub">Örnek bir çeviri üzerinde her alanın ne anlama geldiğini gör.</div>
+    <div class="help-title" id="helpTitle"></div>
+    <div class="help-sub" id="helpSub"></div>
     <!-- Örnek kart — gerçek kart ile aynı görünüm -->
     <div style="background:linear-gradient(160deg,#1b2438,#131a28);border:1px solid rgba(90,184,176,0.2);border-radius:4px 18px 18px 18px;padding:12px 14px 10px;margin-bottom:16px;">
       <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
@@ -310,7 +312,7 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
         <div><div class="help-ann-title">İyileştir</div><div class="help-ann-desc">Hata varsa hatayı geri bildirim olarak modele iletir ve çeviriyi yeniden yapar.</div></div>
       </div>
     </div>
-    <button class="help-close" onclick="closeHelp()">Anladım</button>
+    <button class="help-close" id="helpClose" onclick="closeHelp()"></button>
   </div>
 </div>
 
@@ -318,22 +320,22 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 <div class="s-ov" id="sOv" onclick="closeSettings()">
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="sh-handle"></div>
-    <div class="sh-title">Ayarlar</div>
-    <div class="sh-label">API Anahtarı</div>
+    <div class="sh-title" id="shTitle"></div>
+    <div class="sh-label" id="shApiLabel"></div>
     <input type="password" class="field" id="newKey" placeholder="Yeni anahtar…" style="margin-bottom:10px">
-    <button class="primary-btn" onclick="updateKey()" style="margin-bottom:6px">Güncelle</button>
-    <button class="danger-btn" onclick="deleteKey()">Anahtarı Sil &amp; Sıfırla</button>
-    <button class="danger-btn" onclick="clearCache()" style="margin-top:6px;background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);color:rgba(242,239,232,0.5)">Dil &amp; Ayar Önbelleğini Temizle</button>
+    <button class="primary-btn" onclick="updateKey()" style="margin-bottom:6px" id="updateBtn"></button>
+    <button class="danger-btn" onclick="deleteKey()" id="deleteBtn"></button>
+    <button class="danger-btn" onclick="clearCache()" id="clearCacheBtn" style="margin-top:6px;background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);color:rgba(242,239,232,0.5)"></button>
     <div class="opt-row">
-      <div><div class="opt-t">Geri Çeviri</div><div class="opt-s">Çeviriyi tekrar kaynak dile çevirir. Anlam kayması varsa burada fark edilir.</div></div>
+      <div><div class="opt-t" id="btLabel"></div><div class="opt-s" id="btDesc"></div></div>
       <button class="mini-tog" id="btTog" onclick="toggleOpt('bt')">Açık</button>
     </div>
     <div class="opt-row">
-      <div><div class="opt-t">Doğrulayıcı</div><div class="opt-s">Anlam ekleme, eksiltme veya çarpıtma varsa uyarır. Hata bulunursa "İyileştir" çıkar.</div></div>
+      <div><div class="opt-t" id="valLabel"></div><div class="opt-s" id="valDesc"></div></div>
       <button class="mini-tog" id="valTog" onclick="toggleOpt('val')">Açık</button>
     </div>
     <div class="opt-row">
-      <div><div class="opt-t">Ton Etiketi</div><div class="opt-s">Her çeviride metnin tonunu gösterir.</div></div>
+      <div><div class="opt-t" id="toneLabel"></div><div class="opt-s" id="toneDesc"></div></div>
       <button class="mini-tog" id="toneTog" onclick="toggleOpt('tone')">Açık</button>
     </div>
     <div class="opt-row">
@@ -345,13 +347,13 @@ details.validator-block[open] .val-arrow { transform:rotate(180deg); }
 <div class="s-ov" id="lpOv" onclick="closeLangPicker()">
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="sh-handle"></div>
-    <div class="sh-title" id="lpTitle">Kaynak Dil</div>
+    <div class="sh-title" id="lpTitle"></div>
     <div class="lang-list" id="langList"></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="ver">14mar13-00</div>
+<div class="ver">17mar13-20</div>
 
 <script>
 let apiKey='', srcLang='tr', tgtLang='en';
@@ -383,6 +385,25 @@ const UI={
     pasteFallback:'Alana uzun bas → Yapıştır', copyOk:'Kopyalandı ✓', copyFail:'Kopyalanamadı',
     setupNote:'Bu ekranı yalnızca bir kez görürsün.', startBtn:'Başla →',
     open:'Açık', closed:'Kapalı',
+    settingsTitle:'Ayarlar', apiKeyLabel:'API Anahtarı', updateBtn:'Güncelle',
+    deleteKeyBtn:'Anahtarı Sil & Sıfırla', clearCacheBtn:'Dil & Ayar Önbelleğini Temizle',
+    backTransLabel:'Geri Çeviri', validatorLabel:'Doğrulayıcı',
+    toneTogLabel:'Ton Etiketi', howReadTitle:'Kartı nasıl okursun?',
+    backTransDesc:'Çeviriyi tekrar kaynak dile çevirir. Anlam kayması varsa burada fark edilir.',
+    validatorDesc:'Anlam ekleme, eksiltme veya çarpıtma varsa uyarır. Hata bulunursa "İyileştir" çıkar.',
+    toneTogDesc:'Her çeviride metnin tonunu gösterir.',
+    uiLangDescEN:'Uygulama dilini değiştir.',
+    clearCacheDesc:'Dil & Ayar Önbelleğini Temizle',
+    featureBackTrans:'Geri Çeviri', featureBackDesc:'Sistemin ne anladığını gösterir.',
+    featureValidator:'Doğrulayıcı', featureValidatorDesc:'Anlam kaymasını yakalar.',
+    featureImprove:'İyileştir', featureImproveDesc:'Hata varsa geri bildirimle yeniden dener.',
+    featureCopy:'Hızlı Kopyala', featureCopyDesc:'Tek dokunuşla panoya alır.',
+    setupSubtitle:'Kişisel Çeviri Asistanı',
+    setupHeadline1:'Kelime değil,', setupHeadline2:'niyet',setupHeadline3:'çevirir.',
+    setupBody:'Çev yalnızca çeviri yapmaz — geri çeviri üretir, anlam kaymasını tespit eder ve gerektiğinde düzeltilmiş sonuç sunar.',
+    setupStep1:'API anahtarı oluştur:', setupStep2:'Anahtarı kopyala', setupStep3:'Aşağıya yapıştır ve başla',
+    setupNoteText:'Bu ekranı yalnızca bir kez görürsün.',
+    clearChatTitle:'Sohbeti temizle', howWorksTitle:'Nasıl çalışır?',
   },
   en:{
     ready:'Ready', readySub:'Type something to translate.',
@@ -405,6 +426,25 @@ const UI={
     pasteFallback:'Long press the field → Paste', copyOk:'Copied ✓', copyFail:'Could not copy',
     setupNote:'You will only see this screen once.', startBtn:'Start →',
     open:'On', closed:'Off',
+    settingsTitle:'Settings', apiKeyLabel:'API Key', updateBtn:'Update',
+    deleteKeyBtn:'Delete Key & Reset', clearCacheBtn:'Clear Cache',
+    backTransLabel:'Back Translation', validatorLabel:'Validator',
+    toneTogLabel:'Tone Label', howReadTitle:'How to read a card?',
+    backTransDesc:'Translates back to source. Detects meaning drift.',
+    validatorDesc:'Warns on meaning addition, omission or distortion. Shows Improve button on error.',
+    toneTogDesc:'Shows the tone of each translation.',
+    uiLangDescEN:'Change app language.',
+    clearCacheDesc:'Clear language & settings cache',
+    featureBackTrans:'Back Translation', featureBackDesc:'Shows what the system understood.',
+    featureValidator:'Validator', featureValidatorDesc:'Catches meaning drift.',
+    featureImprove:'Improve', featureImproveDesc:'Retries with feedback on error.',
+    featureCopy:'Quick Copy', featureCopyDesc:'One tap to clipboard.',
+    setupSubtitle:'Personal Translation Assistant',
+    setupHeadline1:'Not words,', setupHeadline2:'intent',setupHeadline3:'translated.',
+    setupBody:'çev. not only translates — it back-translates, detects meaning drift and offers a corrected result when needed.',
+    setupStep1:'Create API key at', setupStep2:'Copy the key', setupStep3:'Paste below and start',
+    setupNoteText:'You will only see this screen once.',
+    clearChatTitle:'Sohbeti temizle', howWorksTitle:'How it works',
   }
 };
 
@@ -475,25 +515,57 @@ function updateLangUI(){
 }
 
 function applyUILang(){
-  const sn=document.getElementById('setupNote');
-  const sb=document.getElementById('startBtn');
-  if(sn)sn.textContent=t('setupNote');
-  if(sb)sb.textContent=t('startBtn');
+  const s=(id,txt)=>{const el=document.getElementById(id);if(el)el.textContent=txt;};
+  const h=(id,html)=>{const el=document.getElementById(id);if(el)el.innerHTML=html;};
+
+  // Setup screen
+  s('sEyebrow', t('setupSubtitle'));
+  s('sHead1', t('setupHeadline1')+' ');
+  s('sHead2', t('setupHeadline2'));
+  s('sHead3', ' '+t('setupHeadline3'));
+  s('sBody', t('setupBody'));
+  s('sStep1', t('setupStep1'));
+  s('sStep2', t('setupStep2'));
+  s('sStep3', t('setupStep3'));
+  s('setupNote', t('setupNoteText'));
+  s('startBtn', t('startBtn'));
+  const slb=document.getElementById('setupLangBtn');
+  if(slb)slb.textContent=uiLang.toUpperCase();
+
+  // Feat grid
+  s('f1t', t('featureBackTrans')); s('f1s', t('featureBackDesc'));
+  s('f2t', t('featureValidator')); s('f2s', t('featureValidatorDesc'));
+  s('f3t', t('featureImprove'));   s('f3s', t('featureImproveDesc'));
+  s('f4t', t('featureCopy'));      s('f4s', t('featureCopyDesc'));
+
+  // Main UI
   const inp=document.getElementById('inputText');
   if(inp)inp.placeholder=t('translate');
   const pt=document.getElementById('pasteBtnTxt');
   if(pt&&pt.style.display!=='none')pt.textContent=t('paste');
-  const es=document.getElementById('emptyState');
-  if(es){
-    const et=es.querySelector('.empty-t');
-    const esub=es.querySelector('.empty-s');
-    if(et)et.textContent=t('ready');
-    if(esub)esub.textContent=t('readySub');
-  }
-  const ul=document.getElementById('uiLangLabel');
-  const ud=document.getElementById('uiLangDesc');
-  if(ul)ul.textContent=t('uiLangLabel');
-  if(ud)ud.textContent=t('uiLangDesc');
+  const pbt=document.getElementById('pasteBigTxt');
+  if(pbt)pbt.textContent=t('paste');
+
+  // Empty state
+  s('emptyT', t('ready'));
+  s('emptyS', t('readySub'));
+
+  // Settings sheet
+  s('shTitle', t('settingsTitle'));
+  s('shApiLabel', t('apiKeyLabel'));
+  s('updateBtn', t('updateBtn'));
+  s('deleteBtn', t('deleteKeyBtn'));
+  s('clearCacheBtn', t('clearCacheBtn'));
+  s('btLabel', t('backTransLabel'));   s('btDesc', t('backTransDesc'));
+  s('valLabel', t('validatorLabel'));  s('valDesc', t('validatorDesc'));
+  s('toneLabel', t('toneTogLabel'));   s('toneDesc', t('toneTogDesc'));
+  s('uiLangLabel', t('uiLangLabel')); s('uiLangDesc', t('uiLangDescEN'));
+
+  // Help modal
+  s('helpTitle', t('howReadTitle'));
+  s('helpSub', t('howSub'));
+  s('helpClose', t('understand'));
+
   renderToggles();
 }
 
